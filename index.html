@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Furkan Sarıca | DevOps & Network Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+--bg-primary: #0a0c10;
+--bg-secondary: #11141a;
+--bg-card: #151922;
+--terminal-green: #00ff88;
+--terminal-green-dim: rgba(0, 255, 136, 0.3);
+--accent-cyan: #00d4ff;
+--accent-amber: #ffb000;
+--accent-purple: #bd93f9;
+--text-primary: #e6edf3;
+--text-secondary: #8b949e;
+--text-muted: #6e7681;
+--border-color: #30363d;
+--border-accent: #00ff88;
+--glow: 0 0 20px rgba(0, 255, 136, 0.3);
+--glow-strong: 0 0 30px rgba(0, 255, 136, 0.5);
+}
+
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+html {
+scroll-behavior: smooth;
+}
+
+body {
+font-family: 'JetBrains Mono', monospace;
+background-color: var(--bg-primary);
+color: var(--text-primary);
+line-height: 1.7;
+overflow-x: hidden;
+}
+
+::selection {
+background: var(--terminal-green);
+color: var(--bg-primary);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+width: 8px;
+}
+
+::-webkit-scrollbar-track {
+background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+background: var(--border-color);
+border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+background: var(--terminal-green);
+}
+
+/* Terminal Cursor Animation */
+@keyframes blink {
+0%, 50% { opacity: 1; }
+51%, 100% { opacity: 0; }
+}
+
+.cursor::after {
+content: '█';
+animation: blink 1s infinite;
+color: var(--terminal-green);
+}
+
+/* Scanline Effect */
+body::before {
+content: '';
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: repeating-linear-gradient(
+0deg,
+rgba(0, 0, 0, 0.03),
+rgba(0, 0, 0, 0.03) 1px,
+transparent 1px,
+transparent 2px
+);
+pointer-events: none;
+z-index: 9999;
+opacity: 0.5;
+}
+
+/* Hero Section */
+.hero {
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: flex-start;
+padding: 2rem;
+max-width: 900px;
+margin: 0 auto;
+position: relative;
+}
+
+.hero-prompt {
+font-size: 0.9rem;
+color: var(--text-muted);
+margin-bottom: 1rem;
+}
+
+.hero-prompt::before {
+content: 'furkan@devops:~$ ';
+color: var(--terminal-green);
+}
+
+.hero h1 {
+font-family: 'JetBrains Mono', monospace;
+font-size: clamp(2rem, 5vw, 3.5rem);
+font-weight: 500;
+margin-bottom: 0.5rem;
+color: var(--text-primary);
+}
+
+.hero .typing {
+color: var(--terminal-green);
+}
+
+.hero .cursor {
+display: inline;
+}
+
+.hero-subtitle {
+font-size: 1.1rem;
+color: var(--accent-cyan);
+margin-top: 0.5rem;
+margin-bottom: 1.5rem;
+}
+
+.hero-location {
+font-size: 0.9rem;
+color: var(--text-muted);
+margin-bottom: 2rem;
+}
+
+.hero-location::before {
+content: '[';
+color: var(--terminal-green);
+}
+
+.hero-location::after {
+content: ']';
+color: var(--terminal-green);
+}
+
+/* ASCII Art Header */
+.ascii-header {
+font-size: 0.7rem;
+color: var(--terminal-green-dim);
+line-height: 1.2;
+margin-bottom: 2rem;
+opacity: 0.6;
+white-space: pre;
+font-family: 'JetBrains Mono', monospace;
+}
+
+/* Hero Navigation */
+.hero-nav {
+display: flex;
+flex-wrap: wrap;
+gap: 1rem;
+margin-top: 2rem;
+}
+
+.hero-nav a {
+color: var(--text-secondary);
+text-decoration: none;
+padding: 0.6rem 1.2rem;
+border: 1px solid var(--border-color);
+background: var(--bg-card);
+transition: all 0.3s ease;
+font-size: 0.85rem;
+position: relative;
+overflow: hidden;
+}
+
+.hero-nav a::before {
+content: '>';
+margin-right: 0.5rem;
+color: var(--terminal-green);
+opacity: 0;
+transition: opacity 0.3s;
+}
+
+.hero-nav a:hover {
+border-color: var(--terminal-green);
+color: var(--terminal-green);
+box-shadow: var(--glow);
+transform: translateX(5px);
+}
+
+.hero-nav a:hover::before {
+opacity: 1;
+}
+
+/* Scroll Indicator */
+.scroll-indicator {
+position: absolute;
+bottom: 2rem;
+left: 50%;
+transform: translateX(-50%);
+font-size: 0.8rem;
+color: var(--text-muted);
+animation: bounce 2s infinite;
+}
+
+.scroll-indicator::before {
+content: '↓ scroll down';
+}
+
+@keyframes bounce {
+0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+40% { transform: translateX(-50%) translateY(-10px); }
+60% { transform: translateX(-50%) translateY(-5px); }
+}
+
+/* Section Styles */
+section {
+padding: 5rem 2rem;
+max-width: 1000px;
+margin: 0 auto;
+}
+
+.section-header {
+margin-bottom: 3rem;
+padding-bottom: 1rem;
+border-bottom: 1px solid var(--border-color);
+position: relative;
+}
+
+.section-header::after {
+content: '';
+position: absolute;
+bottom: -1px;
+left: 0;
+width: 100px;
+height: 1px;
+background: var(--terminal-green);
+box-shadow: var(--glow);
+}
+
+.section-title {
+font-family: 'JetBrains Mono', monospace;
+font-size: 1.2rem;
+font-weight: 500;
+color: var(--terminal-green);
+margin-bottom: 0.5rem;
+}
+
+.section-title::before {
+content: '$ ';
+color: var(--text-muted);
+}
+
+.section-subtitle {
+font-size: 0.85rem;
+color: var(--text-muted);
+}
+
+/* Terminal Window Style Cards */
+.terminal-card {
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+margin-bottom: 2rem;
+position: relative;
+}
+
+.terminal-card::before {
+content: '● ● ●';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+padding: 0.8rem;
+font-size: 0.7rem;
+letter-spacing: 0.3rem;
+color: var(--text-muted);
+background: linear-gradient(to bottom, #1f242c, var(--bg-card));
+border-bottom: 1px solid var(--border-color);
+}
+
+.terminal-content {
+padding: 3rem 2rem 2rem;
+}
+
+/* About Section */
+#about {
+background: var(--bg-secondary);
+}
+
+.about-grid {
+display: grid;
+grid-template-columns: 1fr 2fr;
+gap: 3rem;
+align-items: start;
+}
+
+.about-image {
+position: relative;
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+padding: 2rem;
+text-align: center;
+}
+
+.about-image::before {
+content: 'user@avatar:';
+position: absolute;
+top: 0.5rem;
+left: 1rem;
+font-size: 0.7rem;
+color: var(--text-muted);
+}
+
+.about-avatar {
+font-size: 5rem;
+line-height: 1;
+}
+
+.about-text pre {
+font-family: 'JetBrains Mono', monospace;
+font-size: 0.9rem;
+line-height: 1.8;
+color: var(--text-secondary);
+white-space: pre-wrap;
+}
+
+.about-text .comment {
+color: var(--text-muted);
+}
+
+.about-text .keyword {
+color: var(--accent-cyan);
+}
+
+.about-text .string {
+color: var(--accent-amber);
+}
+
+.about-text .function {
+color: var(--terminal-green);
+}
+
+/* Skills Tags */
+.skills-container {
+margin-top: 1.5rem;
+}
+
+.skill-tag {
+display: inline-block;
+padding: 0.4rem 0.8rem;
+margin: 0.3rem;
+background: rgba(0, 255, 136, 0.1);
+border: 1px solid var(--terminal-green-dim);
+color: var(--terminal-green);
+font-size: 0.8rem;
+transition: all 0.3s;
+}
+
+.skill-tag:hover {
+background: var(--terminal-green);
+color: var(--bg-primary);
+box-shadow: var(--glow);
+cursor: default;
+}
+
+/* Education Section */
+.edu-item {
+margin-bottom: 2rem;
+padding: 1.5rem;
+border-left: 2px solid var(--border-color);
+transition: border-color 0.3s;
+}
+
+.edu-item:hover {
+border-left-color: var(--terminal-green);
+}
+
+.edu-header {
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+flex-wrap: wrap;
+gap: 1rem;
+margin-bottom: 0.5rem;
+}
+
+.edu-title {
+font-size: 1rem;
+color: var(--text-primary);
+font-weight: 500;
+}
+
+.edu-date {
+font-size: 0.8rem;
+color: var(--text-muted);
+}
+
+.edu-school {
+color: var(--accent-cyan);
+font-size: 0.9rem;
+margin-bottom: 0.3rem;
+}
+
+.edu-gpa {
+color: var(--accent-amber);
+font-size: 0.85rem;
+}
+
+.courses-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+gap: 0.5rem;
+margin-top: 1rem;
+padding-top: 1rem;
+border-top: 1px solid var(--border-color);
+}
+
+.course-item {
+font-size: 0.8rem;
+color: var(--text-secondary);
+padding-left: 1rem;
+position: relative;
+}
+
+.course-item::before {
+content: '→';
+position: absolute;
+left: 0;
+color: var(--terminal-green);
+}
+
+/* Certificates Section */
+.cert-card {
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+padding: 1.5rem;
+margin-bottom: 1.5rem;
+transition: all 0.3s;
+}
+
+.cert-card:hover {
+border-color: var(--terminal-green);
+box-shadow: var(--glow);
+}
+
+.cert-header {
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+margin-bottom: 0.5rem;
+}
+
+.cert-title {
+font-size: 1rem;
+color: var(--text-primary);
+}
+
+.cert-status {
+font-size: 0.75rem;
+padding: 0.2rem 0.6rem;
+background: rgba(0, 255, 136, 0.1);
+color: var(--terminal-green);
+border: 1px solid var(--terminal-green-dim);
+}
+
+.cert-provider {
+color: var(--accent-cyan);
+font-size: 0.85rem;
+margin-bottom: 0.8rem;
+}
+
+.cert-desc {
+color: var(--text-secondary);
+font-size: 0.85rem;
+line-height: 1.6;
+}
+
+/* Projects Section */
+.project-card {
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+margin-bottom: 2rem;
+padding: 2rem;
+position: relative;
+transition: all 0.3s;
+}
+
+.project-card:hover {
+border-color: var(--accent-cyan);
+box-shadow: 0 0 30px rgba(0, 212, 255, 0.1);
+}
+
+.project-header {
+margin-bottom: 1rem;
+padding-bottom: 1rem;
+border-bottom: 1px dashed var(--border-color);
+}
+
+.project-title {
+font-size: 1.1rem;
+color: var(--text-primary);
+margin-bottom: 0.3rem;
+}
+
+.project-title::before {
+content: '# ';
+color: var(--accent-cyan);
+}
+
+.project-tag {
+font-size: 0.75rem;
+color: var(--accent-purple);
+}
+
+.project-body {
+color: var(--text-secondary);
+}
+
+.project-body ul {
+list-style: none;
+padding: 0;
+}
+
+.project-body li {
+font-size: 0.9rem;
+padding-left: 1.5rem;
+position: relative;
+margin-bottom: 0.7rem;
+}
+
+.project-body li::before {
+content: '>';
+position: absolute;
+left: 0;
+color: var(--terminal-green);
+}
+
+/* Tools Section - Grid Display */
+.tools-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+gap: 1rem;
+}
+
+.tool-box {
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+padding: 1.2rem;
+transition: all 0.3s;
+}
+
+.tool-box:hover {
+border-color: var(--terminal-green);
+box-shadow: var(--glow);
+}
+
+.tool-header {
+text-align: center;
+margin-bottom: 1rem;
+padding-bottom: 0.8rem;
+border-bottom: 1px solid var(--border-color);
+}
+
+.tool-title {
+font-size: 0.85rem;
+color: var(--terminal-green);
+text-transform: uppercase;
+letter-spacing: 1px;
+}
+
+.tool-list {
+font-size: 0.8rem;
+}
+
+.tool-list li {
+color: var(--text-secondary);
+list-style: none;
+padding: 0.3rem 0;
+padding-left: 1rem;
+position: relative;
+}
+
+.tool-list li::before {
+content: '-';
+position: absolute;
+left: 0;
+color: var(--accent-cyan);
+}
+
+/* Contact Section */
+#contact {
+text-align: center;
+}
+
+.contact-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+gap: 1.5rem;
+max-width: 800px;
+margin: 2rem auto;
+}
+
+.contact-item {
+display: block;
+text-decoration: none;
+padding: 1.5rem;
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+transition: all 0.3s;
+}
+
+.contact-item:hover {
+border-color: var(--terminal-green);
+box-shadow: var(--glow);
+transform: translateY(-3px);
+}
+
+.contact-label {
+font-size: 0.75rem;
+color: var(--text-muted);
+text-transform: uppercase;
+letter-spacing: 1px;
+margin-bottom: 0.5rem;
+}
+
+.contact-value {
+font-size: 0.9rem;
+color: var(--terminal-green);
+}
+
+.contact-value:hover {
+text-decoration: underline;
+}
+
+/* Footer */
+footer {
+background: var(--bg-secondary);
+padding: 3rem 2rem;
+text-align: center;
+border-top: 1px solid var(--border-color);
+}
+
+.footer-text {
+color: var(--text-muted);
+font-size: 0.85rem;
+}
+
+.footer-prompt {
+color: var(--terminal-green);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+.about-grid {
+grid-template-columns: 1fr;
+}
+
+.ascii-header {
+font-size: 0.55rem;
+}
+
+.hero-nav {
+flex-direction: column;
+}
+
+.edu-header {
+flex-direction: column;
+}
+
+.project-header {
+flex-direction: column;
+}
+
+.tools-grid {
+grid-template-columns: 1fr;
+}
+}
+</style>
+</head>
+<body>
+
+<!-- Hero Section -->
+<section class="hero">
+<div class="hero-prompt">whoami</div>
+
+<div class="ascii-header">
+  _____           _
+ |  ___|   _ _ __| | ____ _ _ __
+ | |_ | | | | '__| |/ / _` | '_ \
+ |  _|| |_| | |  |   < (_| | | | |
+ |_|   \__,_|_|  |_|\_\__,_|_| |_|
+</div>
+
+<h1>
+<span class="typing">Furkan Sarıca</span><span class="cursor"></span>
+</h1>
+
+<p class="hero-subtitle">DevOps & Network Engineer | Systems Administrator</p>
+<p class="hero-location">istanbul, tr | ybs student</p>
+
+<nav class="hero-nav">
+<a href="#about">./about.sh</a>
+<a href="#education">./education.sh</a>
+<a href="#certificates">./certificates.sh</a>
+<a href="#projects">./projects.sh</a>
+<a href="#tools">./tools.sh</a>
+<a href="#contact">./contact.sh</a>
+</nav>
+
+<div class="scroll-indicator"></div>
+</section>
+
+<!-- About Section -->
+<section id="about">
+<div class="section-header">
+<h2 class="section-title">about</h2>
+<p class="section-subtitle">cat ~/profile.md</p>
+</div>
+
+<div class="about-grid">
+<div class="about-image">
+<div class="about-avatar">👨‍💻</div>
+</div>
+<div class="about-text">
+<pre><code class="comment"># DevOps & Network Engineer in training</code>
+<code class="keyword">class</code> <code class="function">SystemsAdmin</code>:
+    <code class="keyword">def</code> <code class="function">__init__</code>(self):
+        self.focus = [<span class="string">"DevOps"</span>, <span class="string">"Linux"</span>, <span class="string">"Networking"</span>]
+        self.environment = <span class="string">"Homelab"</span>
+        self.containers = <span class="string">"Docker"</span>
+
+    <code class="keyword">def</code> <code class="function">build_infrastructure</code>(self):
+        <code class="comment"># AI-assisted container orchestration</code>
+        <code class="keyword">return</code> <span class="string">"Low-resource, scalable systems"</span></code></pre>
+
+<p style="color: var(--text-secondary); margin-top: 1.5rem; font-size: 0.9rem;">
+Linux tabanlı homelab ortamlarında container tabanlı servisler tasarlıyorum.
+AI destekli sunucu otomasyonu, sanal ağ laboratuvarları ve merkezi loglama sistemleri üzerine çalışıyorum.
+</p>
+
+<div class="skills-container">
+<span class="skill-tag">DevOps</span>
+<span class="skill-tag">Linux</span>
+<span class="skill-tag">Docker</span>
+<span class="skill-tag">System Admin</span>
+<span class="skill-tag">Networking</span>
+<span class="skill-tag">Bash</span>
+<span class="skill-tag">Python</span>
+<span class="skill-tag">Git</span>
+<span class="skill-tag">Homelab</span>
+<span class="skill-tag">Cloud</span>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Education Section -->
+<section id="education">
+<div class="section-header">
+<h2 class="section-title">education</h2>
+<p class="section-subtitle">ls -la ~/academic/</p>
+</div>
+
+<div class="terminal-card">
+<div class="terminal-content">
+<div class="edu-item">
+<div class="edu-header">
+<span class="edu-title">Yönetim Bilişim Sistemleri - Lisans</span>
+<span class="edu-date">2022 - 2026 (Expected)</span>
+</div>
+<div class="edu-school">İstanbul Gelişim Üniversitesi</div>
+<div class="edu-gpa">GPA: 3.03/4.00</div>
+<div class="courses-grid">
+<span class="course-item">İşletim Sistemleri</span>
+<span class="course-item">Bilgisayar Ağları ve Ağ Tasarımı</span>
+<span class="course-item">Bilgi Güvenliği ve Ağ Güvenliği</span>
+<span class="course-item">Veritabanı Yönetim Sistemleri</span>
+<span class="course-item">Sistem Analizi ve Tasarımı</span>
+<span class="course-item">Veri Madenciliği / ML</span>
+</div>
+</div>
+
+<div class="edu-item">
+<div class="edu-header">
+<span class="edu-title">Lise Diploması - Eşit Ağırlık</span>
+<span class="edu-date">2016 - 2020</span>
+</div>
+<div class="edu-school">Özel Vizyon Akademi Lisesi, Aksaray</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Certificates Section -->
+<section id="certificates">
+<div class="section-header">
+<h2 class="section-title">certificates</h2>
+<p class="section-subtitle">cat ~/certs/*.json</p>
+</div>
+
+<div class="cert-card">
+<div class="cert-header">
+<span class="cert-title">IBM DevOps and Software Engineering</span>
+<span class="cert-status">IN_PROGRESS</span>
+</div>
+<div class="cert-provider">@ IBM</div>
+<div class="cert-desc">
+DevOps prensipleri, Agile/Scrum, CI/CD, bulut bilişim mimarisi, Linux komutları,
+Git, konteyner tabanlı uygulama dağıtımı ve gözlemlenebilirlik (Grafana vb.)
+</div>
+</div>
+
+<div class="cert-card">
+<div class="cert-header">
+<span class="cert-title">Network Engineering Professional</span>
+<span class="cert-status">IN_PROGRESS</span>
+</div>
+<div class="cert-provider">@ Akamai Technologies</div>
+<div class="cert-desc">
+Linux sistem yönetimi, ağ güvenliği, routing protokolleri, uzaktan erişim sistemleri,
+scripting, incident response ve güvenlik yönetimi
+</div>
+</div>
+</section>
+
+<!-- Projects Section -->
+<section id="projects">
+<div class="section-header">
+<h2 class="section-title">projects</h2>
+<p class="section-subtitle">tree ~/projects/</p>
+</div>
+
+<div class="project-card">
+<div class="project-header">
+<div>
+<div class="project-title">AI-Powered Smart Container Orchestration</div>
+<div class="project-tag">PERSONAL_PROJECT | Homelab</div>
+</div>
+</div>
+<div class="project-body">
+<ul>
+<li>Düşük kaynak tüketimli Linux tabanlı homelab altyapısı tasarlama</li>
+<li>Docker/docker-compose ile konteyner tabanlı servisler, ters vekil mimarisi</li>
+<li>OpenClaw ve Kimi K2.5 API ile AI destekli sunucu otomasyonu</li>
+<li>Kritik işlemler için onay ve denetim adımları ile güvenli yarı otonom yönetim</li>
+<li>Git ile versiyonlama, güncelleme ve yedekleme süreçleri</li>
+</ul>
+</div>
+</div>
+
+<div class="project-card">
+<div class="project-header">
+<div>
+<div class="project-title">Virtual Network Lab & VPN Infrastructure</div>
+<div class="project-tag">PERSONAL_PROJECT | Networking</div>
+</div>
+</div>
+<div class="project-body">
+<ul>
+<li>VirtualBox üzerinde router, DNS ve istemci rolleri ile ağ topolojileri</li>
+<li>TCP/IP, DNS ve HTTP/HTTPS analizi için tcpdump, ping, traceroute, nmap</li>
+<li>SSH anahtar tabanlı kimlik doğrulama ve firewall kuralları</li>
+<li>WireGuard/OpenVPN ile güvenli uzaktan erişim senaryoları</li>
+</ul>
+</div>
+</div>
+
+<div class="project-card">
+<div class="project-header">
+<div>
+<div class="project-title">Centralized Logging & Monitoring</div>
+<div class="project-tag">PERSONAL_PROJECT | Observability</div>
+</div>
+</div>
+<div class="project-body">
+<ul>
+<li>Birden fazla Linux sunucudan merkezi log toplama altyapısı</li>
+<li>Syslog yapılandırmaları ile servis ve güvenlik olayları filtreleme</li>
+<li>CPU, bellek, disk ve ağ izleme için hafif monitoring dashboard'ları</li>
+<li>Temel gözlemlenebilirlik (observability) implementasyonu</li>
+</ul>
+</div>
+</div>
+</section>
+
+<!-- Tools Section -->
+<section id="tools">
+<div class="section-header">
+<h2 class="section-title">tools</h2>
+<p class="section-subtitle">dpkg -l | grep -E "(docker|git|python)"</p>
+</div>
+
+<div class="tools-grid">
+<div class="tool-box">
+<div class="tool-header">
+<span class="tool-title">OS</span>
+</div>
+<ul class="tool-list">
+<li>Linux (Ubuntu/Debian)</li>
+</ul>
+</div>
+
+<div class="tool-box">
+<div class="tool-header">
+<span class="tool-title">Container</span>
+</div>
+<ul class="tool-list">
+<li>Docker</li>
+<li>docker-compose</li>
+<li>Container Orchestration</li>
+</ul>
+</div>
+
+<div class="tool-box">
+<div class="tool-header">
+<span class="tool-title">Version Control</span>
+</div>
+<ul class="tool-list">
+<li>Git</li>
+<li>GitHub</li>
+<li>Git Workflows</li>
+</ul>
+</div>
+
+<div class="tool-box">
+<div class="tool-header">
+<span class="tool-title">Automation</span>
+</div>
+<ul class="tool-list">
+<li>Bash Scripting</li>
+<li>Python</li>
+<li>CI/CD Pipelines</li>
+</ul>
+</div>
+
+<div class="tool-box">
+<div class="tool-header">
+<span class="tool-title">Databases</span>
+</div>
+<ul class="tool-list">
+<li>SQL</li>
+<li>R (Statistics)</li>
+<li>Relational DB Design</li>
+</ul>
+</div>
+
+<div class="tool-box">
+<div class="tool-header">
+<span class="tool-title">Network</span>
+</div>
+<ul class="tool-list">
+<li>ping, traceroute</li>
+<li>netstat, ss, tcpdump</li>
+<li>nmap, WireGuard</li>
+</ul>
+</div>
+
+<div class="tool-box">
+<div class="tool-header">
+<span class="tool-title">Monitoring</span>
+</div>
+<ul class="tool-list">
+<li>Syslog</li>
+<li>Grafana</li>
+<li>Log Aggregation</li>
+</ul>
+</div>
+
+<div class="tool-box">
+<div class="tool-header">
+<span class="tool-title">Config</span>
+</div>
+<ul class="tool-list">
+<li>YAML</li>
+<li>JSON</li>
+<li>Infrastructure as Code</li>
+</ul>
+</div>
+</div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact">
+<div class="section-header">
+<h2 class="section-title">contact</h2>
+<p class="section-subtitle">ssh user@host | sendmail</p>
+</div>
+
+<div class="contact-grid">
+<a href="mailto:sarica.furkan@icloud.com" class="contact-item">
+<div class="contact-label">EMAIL</div>
+<div class="contact-value">sarica.furkan@icloud.com</div>
+</a>
+
+<div class="contact-item" style="cursor: default;">
+<div class="contact-label">PHONE</div>
+<div class="contact-value">+90 541 168 27 14</div>
+</div>
+
+<a href="https://linkedin.com/in/furkan-sarica" target="_blank" class="contact-item">
+<div class="contact-label">LINKEDIN</div>
+<div class="contact-value">/in/furkan-sarica</div>
+</a>
+
+<a href="https://github.com/fufuizm" target="_blank" class="contact-item">
+<div class="contact-label">GITHUB</div>
+<div class="contact-value">@fufuizm</div>
+</a>
+</div>
+
+<p style="margin-top: 3rem; color: var(--text-muted); font-size: 0.85rem;">
+<span style="color: var(--accent-cyan);">LANG:</span> TR (Native) | EN (B1 - Technical Docs)
+</p>
+</section>
+
+<!-- Footer -->
+<footer>
+<p class="footer-text">
+<span class="footer-prompt">furkan@devops:~$</span> echo "Thanks for visiting"
+</p>
+<p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 1rem;">
+© 2025 | Built with HTML + CSS | No frameworks
+</p>
+</footer>
+
+<script>
+// Typing effect for hero
+document.addEventListener('DOMContentLoaded', () => {
+const text = "Furkan Sarıca";
+const typingElement = document.querySelector('.typing');
+typingElement.textContent = '';
+let i = 0;
+
+function typeWriter() {
+if (i < text.length) {
+typingElement.textContent += text.charAt(i);
+i++;
+setTimeout(typeWriter, 100);
+}
+}
+
+setTimeout(typeWriter, 500);
+});
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+anchor.addEventListener('click', function (e) {
+e.preventDefault();
+const target = document.querySelector(this.getAttribute('href'));
+if (target) {
+target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+});
+});
+
+// Intersection Observer animations
+const observerOptions = { threshold: 0.1 };
+const observer = new IntersectionObserver((entries) => {
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+entry.target.style.opacity = '1';
+entry.target.style.transform = 'translateY(0)';
+}
+});
+}, observerOptions);
+
+document.querySelectorAll('.terminal-card, .cert-card, .project-card, .tool-box, .edu-item').forEach(el => {
+el.style.opacity = '0';
+el.style.transform = 'translateY(20px)';
+el.style.transition = 'opacity 0.5s, transform 0.5s';
+observer.observe(el);
+});
+</script>
+
+</body>
+</html>
