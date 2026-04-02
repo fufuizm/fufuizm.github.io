@@ -1102,3 +1102,188 @@ body.theme-ubuntu {
 body.glitch-mode {
     animation: glitch-skew 0.18s infinite;
 }
+
+/* ===== ASCII Network Topology ===== */
+.ascii-topology {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--accent-cyan);
+    background: rgba(0, 212, 255, 0.05);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    padding: 1rem 1.2rem;
+    margin-top: 1.2rem;
+    line-height: 1.7;
+    overflow-x: auto;
+    white-space: pre;
+    display: block;
+    border-left: 3px solid var(--accent-cyan);
+}
+
+.ascii-topology code {
+    font-family: inherit;
+    background: none;
+    color: inherit;
+    font-size: inherit;
+}
+
+/* ===== CI/CD Pipeline ===== */
+.pipeline-container {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 1.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+}
+
+.pipeline-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 90px;
+    transition: all 0.3s;
+}
+
+.pipeline-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    transition: color 0.3s;
+    font-weight: 500;
+}
+
+.pipeline-icon {
+    font-size: 1.4rem;
+    line-height: 1;
+    min-height: 1.4rem;
+}
+
+.pipeline-stage.running .pipeline-label { color: var(--accent-amber); }
+.pipeline-stage.done .pipeline-label    { color: var(--terminal-green); }
+.pipeline-stage.failed .pipeline-label  { color: #ff4444; }
+.pipeline-stage.retry .pipeline-label   { color: var(--accent-amber); }
+
+@keyframes pulse-running {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+.pipeline-stage.running .pipeline-icon {
+    animation: pulse-running 0.8s ease infinite;
+}
+
+.pipeline-arrow {
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    user-select: none;
+}
+
+.pipeline-log {
+    margin-top: 0.8rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    min-height: 1.2em;
+}
+
+/* ===== 502 Bad Gateway Overlay ===== */
+#nginx-502-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #fff;
+    z-index: 5000;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-family: 'Times New Roman', serif;
+    color: #000;
+}
+
+#nginx-502-overlay.active {
+    display: flex;
+}
+
+#nginx-502-content {
+    text-align: center;
+    max-width: 500px;
+}
+
+#nginx-502-content h1 {
+    font-size: 2rem;
+    font-weight: normal;
+    margin-bottom: 0.3rem;
+}
+
+#nginx-502-content hr {
+    border: none;
+    border-top: 1px solid #000;
+    margin: 0.5rem 0;
+}
+
+#nginx-502-content > p {
+    font-size: 0.9rem;
+    color: #333;
+    margin: 0.2rem 0;
+}
+
+.nginx-hint {
+    margin-top: 1.2rem;
+    font-size: 0.8rem;
+    color: #666;
+    font-family: monospace;
+}
+
+.nginx-hint code {
+    background: #f0f0f0;
+    padding: 0.1rem 0.4rem;
+    border-radius: 2px;
+    font-size: 0.85rem;
+}
+
+/* CLI terminal must sit above 502 overlay (z-index 5000) */
+#cli-terminal {
+    position: relative;
+    z-index: 6000;
+    background: var(--bg-primary);
+}
+
+/* ===== Background Scrolling Logs ===== */
+#bg-logs {
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    width: 400px;
+    max-height: 110px;
+    overflow: hidden;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--terminal-green);
+    opacity: 0.18;
+    pointer-events: none;
+    z-index: 1;
+    line-height: 1.55;
+}
+
+@media (max-width: 900px) {
+    #bg-logs { display: none; }
+}
+
+/* ===== Sparkline mini chart ===== */
+.sparkline {
+    display: inline-flex;
+    align-items: flex-end;
+    height: 14px;
+    gap: 1px;
+    vertical-align: middle;
+    margin: 0 2px;
+}
+
+.spark-bar {
+    display: inline-block;
+    width: 3px;
+    min-height: 2px;
+    background: var(--terminal-green);
+    transition: height 0.4s ease;
+}
