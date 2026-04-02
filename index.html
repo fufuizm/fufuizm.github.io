@@ -1229,11 +1229,22 @@ runBootSequence();
         var cmdHandled = true; // track whether command was recognized
 
         if (c === 'help') {
-            addLine('Available commands:');
-            addLine('  Navigation : cd <dir> | ls | pwd | cat <file>');
-            addLine('  Sections   : projects | about | education | certificates | tools | contact');
-            addLine('  System     : whoami | uname -a | clear | exit');
-            addLine('  Themes     : theme ls | theme set <name>');
+            addLine('Available system commands:');
+            addLine('');
+            addLine('[ Core Utilities ]');
+            addLine('  cd, ls, pwd, cat, clear, exit, help, history, man');
+            addLine('');
+            addLine('[ Network & SecOps ]');
+            addLine('  ip a, ifconfig, ping, nmap, traceroute, dig');
+            addLine('');
+            addLine('[ SysAdmin & Monitoring ]');
+            addLine('  whoami, uname -a, htop, chmod, sudo apt update, sudo rm -rf / (DANGER)');
+            addLine('');
+            addLine('[ DevOps & Containers ]');
+            addLine('  docker, kubectl, git log');
+            addLine('');
+            addLine('[ Advanced Tools & Config ]');
+            addLine('  vim (Vi IMproved), theme (Display Config), make coffee (JIT Coffee Engine)');
         } else if (sections[c]) {
             addLine('Scrolling to #' + c + '...', 'ok');
             var target = document.querySelector(sections[c]);
