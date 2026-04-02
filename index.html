@@ -1,140 +1,1134 @@
-TR
-/
-EN
-whoami
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Furkan Sarıca - DevOps & Network Engineer | Linux, Docker, Networking, CI/CD">
+<title>Furkan Sarıca | DevOps & Network Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+--bg-primary: #0a0c10;
+--bg-secondary: #11141a;
+--bg-card: #151922;
+--terminal-green: #00ff88;
+--terminal-green-dim: rgba(0, 255, 136, 0.3);
+--accent-cyan: #00d4ff;
+--accent-amber: #ffb000;
+--accent-purple: #bd93f9;
+--text-primary: #e6edf3;
+--text-secondary: #8b949e;
+--text-muted: #6e7681;
+--border-color: #30363d;
+--border-accent: #00ff88;
+--glow: 0 0 20px rgba(0, 255, 136, 0.3);
+--glow-strong: 0 0 30px rgba(0, 255, 136, 0.5);
+}
+
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+html {
+scroll-behavior: smooth;
+}
+
+body {
+font-family: 'JetBrains Mono', monospace;
+background-color: var(--bg-primary);
+color: var(--text-primary);
+line-height: 1.7;
+overflow-x: hidden;
+}
+
+::selection {
+background: var(--terminal-green);
+color: var(--bg-primary);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--terminal-green); }
+
+/* Terminal Cursor Animation */
+@keyframes blink {
+0%, 50% { opacity: 1; }
+51%, 100% { opacity: 0; }
+}
+
+.cursor::after {
+content: '█';
+animation: blink 1s infinite;
+color: var(--terminal-green);
+}
+
+/* Scanline Effect */
+body::before {
+content: '';
+position: fixed;
+top: 0; left: 0;
+width: 100%; height: 100%;
+background: repeating-linear-gradient(0deg,rgba(0,0,0,0.03),rgba(0,0,0,0.03) 1px,transparent 1px,transparent 2px);
+pointer-events: none;
+z-index: 9999;
+opacity: 0.5;
+}
+
+/* Language Toggle */
+.lang-toggle {
+position: fixed;
+top: 1.2rem;
+right: 1.5rem;
+z-index: 10000;
+display: flex;
+align-items: center;
+gap: 0.5rem;
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+padding: 0.4rem 0.8rem;
+cursor: pointer;
+transition: all 0.3s ease;
+font-family: 'JetBrains Mono', monospace;
+font-size: 0.75rem;
+color: var(--text-secondary);
+user-select: none;
+}
+
+.lang-toggle:hover {
+border-color: var(--terminal-green);
+box-shadow: var(--glow);
+color: var(--terminal-green);
+}
+
+.lang-toggle .lang-option {
+transition: color 0.3s;
+}
+
+.lang-toggle .lang-option.active {
+color: var(--terminal-green);
+text-shadow: 0 0 8px rgba(0, 255, 136, 0.5);
+}
+
+.lang-toggle .lang-separator {
+color: var(--text-muted);
+}
+
+/* Hero Section */
+.hero {
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: flex-start;
+padding: 2rem;
+max-width: 900px;
+margin: 0 auto;
+position: relative;
+}
+
+.hero-prompt {
+font-size: 0.9rem;
+color: var(--text-muted);
+margin-bottom: 1rem;
+}
+
+.hero-prompt::before {
+content: 'furkan@devops:~$ ';
+color: var(--terminal-green);
+}
+
+.hero h1 {
+font-family: 'JetBrains Mono', monospace;
+font-size: clamp(2rem, 5vw, 3.5rem);
+font-weight: 500;
+margin-bottom: 0.5rem;
+color: var(--text-primary);
+}
+
+.hero .typing { color: var(--terminal-green); }
+.hero .cursor { display: inline; }
+
+.hero-subtitle {
+font-size: 1.1rem;
+color: var(--accent-cyan);
+margin-top: 0.5rem;
+margin-bottom: 1.5rem;
+}
+
+.hero-location {
+font-size: 0.9rem;
+color: var(--text-muted);
+margin-bottom: 2rem;
+}
+
+.hero-location::before { content: '['; color: var(--terminal-green); }
+.hero-location::after { content: ']'; color: var(--terminal-green); }
+
+/* ASCII Art Header */
+.ascii-header {
+font-size: 0.7rem;
+color: var(--terminal-green-dim);
+line-height: 1.2;
+margin-bottom: 2rem;
+opacity: 0.6;
+white-space: pre;
+font-family: 'JetBrains Mono', monospace;
+}
+
+/* Hero Navigation */
+.hero-nav {
+display: flex;
+flex-wrap: wrap;
+gap: 1rem;
+margin-top: 2rem;
+}
+
+.hero-nav a {
+color: var(--text-secondary);
+text-decoration: none;
+padding: 0.6rem 1.2rem;
+border: 1px solid var(--border-color);
+background: var(--bg-card);
+transition: all 0.3s ease;
+font-size: 0.85rem;
+position: relative;
+overflow: hidden;
+}
+
+.hero-nav a::before {
+content: '>';
+margin-right: 0.5rem;
+color: var(--terminal-green);
+opacity: 0;
+transition: opacity 0.3s;
+}
+
+.hero-nav a:hover {
+border-color: var(--terminal-green);
+color: var(--terminal-green);
+box-shadow: var(--glow);
+transform: translateX(5px);
+}
+
+.hero-nav a:hover::before { opacity: 1; }
+
+/* Scroll Indicator */
+.scroll-indicator {
+position: absolute;
+bottom: 2rem;
+left: 50%;
+transform: translateX(-50%);
+font-size: 0.8rem;
+color: var(--text-muted);
+animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+40% { transform: translateX(-50%) translateY(-10px); }
+60% { transform: translateX(-50%) translateY(-5px); }
+}
+
+/* Section Styles */
+section {
+padding: 5rem 2rem;
+max-width: 1000px;
+margin: 0 auto;
+}
+
+.section-header {
+margin-bottom: 3rem;
+padding-bottom: 1rem;
+border-bottom: 1px solid var(--border-color);
+position: relative;
+}
+
+.section-header::after {
+content: '';
+position: absolute;
+bottom: -1px; left: 0;
+width: 100px; height: 1px;
+background: var(--terminal-green);
+box-shadow: var(--glow);
+}
+
+.section-title {
+font-family: 'JetBrains Mono', monospace;
+font-size: 1.2rem;
+font-weight: 500;
+color: var(--terminal-green);
+margin-bottom: 0.5rem;
+}
+
+.section-title::before {
+content: '$ ';
+color: var(--text-muted);
+}
+
+.section-subtitle {
+font-size: 0.85rem;
+color: var(--text-muted);
+}
+
+/* Terminal Window Style Cards */
+.terminal-card {
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+margin-bottom: 2rem;
+position: relative;
+}
+
+.terminal-card::before {
+content: '● ● ●';
+position: absolute;
+top: 0; left: 0; right: 0;
+padding: 0.8rem;
+font-size: 0.7rem;
+letter-spacing: 0.3rem;
+color: var(--text-muted);
+background: linear-gradient(to bottom, #1f242c, var(--bg-card));
+border-bottom: 1px solid var(--border-color);
+}
+
+.terminal-content {
+padding: 3rem 2rem 2rem;
+}
+
+/* About Section */
+#about { background: var(--bg-secondary); }
+
+.about-grid {
+display: grid;
+grid-template-columns: 1fr 2fr;
+gap: 3rem;
+align-items: start;
+}
+
+.about-image {
+position: relative;
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+padding: 2rem;
+text-align: center;
+}
+
+.about-image::before {
+content: 'user@avatar:';
+position: absolute;
+top: 0.5rem; left: 1rem;
+font-size: 0.7rem;
+color: var(--text-muted);
+}
+
+.about-avatar {
+width: 100%;
+max-width: 250px;
+height: auto;
+border: 1px solid var(--border-color);
+border-radius: 8px;
+transition: all 0.3s;
+margin: 0 auto;
+display: block;
+}
+
+.about-avatar:hover {
+border-color: var(--terminal-green);
+box-shadow: var(--glow);
+transform: translateY(-5px);
+}
+
+.about-text pre {
+font-family: 'JetBrains Mono', monospace;
+font-size: 0.85rem;
+line-height: 1.8;
+color: var(--text-secondary);
+white-space: pre-wrap;
+}
+
+.about-text .comment { color: var(--text-muted); }
+.about-text .keyword { color: var(--accent-cyan); }
+.about-text .string { color: var(--accent-amber); }
+.about-text .function { color: var(--terminal-green); }
+
+/* Skills Tags */
+.skills-container { margin-top: 1.5rem; }
+
+.skill-tag {
+display: inline-block;
+padding: 0.4rem 0.8rem;
+margin: 0.3rem;
+background: rgba(0, 255, 136, 0.1);
+border: 1px solid var(--terminal-green-dim);
+color: var(--terminal-green);
+font-size: 0.8rem;
+transition: all 0.3s;
+}
+
+.skill-tag:hover {
+background: var(--terminal-green);
+color: var(--bg-primary);
+box-shadow: var(--glow);
+cursor: default;
+}
+
+/* Education Section */
+.edu-item {
+margin-bottom: 2rem;
+padding: 1.5rem;
+border-left: 2px solid var(--border-color);
+transition: border-color 0.3s;
+}
+
+.edu-item:hover { border-left-color: var(--terminal-green); }
+
+.edu-header {
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+flex-wrap: wrap;
+gap: 1rem;
+margin-bottom: 0.5rem;
+}
+
+.edu-title { font-size: 1rem; color: var(--text-primary); font-weight: 500; }
+.edu-date { font-size: 0.8rem; color: var(--text-muted); }
+.edu-school { color: var(--accent-cyan); font-size: 0.9rem; margin-bottom: 0.3rem; }
+.edu-gpa { color: var(--accent-amber); font-size: 0.85rem; }
+
+.courses-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+gap: 0.5rem;
+margin-top: 1rem;
+padding-top: 1rem;
+border-top: 1px solid var(--border-color);
+}
+
+.course-item {
+font-size: 0.8rem;
+color: var(--text-secondary);
+padding-left: 1rem;
+position: relative;
+}
+
+.course-item::before {
+content: '→';
+position: absolute;
+left: 0;
+color: var(--terminal-green);
+}
+
+/* Certificates Section */
+.cert-card {
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+padding: 1.5rem;
+margin-bottom: 1.5rem;
+transition: all 0.3s;
+}
+
+.cert-card:hover {
+border-color: var(--terminal-green);
+box-shadow: var(--glow);
+}
+
+.cert-header {
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+margin-bottom: 0.5rem;
+}
+
+.cert-title { font-size: 1rem; color: var(--text-primary); }
+
+.cert-status {
+font-size: 0.75rem;
+padding: 0.2rem 0.6rem;
+background: rgba(0, 255, 136, 0.1);
+color: var(--terminal-green);
+border: 1px solid var(--terminal-green-dim);
+white-space: nowrap;
+}
+
+.cert-provider { color: var(--accent-cyan); font-size: 0.85rem; margin-bottom: 0.8rem; }
+.cert-desc { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; }
+
+/* Projects Section */
+.project-card {
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+margin-bottom: 2rem;
+padding: 2rem;
+position: relative;
+transition: all 0.3s;
+}
+
+.project-card:hover {
+border-color: var(--accent-cyan);
+box-shadow: 0 0 30px rgba(0, 212, 255, 0.1);
+}
+
+.project-header {
+margin-bottom: 1rem;
+padding-bottom: 1rem;
+border-bottom: 1px dashed var(--border-color);
+}
+
+.project-title {
+font-size: 1.1rem;
+color: var(--text-primary);
+margin-bottom: 0.3rem;
+}
+
+.project-title::before { content: '# '; color: var(--accent-cyan); }
+.project-tag { font-size: 0.75rem; color: var(--accent-purple); }
+
+.project-body { color: var(--text-secondary); }
+.project-body ul { list-style: none; padding: 0; }
+
+.project-body li {
+font-size: 0.9rem;
+padding-left: 1.5rem;
+position: relative;
+margin-bottom: 0.7rem;
+}
+
+.project-body li::before {
+content: '>';
+position: absolute;
+left: 0;
+color: var(--terminal-green);
+}
+
+.project-tech {
+margin-top: 1rem;
+padding-top: 1rem;
+border-top: 1px solid var(--border-color);
+}
+
+.project-tech span {
+display: inline-block;
+padding: 0.2rem 0.5rem;
+margin: 0.2rem;
+background: rgba(0, 212, 255, 0.1);
+border: 1px solid rgba(0, 212, 255, 0.2);
+color: var(--accent-cyan);
+font-size: 0.7rem;
+}
+
+/* Tools Section - Grid Display */
+.tools-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+gap: 1rem;
+}
+
+.tool-box {
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+padding: 1.2rem;
+transition: all 0.3s;
+}
+
+.tool-box:hover {
+border-color: var(--terminal-green);
+box-shadow: var(--glow);
+}
+
+.tool-header {
+text-align: center;
+margin-bottom: 1rem;
+padding-bottom: 0.8rem;
+border-bottom: 1px solid var(--border-color);
+}
+
+.tool-title {
+font-size: 0.85rem;
+color: var(--terminal-green);
+text-transform: uppercase;
+letter-spacing: 1px;
+}
+
+.tool-list { font-size: 0.8rem; }
+
+.tool-list li {
+color: var(--text-secondary);
+list-style: none;
+padding: 0.3rem 0 0.3rem 1rem;
+position: relative;
+}
+
+.tool-list li::before {
+content: '-';
+position: absolute;
+left: 0;
+color: var(--accent-cyan);
+}
+
+/* Contact Section */
+#contact { text-align: center; }
+
+.contact-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+gap: 1.5rem;
+max-width: 800px;
+margin: 2rem auto;
+}
+
+.contact-item {
+display: block;
+text-decoration: none;
+padding: 1.5rem;
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+transition: all 0.3s;
+}
+
+.contact-item:hover {
+border-color: var(--terminal-green);
+box-shadow: var(--glow);
+transform: translateY(-3px);
+}
+
+.contact-label {
+font-size: 0.75rem;
+color: var(--text-muted);
+text-transform: uppercase;
+letter-spacing: 1px;
+margin-bottom: 0.5rem;
+}
+
+.contact-value {
+font-size: 0.9rem;
+color: var(--terminal-green);
+}
+
+.contact-value:hover { text-decoration: underline; }
+
+/* Footer */
+footer {
+background: var(--bg-secondary);
+padding: 3rem 2rem;
+text-align: center;
+border-top: 1px solid var(--border-color);
+}
+
+.footer-text { color: var(--text-muted); font-size: 0.85rem; }
+.footer-prompt { color: var(--terminal-green); }
+
+/* Bilingual: hide/show */
+[data-lang-tr] { display: none; }
+[data-lang-en] { display: none; }
+body.lang-tr [data-lang-tr] { display: inline; }
+body.lang-en [data-lang-en] { display: inline; }
+/* For block-level bilingual elements */
+[data-lang-tr-block] { display: none; }
+[data-lang-en-block] { display: none; }
+body.lang-tr [data-lang-tr-block] { display: block; }
+body.lang-en [data-lang-en-block] { display: block; }
+/* For list items */
+[data-lang-tr-li] { display: none; }
+[data-lang-en-li] { display: none; }
+body.lang-tr [data-lang-tr-li] { display: list-item; }
+body.lang-en [data-lang-en-li] { display: list-item; }
+/* For grid items */
+[data-lang-tr-grid] { display: none; }
+[data-lang-en-grid] { display: none; }
+body.lang-tr [data-lang-tr-grid] { display: grid; }
+body.lang-en [data-lang-en-grid] { display: grid; }
+
+/* Responsive */
+@media (max-width: 768px) {
+.about-grid { grid-template-columns: 1fr; }
+.ascii-header { font-size: 0.55rem; }
+.hero-nav { flex-direction: column; }
+.edu-header { flex-direction: column; }
+.tools-grid { grid-template-columns: 1fr; }
+.lang-toggle { top: 0.8rem; right: 0.8rem; }
+}
+</style>
+</head>
+<body class="lang-tr">
+
+<!-- Language Toggle -->
+<div class="lang-toggle" onclick="toggleLang()" title="Switch language / Dil değiştir">
+<span class="lang-option active" id="lang-tr-btn">TR</span>
+<span class="lang-separator">/</span>
+<span class="lang-option" id="lang-en-btn">EN</span>
+</div>
+
+<!-- Hero Section -->
+<section class="hero">
+<div class="hero-prompt">whoami</div>
+
+<div class="ascii-header">
   _____           _
  |  ___|   _ _ __| | ____ _ _ __
  | |_ | | | | '__| |/ / _` | '_ \
  |  _|| |_| | |  |   < (_| | | | |
  |_|   \__,_|_|  |_|\_\__,_|_| |_|
-Furkan Sarıca
-DevOps & Ağ Mühendisi | Sistem Yöneticisi
-İstanbul, TR | YBS Öğrencisi @ İstanbul Gelişim Üniversitesi
-./about.sh
-./education.sh
-./certificates.sh
-./projects.sh
-./tools.sh
-./contact.sh
-↓ aşağı kaydır
-about
-cat ~/profile.md
-￼
-# DevOps & Network Engineer in training
-class SystemsAdmin:
-    def __init__(self):
-        self.focus = ["DevOps", "Linux", "Networking", "Cloud"]
-        self.environment = "Homelab"
-        self.containers = "Docker"
-        self.automation = ["Bash", "Python", "AI-driven"]
-        self.networking = ["VPN", "Firewall", "DNS", "Monitoring"]
+</div>
 
-    def build_infrastructure(self):
-        # AI-assisted container orchestration
-        return "Low-resource, scalable systems"
+<h1>
+<span class="typing">Furkan Sarıca</span><span class="cursor"></span>
+</h1>
 
-    def monitor(self):
-        # Centralized logging & observability
-        return ["Syslog", "Grafana", "Log aggregation"]
-Linux tabanlı homelab ortamlarında container tabanlı servisler tasarlıyor ve işletiyorum. AI destekli sunucu otomasyonu, sanal ağ laboratuvarları, VPN altyapıları ve merkezi loglama/monitoring sistemleri üzerine çalışıyorum. İş süreçlerini, veri yönetimini ve altyapıyı bütünleşik olarak ele alan bir YBS perspektifine sahibim.
-DevOps Linux Docker docker-compose Bash Python Git Networking VPN Monitoring Grafana SQL CI/CD Cloud Homelab
-education
-ls -la ~/academic/
-Yönetim Bilişim Sistemleri — Lisans
-2022 – 2026 (Expected)
-İstanbul Gelişim Üniversitesi
-GPA: 3.03 / 4.00
-İşletim Sistemleri
-Bilgisayar Ağları ve Ağ Tasarımı
-Bilgi ve Ağ Güvenliği
-Veritabanı Yönetim Sistemleri
-Sistem Analizi ve Tasarımı
-Veri Madenciliği / ML
-Büyük Veri Analitiği
-ERP Sistemleri
-Bulut Bilişim Teknolojileri
-Proje Yönetimi
-Lise Diploması — Eşit Ağırlık
-2016 – 2020
-Özel Vizyon Akademi Lisesi, Aksaray
-certificates
-cat ~/certs/*.json
-IBM DevOps and Software Engineering Professional Certificate
-IN_PROGRESS
-@ IBM
-DevOps prensipleri, Agile/Scrum, CI/CD, bulut bilişim mimarisi, Linux komutları, Git, konteyner tabanlı uygulama dağıtımı ve gözlemlenebilirlik (Grafana vb.)
-Akamai Network Engineering Professional Certificate
-IN_PROGRESS
-@ Akamai Technologies
-Linux sistem yönetimi, ağ güvenliği, routing protokolleri, uzaktan erişim sistemleri, scripting, incident response ve güvenlik yönetimi
-projects
-tree ~/projects/
-AI-Powered Container Infrastructure Automation
-PERSONAL_PROJECT | Homelab | Docker | AI
-	•	Düşük kaynak tüketimli Linux sunucu üzerinde Docker ve docker-compose ile modüler konteyner altyapısı
-	•	Web UI, DNS filtreleme, monitoring bileşenleri ters vekil (reverse proxy) arkasında izole servisler olarak çalıştırma
-	•	OpenClaw ve Kimi K2.5 API ile sunucu metriklerini (CPU, RAM, disk, servis durumu) analiz eden AI otomasyon pipeline'ı
-	•	Model çıktılarını komut ve script'lere dönüştüren kontrollü yürütme mekanizması
-	•	Kritik operasyonlar için onay adımı — güvenli yarı otonom sunucu yönetimi
-	•	Git ile versiyon kontrollü konfigürasyon dosyaları, rollback ve yedekleme prosedürleri
-LinuxDockerdocker-composeGitOpenClawKimi K2.5 APIReverse ProxyBash
-Virtual Network Lab & VPN Infrastructure
-PERSONAL_PROJECT | Networking | VPN | Security
-	•	VirtualBox üzerinde router, DNS sunucu ve istemci rollerinde çoklu Linux VM'ler ile ağ topolojisi
-	•	Internal network ve DMZ benzeri segmentler ile internet erişim senaryoları
-	•	ping, traceroute, netstat/ss, tcpdump, nmap ile TCP/IP, DNS, HTTP/HTTPS trafik analizi
-	•	SSH anahtar tabanlı kimlik doğrulama ve ufw firewall kuralları
-	•	WireGuard/OpenVPN ile iç ağa güvenli uzaktan erişim ve servis yönetimi
-VirtualBoxLinuxSSHufwWireGuardOpenVPNtcpdumpnmap
-Centralized Logging & Monitoring Infrastructure
-PERSONAL_PROJECT | Observability | Syslog | Grafana
-	•	Birden fazla Linux sunucudan merkezi log sunucuya sistem loglarının toplanması
-	•	rsyslog/syslog ile servis, güvenlik ve ağ olaylarının tek noktada birleştirilmesi ve filtrelenmesi
-	•	CPU, bellek, disk ve ağ kullanımı için hafif monitoring araçları ve dashboard'lar
-	•	Temel gözlemlenebilirlik (observability) altyapısı ile servis sağlığı izleme
-LinuxrsyslogGrafanaMonitoringLog Aggregation
-tools
-dpkg -l | grep -E "(docker|git|python)"
-OS
-	•	Linux (Ubuntu/Debian)
-CONTAINERS
-	•	Docker
-	•	docker-compose
-	•	Container Orchestration
-VERSION CONTROL
-	•	Git
-	•	GitHub
-	•	Git Workflows
-AUTOMATION
-	•	Bash Scripting
-	•	Python
-	•	CI/CD Pipelines
-DATA
-	•	SQL
-	•	R (Statistics)
-	•	Relational DB Design
-NETWORK
-	•	ping, traceroute
-	•	netstat/ss, tcpdump
-	•	nmap, WireGuard/OpenVPN
-MONITORING
-	•	Syslog / rsyslog
-	•	Grafana
-	•	Log Aggregation
-CONFIG
-	•	YAML
-	•	JSON
-	•	Infrastructure as Code
-contact
-ssh user@host | sendmail
-EMAIL
-sarica.furkan@icloud.com
-PHONE
-+90 541 168 27 14
-LINKEDIN
-/in/furkan-sarica
-GITHUB
-@fufuizm
-LANG: TR (Native) | EN (B1 — Technical Documentation)
-furkan@devops:~$ echo "Ziyaretiniz için teşekkürler"
+<p class="hero-subtitle">
+<span data-lang-tr>DevOps & Ağ Mühendisi | Sistem Yöneticisi</span>
+<span data-lang-en>DevOps & Network Engineer | Systems Administrator</span>
+</p>
+<p class="hero-location">
+<span data-lang-tr>İstanbul, TR | YBS Öğrencisi @ İstanbul Gelişim Üniversitesi</span>
+<span data-lang-en>Istanbul, TR | MIS Student @ Istanbul Gelisim University</span>
+</p>
+
+<nav class="hero-nav">
+<a href="#about">./about.sh</a>
+<a href="#education">./education.sh</a>
+<a href="#certificates">./certificates.sh</a>
+<a href="#projects">./projects.sh</a>
+<a href="#tools">./tools.sh</a>
+<a href="#contact">./contact.sh</a>
+</nav>
+
+<div class="scroll-indicator">
+<span data-lang-tr>↓ aşağı kaydır</span>
+<span data-lang-en>↓ scroll down</span>
+</div>
+</section>
+
+<!-- About Section -->
+<section id="about">
+<div class="section-header">
+<h2 class="section-title">about</h2>
+<p class="section-subtitle">cat ~/profile.md</p>
+</div>
+
+<div class="about-grid">
+<div class="about-image">
+<img src="Fufuizm.PNG" alt="Furkan Sarıca" class="about-avatar">
+</div>
+<div class="about-text">
+<pre><code class="comment"># DevOps & Network Engineer in training</code>
+<code class="keyword">class</code> <code class="function">SystemsAdmin</code>:
+    <code class="keyword">def</code> <code class="function">__init__</code>(self):
+        self.focus = [<span class="string">"DevOps"</span>, <span class="string">"Linux"</span>, <span class="string">"Networking"</span>, <span class="string">"Cloud"</span>]
+        self.environment = <span class="string">"Homelab"</span>
+        self.containers = <span class="string">"Docker"</span>
+        self.automation = [<span class="string">"Bash"</span>, <span class="string">"Python"</span>, <span class="string">"AI-driven"</span>]
+        self.networking = [<span class="string">"VPN"</span>, <span class="string">"Firewall"</span>, <span class="string">"DNS"</span>, <span class="string">"Monitoring"</span>]
+
+    <code class="keyword">def</code> <code class="function">build_infrastructure</code>(self):
+        <code class="comment"># AI-assisted container orchestration</code>
+        <code class="keyword">return</code> <span class="string">"Low-resource, scalable systems"</span>
+
+    <code class="keyword">def</code> <code class="function">monitor</code>(self):
+        <code class="comment"># Centralized logging & observability</code>
+        <code class="keyword">return</code> [<span class="string">"Syslog"</span>, <span class="string">"Grafana"</span>, <span class="string">"Log aggregation"</span>]</pre>
+
+<p style="color: var(--text-secondary); margin-top: 1.5rem; font-size: 0.9rem;">
+<span data-lang-tr>Linux tabanlı homelab ortamlarında container tabanlı servisler tasarlıyor ve işletiyorum. AI destekli sunucu otomasyonu, sanal ağ laboratuvarları, VPN altyapıları ve merkezi loglama/monitoring sistemleri üzerine çalışıyorum. İş süreçlerini, veri yönetimini ve altyapıyı bütünleşik olarak ele alan bir YBS perspektifine sahibim.</span>
+<span data-lang-en>I design and operate container-based services in Linux homelab environments. I work on AI-driven server automation, virtual network labs, VPN infrastructure, and centralized logging/monitoring systems. I bring an MIS perspective that integrates business processes, data management, and infrastructure.</span>
+</p>
+
+<div class="skills-container">
+<span class="skill-tag">DevOps</span>
+<span class="skill-tag">Linux</span>
+<span class="skill-tag">Docker</span>
+<span class="skill-tag">docker-compose</span>
+<span class="skill-tag">Bash</span>
+<span class="skill-tag">Python</span>
+<span class="skill-tag">Git</span>
+<span class="skill-tag">Networking</span>
+<span class="skill-tag">VPN</span>
+<span class="skill-tag">Monitoring</span>
+<span class="skill-tag">Grafana</span>
+<span class="skill-tag">SQL</span>
+<span class="skill-tag">CI/CD</span>
+<span class="skill-tag">Cloud</span>
+<span class="skill-tag">Homelab</span>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Education Section -->
+<section id="education">
+<div class="section-header">
+<h2 class="section-title">education</h2>
+<p class="section-subtitle">ls -la ~/academic/</p>
+</div>
+
+<div class="terminal-card">
+<div class="terminal-content">
+<div class="edu-item">
+<div class="edu-header">
+<span class="edu-title">
+<span data-lang-tr>Yönetim Bilişim Sistemleri — Lisans</span>
+<span data-lang-en>B.Sc. in Management Information Systems</span>
+</span>
+<span class="edu-date">2022 – 2026 (Expected)</span>
+</div>
+<div class="edu-school">İstanbul Gelişim Üniversitesi</div>
+<div class="edu-gpa">GPA: 3.03 / 4.00</div>
+
+<div class="courses-grid" data-lang-tr-grid>
+<span class="course-item">İşletim Sistemleri</span>
+<span class="course-item">Bilgisayar Ağları ve Ağ Tasarımı</span>
+<span class="course-item">Bilgi ve Ağ Güvenliği</span>
+<span class="course-item">Veritabanı Yönetim Sistemleri</span>
+<span class="course-item">Sistem Analizi ve Tasarımı</span>
+<span class="course-item">Veri Madenciliği / ML</span>
+<span class="course-item">Büyük Veri Analitiği</span>
+<span class="course-item">ERP Sistemleri</span>
+<span class="course-item">Bulut Bilişim Teknolojileri</span>
+<span class="course-item">Proje Yönetimi</span>
+</div>
+
+<div class="courses-grid" data-lang-en-grid>
+<span class="course-item">Operating Systems</span>
+<span class="course-item">Computer Networks & Network Design</span>
+<span class="course-item">Information & Network Security</span>
+<span class="course-item">Database Management Systems</span>
+<span class="course-item">Systems Analysis & Design</span>
+<span class="course-item">Data Mining / ML</span>
+<span class="course-item">Big Data Analytics</span>
+<span class="course-item">ERP Systems</span>
+<span class="course-item">Cloud Computing Technologies</span>
+<span class="course-item">Project Management</span>
+</div>
+</div>
+
+<div class="edu-item">
+<div class="edu-header">
+<span class="edu-title">
+<span data-lang-tr>Lise Diploması — Eşit Ağırlık</span>
+<span data-lang-en>High School Diploma — Equally Weighted Track</span>
+</span>
+<span class="edu-date">2016 – 2020</span>
+</div>
+<div class="edu-school">Özel Vizyon Akademi Lisesi, Aksaray</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Certificates Section -->
+<section id="certificates">
+<div class="section-header">
+<h2 class="section-title">certificates</h2>
+<p class="section-subtitle">cat ~/certs/*.json</p>
+</div>
+
+<div class="cert-card">
+<div class="cert-header">
+<span class="cert-title">IBM DevOps and Software Engineering Professional Certificate</span>
+<span class="cert-status">IN_PROGRESS</span>
+</div>
+<div class="cert-provider">@ IBM</div>
+<div class="cert-desc">
+<span data-lang-tr>DevOps prensipleri, Agile/Scrum, CI/CD, bulut bilişim mimarisi, Linux komutları, Git, konteyner tabanlı uygulama dağıtımı ve gözlemlenebilirlik (Grafana vb.)</span>
+<span data-lang-en>DevOps principles, Agile/Scrum, CI/CD, cloud computing architecture, Linux commands, Git, container-based application deployment and observability (Grafana, etc.)</span>
+</div>
+</div>
+
+<div class="cert-card">
+<div class="cert-header">
+<span class="cert-title">Akamai Network Engineering Professional Certificate</span>
+<span class="cert-status">IN_PROGRESS</span>
+</div>
+<div class="cert-provider">@ Akamai Technologies</div>
+<div class="cert-desc">
+<span data-lang-tr>Linux sistem yönetimi, ağ güvenliği, routing protokolleri, uzaktan erişim sistemleri, scripting, incident response ve güvenlik yönetimi</span>
+<span data-lang-en>Linux system administration, network security, routing protocols, remote access systems, scripting, incident response and security management</span>
+</div>
+</div>
+</section>
+
+<!-- Projects Section -->
+<section id="projects">
+<div class="section-header">
+<h2 class="section-title">projects</h2>
+<p class="section-subtitle">tree ~/projects/</p>
+</div>
+
+<!-- Project 1 -->
+<div class="project-card">
+<div class="project-header">
+<div class="project-title">AI-Powered Container Infrastructure Automation</div>
+<div class="project-tag">PERSONAL_PROJECT | Homelab | Docker | AI</div>
+</div>
+<div class="project-body">
+<ul data-lang-tr-block>
+<li>Düşük kaynak tüketimli Linux sunucu üzerinde Docker ve docker-compose ile modüler konteyner altyapısı</li>
+<li>Web UI, DNS filtreleme, monitoring bileşenleri ters vekil (reverse proxy) arkasında izole servisler olarak çalıştırma</li>
+<li>OpenClaw ve Kimi K2.5 API ile sunucu metriklerini (CPU, RAM, disk, servis durumu) analiz eden AI otomasyon pipeline'ı</li>
+<li>Model çıktılarını komut ve script'lere dönüştüren kontrollü yürütme mekanizması</li>
+<li>Kritik operasyonlar için onay adımı — güvenli yarı otonom sunucu yönetimi</li>
+<li>Git ile versiyon kontrollü konfigürasyon dosyaları, rollback ve yedekleme prosedürleri</li>
+</ul>
+<ul data-lang-en-block>
+<li>Modular container infrastructure on low-resource Linux server with Docker and docker-compose</li>
+<li>Web UI, DNS filtering, monitoring components running as isolated services behind reverse proxy</li>
+<li>AI automation pipeline analyzing server metrics (CPU, RAM, disk, service health) via OpenClaw and Kimi K2.5 API</li>
+<li>Controlled execution mechanism converting model outputs to commands and scripts</li>
+<li>Approval step for critical operations — secure semi-autonomous server management</li>
+<li>Version-controlled configuration files with Git, rollback and backup procedures</li>
+</ul>
+</div>
+<div class="project-tech">
+<span>Linux</span><span>Docker</span><span>docker-compose</span><span>Git</span><span>OpenClaw</span><span>Kimi K2.5 API</span><span>Reverse Proxy</span><span>Bash</span>
+</div>
+</div>
+
+<!-- Project 2 -->
+<div class="project-card">
+<div class="project-header">
+<div class="project-title">Virtual Network Lab & VPN Infrastructure</div>
+<div class="project-tag">PERSONAL_PROJECT | Networking | VPN | Security</div>
+</div>
+<div class="project-body">
+<ul data-lang-tr-block>
+<li>VirtualBox üzerinde router, DNS sunucu ve istemci rollerinde çoklu Linux VM'ler ile ağ topolojisi</li>
+<li>Internal network ve DMZ benzeri segmentler ile internet erişim senaryoları</li>
+<li>ping, traceroute, netstat/ss, tcpdump, nmap ile TCP/IP, DNS, HTTP/HTTPS trafik analizi</li>
+<li>SSH anahtar tabanlı kimlik doğrulama ve ufw firewall kuralları</li>
+<li>WireGuard/OpenVPN ile iç ağa güvenli uzaktan erişim ve servis yönetimi</li>
+</ul>
+<ul data-lang-en-block>
+<li>Network topology with multiple Linux VMs acting as router, DNS server and clients on VirtualBox</li>
+<li>Internal network and DMZ-like segments with internet access scenarios</li>
+<li>TCP/IP, DNS, HTTP/HTTPS traffic analysis with ping, traceroute, netstat/ss, tcpdump, nmap</li>
+<li>SSH key-based authentication and ufw firewall rules</li>
+<li>Secure remote access to internal network via WireGuard/OpenVPN for service management</li>
+</ul>
+</div>
+<div class="project-tech">
+<span>VirtualBox</span><span>Linux</span><span>SSH</span><span>ufw</span><span>WireGuard</span><span>OpenVPN</span><span>tcpdump</span><span>nmap</span>
+</div>
+</div>
+
+<!-- Project 3 -->
+<div class="project-card">
+<div class="project-header">
+<div class="project-title">Centralized Logging & Monitoring Infrastructure</div>
+<div class="project-tag">PERSONAL_PROJECT | Observability | Syslog | Grafana</div>
+</div>
+<div class="project-body">
+<ul data-lang-tr-block>
+<li>Birden fazla Linux sunucudan merkezi log sunucuya sistem loglarının toplanması</li>
+<li>rsyslog/syslog ile servis, güvenlik ve ağ olaylarının tek noktada birleştirilmesi ve filtrelenmesi</li>
+<li>CPU, bellek, disk ve ağ kullanımı için hafif monitoring araçları ve dashboard'lar</li>
+<li>Temel gözlemlenebilirlik (observability) altyapısı ile servis sağlığı izleme</li>
+</ul>
+<ul data-lang-en-block>
+<li>Collecting system logs from multiple Linux servers to a central log server</li>
+<li>Aggregating and filtering service, security and network events via rsyslog/syslog</li>
+<li>Lightweight monitoring tools and dashboards for CPU, memory, disk and network usage</li>
+<li>Basic observability infrastructure for service health monitoring</li>
+</ul>
+</div>
+<div class="project-tech">
+<span>Linux</span><span>rsyslog</span><span>Grafana</span><span>Monitoring</span><span>Log Aggregation</span>
+</div>
+</div>
+</section>
+
+<!-- Tools Section -->
+<section id="tools">
+<div class="section-header">
+<h2 class="section-title">tools</h2>
+<p class="section-subtitle">dpkg -l | grep -E "(docker|git|python)"</p>
+</div>
+
+<div class="tools-grid">
+<div class="tool-box">
+<div class="tool-header"><span class="tool-title">OS</span></div>
+<ul class="tool-list">
+<li>Linux (Ubuntu/Debian)</li>
+</ul>
+</div>
+
+<div class="tool-box">
+<div class="tool-header"><span class="tool-title">Containers</span></div>
+<ul class="tool-list">
+<li>Docker</li>
+<li>docker-compose</li>
+<li>Container Orchestration</li>
+</ul>
+</div>
+
+<div class="tool-box">
+<div class="tool-header"><span class="tool-title">Version Control</span></div>
+<ul class="tool-list">
+<li>Git</li>
+<li>GitHub</li>
+<li>Git Workflows</li>
+</ul>
+</div>
+
+<div class="tool-box">
+<div class="tool-header"><span class="tool-title">Automation</span></div>
+<ul class="tool-list">
+<li>Bash Scripting</li>
+<li>Python</li>
+<li>CI/CD Pipelines</li>
+</ul>
+</div>
+
+<div class="tool-box">
+<div class="tool-header"><span class="tool-title">Data</span></div>
+<ul class="tool-list">
+<li>SQL</li>
+<li>R (Statistics)</li>
+<li>Relational DB Design</li>
+</ul>
+</div>
+
+<div class="tool-box">
+<div class="tool-header"><span class="tool-title">Network</span></div>
+<ul class="tool-list">
+<li>ping, traceroute</li>
+<li>netstat/ss, tcpdump</li>
+<li>nmap, WireGuard/OpenVPN</li>
+</ul>
+</div>
+
+<div class="tool-box">
+<div class="tool-header"><span class="tool-title">Monitoring</span></div>
+<ul class="tool-list">
+<li>Syslog / rsyslog</li>
+<li>Grafana</li>
+<li>Log Aggregation</li>
+</ul>
+</div>
+
+<div class="tool-box">
+<div class="tool-header"><span class="tool-title">Config</span></div>
+<ul class="tool-list">
+<li>YAML</li>
+<li>JSON</li>
+<li>Infrastructure as Code</li>
+</ul>
+</div>
+</div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact">
+<div class="section-header">
+<h2 class="section-title">contact</h2>
+<p class="section-subtitle">ssh user@host | sendmail</p>
+</div>
+
+<div class="contact-grid">
+<a href="mailto:sarica.furkan@icloud.com" class="contact-item">
+<div class="contact-label">EMAIL</div>
+<div class="contact-value">sarica.furkan@icloud.com</div>
+</a>
+
+<div class="contact-item" style="cursor: default;">
+<div class="contact-label">PHONE</div>
+<div class="contact-value">+90 541 168 27 14</div>
+</div>
+
+<a href="https://linkedin.com/in/furkan-sarica" target="_blank" class="contact-item">
+<div class="contact-label">LINKEDIN</div>
+<div class="contact-value">/in/furkan-sarica</div>
+</a>
+
+<a href="https://github.com/fufuizm" target="_blank" class="contact-item">
+<div class="contact-label">GITHUB</div>
+<div class="contact-value">@fufuizm</div>
+</a>
+</div>
+
+<p style="margin-top: 3rem; color: var(--text-muted); font-size: 0.85rem;">
+<span style="color: var(--accent-cyan);">LANG:</span> TR (Native) | EN (B1 — Technical Documentation)
+</p>
+</section>
+
+<!-- Footer -->
+<footer>
+<p class="footer-text">
+<span class="footer-prompt">furkan@devops:~$</span>
+<span data-lang-tr> echo "Ziyaretiniz için teşekkürler"</span>
+<span data-lang-en> echo "Thanks for visiting"</span>
+</p>
+<p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 1rem;">
 © 2025 | Built with HTML + CSS | No frameworks
+</p>
+</footer>
+
+<script>
+// Language state
+let currentLang = 'tr';
+
+function toggleLang() {
+currentLang = currentLang === 'tr' ? 'en' : 'tr';
+document.body.classList.remove('lang-tr', 'lang-en');
+document.body.classList.add('lang-' + currentLang);
+document.documentElement.lang = currentLang;
+
+// Update toggle button
+document.getElementById('lang-tr-btn').classList.toggle('active', currentLang === 'tr');
+document.getElementById('lang-en-btn').classList.toggle('active', currentLang === 'en');
+}
+
+// Typing effect for hero
+document.addEventListener('DOMContentLoaded', () => {
+const text = "Furkan Sarıca";
+const typingElement = document.querySelector('.typing');
+typingElement.textContent = '';
+let i = 0;
+
+function typeWriter() {
+if (i < text.length) {
+typingElement.textContent += text.charAt(i);
+i++;
+setTimeout(typeWriter, 100);
+}
+}
+
+setTimeout(typeWriter, 500);
+});
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+anchor.addEventListener('click', function (e) {
+e.preventDefault();
+const target = document.querySelector(this.getAttribute('href'));
+if (target) {
+target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+});
+});
+
+// Intersection Observer animations
+const observerOptions = { threshold: 0.1 };
+const observer = new IntersectionObserver((entries) => {
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+entry.target.style.opacity = '1';
+entry.target.style.transform = 'translateY(0)';
+}
+});
+}, observerOptions);
+
+document.querySelectorAll('.terminal-card, .cert-card, .project-card, .tool-box, .edu-item').forEach(el => {
+el.style.opacity = '0';
+el.style.transform = 'translateY(20px)';
+el.style.transition = 'opacity 0.5s, transform 0.5s';
+observer.observe(el);
+});
+</script>
+
+</body>
+</html>
