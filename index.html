@@ -452,6 +452,7 @@
     <h2 class="section-title"><span data-lang-tr>terminal</span><span data-lang-en>terminal</span></h2>
     <p class="section-subtitle">furkan@devops:~$ _</p>
   </div>
+  <div id="server-metrics"></div>
   <div id="cli-box">
     <div id="cli-output"></div>
     <div id="cli-input-line">
@@ -707,7 +708,29 @@ console.log("%c[!] Merhaba geliştirici! / Hello developer! 🚀\nKodlarımı in
 
     var sections = { projects: '#projects', about: '#about', contact: '#contact', tools: '#tools', education: '#education', certificates: '#certificates' };
 
+    var cliCommands = ['help', 'projects', 'about', 'education', 'certificates', 'tools', 'contact', 'clear', 'whoami', 'sudo', 'ip a', 'ifconfig', 'theme light', 'ls', 'pwd', 'uname -a', 'exit'];
+
+    function fetchIpAndPrint() {
+        var ua = navigator.userAgent.slice(0, 80);
+        fetch('https://api.ipify.org?format=json')
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                addLine('eth0: inet ' + data.ip + ' - ' + ua, 'ok');
+            })
+            .catch(function () {
+                addLine('eth0: inet [unavailable] - ' + ua);
+            });
+    }
+
     input.addEventListener('keydown', function (e) {
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            var val = input.value;
+            if (!val) return;
+            var match = cliCommands.find(function (cmd) { return cmd.startsWith(val); });
+            if (match) input.value = match;
+            return;
+        }
         if (e.key !== 'Enter') return;
         var cmd = input.value.trim();
         input.value = '';
@@ -716,7 +739,7 @@ console.log("%c[!] Merhaba geliştirici! / Hello developer! 🚀\nKodlarımı in
         var c = cmd.toLowerCase();
 
         if (c === 'help') {
-            addLine('Available commands: projects | about | education | certificates | tools | contact | whoami | ls | pwd | uname -a | clear | exit | sudo rm -rf /');
+            addLine('Available commands: projects | about | education | certificates | tools | contact | whoami | ip a | ifconfig | ls | pwd | uname -a | clear | exit | sudo rm -rf / | theme light');
         } else if (sections[c]) {
             addLine('Scrolling to #' + c + '...', 'ok');
             var target = document.querySelector(sections[c]);
@@ -731,18 +754,45 @@ console.log("%c[!] Merhaba geliştirici! / Hello developer! 🚀\nKodlarımı in
                 document.body.classList.remove('root-mode');
                 stopMatrixRain();
             }
-        } else if (c === 'whoami') {
-            addLine('furkan');
+        } else if (c === 'whoami' || c === 'ip a' || c === 'ifconfig') {
+            fetchIpAndPrint();
         } else if (c === 'pwd') {
             addLine('/home/furkan');
         } else if (c === 'ls') {
             addLine('about.sh  certificates.sh  contact.sh  education.sh  projects.sh  tools.sh');
         } else if (c === 'uname -a') {
             addLine('Linux devops 6.5.0-fufuizm #1 SMP Thu Jan 01 00:00:00 UTC 2026 x86_64 GNU/Linux');
+        } else if (c === 'theme light' || c === 'theme set light' || c === 'light') {
+            document.body.classList.add('light-troll');
+            addLine('FATAL ERROR: SysAdmins don\'t use light theme!', 'err');
+            setTimeout(function () {
+                document.body.classList.remove('light-troll');
+                addLine('Reverted to safe dark mode.', 'ok');
+            }, 2500);
         } else {
             addLine('Command not found: ' + cmd + " — type 'help'", 'err');
         }
     });
+}());
+
+// ===== Feature: Live Server Metrics =====
+(function () {
+    var metricsEl = document.getElementById('server-metrics');
+    if (!metricsEl) return;
+    var pageLoadTime = Date.now();
+    setInterval(function () {
+        var elapsed = Math.floor((Date.now() - pageLoadTime) / 1000);
+        var hh = Math.floor(elapsed / 3600);
+        var mm = Math.floor((elapsed % 3600) / 60);
+        var ss = elapsed % 60;
+        var uptime = (hh > 0 ? String(hh).padStart(2, '0') + ':' : '') +
+                     String(mm).padStart(2, '0') + ':' + String(ss).padStart(2, '0');
+        var cpu = Math.floor(Math.random() * 21) + 5;
+        var bars = Math.round(cpu / 5);
+        var cpuStr = '|'.repeat(bars) + '.'.repeat(10 - bars);
+        var ram = 1024 + Math.floor(Math.random() * 50);
+        metricsEl.textContent = '[ UPTIME: ' + uptime + ' ] | [ CPU: ' + cpuStr + ' ' + cpu + '% ] | [ RAM: ' + ram + 'MB / 4096MB ]';
+    }, 1000);
 }());
 
 // ===== Feature: Matrix / Binary Rain in Root Mode =====
