@@ -1232,13 +1232,8 @@ runBootSequence();
             addLine('Available commands:');
             addLine('  Navigation : cd <dir> | ls | pwd | cat <file>');
             addLine('  Sections   : projects | about | education | certificates | tools | contact');
-            addLine('  System     : whoami | ip a | uname -a | neofetch | reboot');
-            addLine('  Extras     : curl wttr.in/Istanbul | cat cv.pdf | ping | clear | exit');
+            addLine('  System     : whoami | uname -a | clear | exit');
             addLine('  Themes     : theme ls | theme set <name>');
-            addLine('  Docker     : docker ps | docker stop <name> | docker start <name>');
-            addLine('  Kubernetes : kubectl get pods | kubectl delete pod <name>');
-            addLine('  Network    : nmap fufuizm.com | traceroute fufuizm.com');
-            addLine('  Easter eggs: sudo rm -rf / | vim <file> | make coffee | chmod 777 top_secret.txt');
         } else if (sections[c]) {
             addLine('Scrolling to #' + c + '...', 'ok');
             var target = document.querySelector(sections[c]);
