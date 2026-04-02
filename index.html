@@ -131,6 +131,32 @@
 </div>
 </div>
 </div>
+
+<!-- Homelab / Infra Snapshot Card -->
+<div class="homelab-card">
+  <div class="homelab-title">
+    <span data-lang-tr>🖥️ Homelab / Altyapı Anlık Görünümü</span>
+    <span data-lang-en>🖥️ Homelab / Infra Snapshot</span>
+  </div>
+  <div class="homelab-grid">
+    <div class="homelab-field">
+      <span class="homelab-key"><span data-lang-tr>Donanım</span><span data-lang-en>Hardware</span></span>
+      <span class="homelab-val">Mini PC / VM host (x86_64, 8 GB RAM)</span>
+    </div>
+    <div class="homelab-field">
+      <span class="homelab-key">Hypervisor</span>
+      <span class="homelab-val">VirtualBox / Proxmox (lab)</span>
+    </div>
+    <div class="homelab-field">
+      <span class="homelab-key"><span data-lang-tr>Ağ</span><span data-lang-en>Network</span></span>
+      <span class="homelab-val">VLAN / DMZ <span data-lang-tr>segmentasyonu</span><span data-lang-en>segmentation</span>, pfSense</span>
+    </div>
+    <div class="homelab-field">
+      <span class="homelab-key"><span data-lang-tr>Servisler</span><span data-lang-en>Services</span></span>
+      <span class="homelab-val">Nginx <span data-lang-tr>ters vekil</span><span data-lang-en>reverse proxy</span>, Pi-hole DNS, Grafana, WireGuard VPN</span>
+    </div>
+  </div>
+</div>
 </section>
 
 <!-- Education Section -->
@@ -229,6 +255,47 @@
 </div>
 </section>
 
+<!-- Verification Section -->
+<section id="verification">
+<div class="section-header">
+<h2 class="section-title"><span data-lang-tr>doğrulama</span><span data-lang-en>verification</span></h2>
+<p class="section-subtitle">cat ~/validation-checklist.md</p>
+</div>
+
+<div class="verification-card">
+  <div class="verification-title">
+    <span data-lang-tr>Doğrulama / Çalışmalarımı Nasıl Kanıtlıyorum</span>
+    <span data-lang-en>Verification / How I Validate My Work</span>
+  </div>
+  <ul class="verification-list">
+    <li class="v-item"><span class="v-check">✓</span>
+      <span data-lang-tr><strong>Restore testi:</strong> Backup'ları düzenli olarak geri yükleyerek bütünlüğünü doğrulama</span>
+      <span data-lang-en><strong>Restore test:</strong> Periodically restore backups to verify integrity before relying on them</span>
+    </li>
+    <li class="v-item"><span class="v-check">✓</span>
+      <span data-lang-tr><strong>Paket yakalama:</strong> Her ağ yapılandırma değişikliğinin ardından tcpdump ile trafik analizi</span>
+      <span data-lang-en><strong>Packet capture:</strong> tcpdump/Wireshark traffic analysis after every network config change</span>
+    </li>
+    <li class="v-item"><span class="v-check">✓</span>
+      <span data-lang-tr><strong>Log korelasyonu:</strong> Servis olaylarını syslog, auth.log ve uygulama loglarıyla çapraz doğrulama</span>
+      <span data-lang-en><strong>Log correlation:</strong> Cross-validating service events against syslog, auth.log, and app logs</span>
+    </li>
+    <li class="v-item"><span class="v-check">✓</span>
+      <span data-lang-tr><strong>Sertleştirme kontrol listesi:</strong> SSH anahtar kimlik doğrulaması, devre dışı parola girişi, ufw varsayılan reddet, root oturumu kapalı</span>
+      <span data-lang-en><strong>Hardening checklist:</strong> SSH key auth, disabled password login, ufw default-deny, root login off</span>
+    </li>
+    <li class="v-item"><span class="v-check">✓</span>
+      <span data-lang-tr><strong>Port tarama doğrulaması:</strong> Firewall kural değişikliklerinin ardından nmap ile saldırı yüzeyi kontrolü</span>
+      <span data-lang-en><strong>Port-scan validation:</strong> nmap scan against all VMs after firewall rule changes to confirm attack surface</span>
+    </li>
+    <li class="v-item"><span class="v-check">✓</span>
+      <span data-lang-tr><strong>Kaos testi:</strong> Servis kesintisi simülasyonu ve alert / otomatik kurtarma süresini ölçme</span>
+      <span data-lang-en><strong>Chaos test:</strong> Simulate service outage and measure alert-to-recovery time against RTO targets</span>
+    </li>
+  </ul>
+</div>
+</section>
+
 <!-- Projects Section -->
 <section id="projects">
 <div class="section-header">
@@ -262,6 +329,25 @@
 </div>
 <div class="project-tech">
 <span>Linux</span><span>Docker</span><span>docker-compose</span><span>Git</span><span>OpenClaw</span><span>Kimi K2.5 API</span><span>Reverse Proxy</span><span>Bash</span>
+</div>
+<div class="slo-badges">
+  <span class="slo-badge" title="Service Level Objective — target uptime">SLO: 99.5%</span>
+  <span class="slo-badge rto" title="Recovery Time Objective — max acceptable downtime">RTO: 15m</span>
+  <span class="slo-badge rpo" title="Recovery Point Objective — max data loss window">RPO: 30m</span>
+</div>
+<div class="postmortem-block">
+  <div class="postmortem-title">⚠ <span data-lang-tr>Olay / Postmortem</span><span data-lang-en>Incident / Postmortem</span></div>
+  <ul class="postmortem-list">
+    <li><span class="pm-label"><span data-lang-tr>Sorun</span><span data-lang-en>Problem</span></span> <span data-lang-tr>AI pipeline yanlış servis adını hedef alarak hatalı konteyner restart komutu üretiyor.</span><span data-lang-en>AI pipeline targeting wrong service name, generating incorrect container restart command.</span></li>
+    <li><span class="pm-label"><span data-lang-tr>Kök neden</span><span data-lang-en>Root cause</span></span> <span data-lang-tr>Model çıktısı parse edilmeden doğrudan komut olarak çalıştırılıyordu.</span><span data-lang-en>Model output was executed directly without schema validation of the service name field.</span></li>
+    <li><span class="pm-label">Fix</span> <span data-lang-tr>Komut çalıştırmadan önce servis adını allowlist ile doğrulayan parser eklendi.</span><span data-lang-en>Added parser that validates service name against an allowlist before any command execution.</span></li>
+    <li><span class="pm-label"><span data-lang-tr>Ders</span><span data-lang-en>Lesson</span></span> <span data-lang-tr>LLM çıktısına hiçbir zaman doğrudan güvenme; her zaman şema doğrulaması ve insan onay adımı kullan.</span><span data-lang-en>Never trust LLM output directly; always schema-validate and keep the human approval gate.</span></li>
+  </ul>
+</div>
+<div class="artifact-links">
+  <span class="artifact-label"><span data-lang-tr>İndirilebilir Dosyalar:</span><span data-lang-en>Artifacts:</span></span>
+  <a href="artifacts/ai-container-topology.md" download class="artifact-btn">📐 <span data-lang-tr>Topoloji</span><span data-lang-en>Topology</span>.md</a>
+  <a href="artifacts/compose-snippet.yml" download class="artifact-btn">🐳 compose-snippet.yml</a>
 </div>
 </div>
 
@@ -297,6 +383,25 @@
 <div class="project-tech">
 <span>VirtualBox</span><span>Linux</span><span>SSH</span><span>ufw</span><span>WireGuard</span><span>OpenVPN</span><span>tcpdump</span><span>nmap</span>
 </div>
+<div class="slo-badges">
+  <span class="slo-badge" title="Service Level Objective — target tunnel uptime">SLO: 99.0%</span>
+  <span class="slo-badge rto" title="Recovery Time Objective — max acceptable downtime">RTO: 30m</span>
+  <span class="slo-badge rpo" title="Recovery Point Objective — max config loss window">RPO: 1h</span>
+</div>
+<div class="postmortem-block">
+  <div class="postmortem-title">⚠ <span data-lang-tr>Olay / Postmortem</span><span data-lang-en>Incident / Postmortem</span></div>
+  <ul class="postmortem-list">
+    <li><span class="pm-label"><span data-lang-tr>Sorun</span><span data-lang-en>Problem</span></span> <span data-lang-tr>WireGuard tüneli VM yeniden başlatmasının ardından otomatik olarak kalkmıyor.</span><span data-lang-en>WireGuard tunnel not coming up automatically after VM reboot.</span></li>
+    <li><span class="pm-label"><span data-lang-tr>Kök neden</span><span data-lang-en>Root cause</span></span> <span data-lang-tr>systemd servisi enable edilmemiş, systemctl enable wg-quick@wg0 komutu eksikti.</span><span data-lang-en>systemd service not enabled — missing <code>systemctl enable wg-quick@wg0</code>.</span></li>
+    <li><span class="pm-label">Fix</span> <span data-lang-tr>Tüm VM'lerde <code>systemctl enable</code> çalıştırıldı ve boot testi yapıldı.</span><span data-lang-en>Ran <code>systemctl enable</code> on all VMs and added a post-reboot connectivity test to the runbook.</span></li>
+    <li><span class="pm-label"><span data-lang-tr>Ders</span><span data-lang-en>Lesson</span></span> <span data-lang-tr>Her servis değişikliğinden sonra reboot testi runbook'a eklenmeli.</span><span data-lang-en>Every service change must include a reboot test step in the runbook.</span></li>
+  </ul>
+</div>
+<div class="artifact-links">
+  <span class="artifact-label"><span data-lang-tr>İndirilebilir Dosyalar:</span><span data-lang-en>Artifacts:</span></span>
+  <a href="artifacts/vpn-lab-topology.md" download class="artifact-btn">📐 <span data-lang-tr>Topoloji</span><span data-lang-en>Topology</span>.md</a>
+  <a href="artifacts/vpn-lab-runbook.md" download class="artifact-btn">📋 runbook.md</a>
+</div>
 </div>
 
 <!-- Project 3 -->
@@ -322,6 +427,25 @@
 <div class="project-tech">
 <span>Linux</span><span>rsyslog</span><span>Grafana</span><span>Monitoring</span><span>Log Aggregation</span>
 </div>
+<div class="slo-badges">
+  <span class="slo-badge" title="Service Level Objective — log delivery success rate">SLO: 99.9%</span>
+  <span class="slo-badge rto" title="Recovery Time Objective — max log collection gap">RTO: 10m</span>
+  <span class="slo-badge rpo" title="Recovery Point Objective — max log data loss">RPO: 5m</span>
+</div>
+<div class="postmortem-block">
+  <div class="postmortem-title">⚠ <span data-lang-tr>Olay / Postmortem</span><span data-lang-en>Incident / Postmortem</span></div>
+  <ul class="postmortem-list">
+    <li><span class="pm-label"><span data-lang-tr>Sorun</span><span data-lang-en>Problem</span></span> <span data-lang-tr>Merkezi log sunucusunda disk dolunca rsyslog sessizce log kaybetmeye başladı.</span><span data-lang-en>Central log server silently dropping logs when disk reached full capacity.</span></li>
+    <li><span class="pm-label"><span data-lang-tr>Kök neden</span><span data-lang-en>Root cause</span></span> <span data-lang-tr>Disk kullanımı için alert kurulmamıştı; logrotate çalışmıyordu.</span><span data-lang-en>No disk usage alert configured; logrotate was not running due to a misconfigured cron entry.</span></li>
+    <li><span class="pm-label">Fix</span> <span data-lang-tr>Logrotate düzeltildi, disk kullanımı için %80 eşiğinde Grafana alert eklendi.</span><span data-lang-en>Fixed logrotate config; added Grafana alert at 80% disk threshold.</span></li>
+    <li><span class="pm-label"><span data-lang-tr>Ders</span><span data-lang-en>Lesson</span></span> <span data-lang-tr>Gözlemlenebilirlik stack'inin kendisi de izlenmeli; infra'yı kim izlediğini izle.</span><span data-lang-en>The observability stack itself must be monitored — "who watches the watchmen" applies to infra too.</span></li>
+  </ul>
+</div>
+<div class="artifact-links">
+  <span class="artifact-label"><span data-lang-tr>İndirilebilir Dosyalar:</span><span data-lang-en>Artifacts:</span></span>
+  <a href="artifacts/logging-setup.md" download class="artifact-btn">📋 runbook.md</a>
+  <a href="artifacts/monitoring-config.yml" download class="artifact-btn">⚙ monitoring-config.yml</a>
+</div>
 </div>
 </section>
 
@@ -337,78 +461,99 @@
 <p class="section-subtitle">dpkg -l | grep -E "(docker|git|python)"</p>
 </div>
 
-<div class="tools-grid">
-<div class="tool-box">
-<div class="tool-header"><span class="tool-title"><span data-lang-tr>İŞLETİM SİSTEMİ</span><span data-lang-en>OS</span></span></div>
-<ul class="tool-list">
-<li><i class="devicon-linux-plain"></i> Linux</li>
-<li><i class="devicon-ubuntu-plain"></i> Ubuntu</li>
-<li><i class="devicon-debian-plain"></i> Debian</li>
-</ul>
-</div>
+<div class="stack-layers">
 
-<div class="tool-box">
-<div class="tool-header"><span class="tool-title"><span data-lang-tr>KONTEYNERLER</span><span data-lang-en>CONTAINERS</span></span></div>
-<ul class="tool-list">
-<li><i class="devicon-docker-plain"></i> Docker</li>
-<li>docker-compose</li>
-<li>Container Orchestration</li>
-</ul>
-</div>
+  <div class="stack-layer">
+    <div class="stack-layer-label">
+      <span class="stack-layer-num">L1</span>
+      <span data-lang-tr>Compute / İşletim Sistemi</span><span data-lang-en>Compute / OS</span>
+    </div>
+    <ul class="tool-list stack-tool-list">
+      <li><i class="devicon-linux-plain"></i> Linux</li>
+      <li><i class="devicon-ubuntu-plain"></i> Ubuntu</li>
+      <li><i class="devicon-debian-plain"></i> Debian</li>
+      <li>systemd</li>
+    </ul>
+  </div>
 
-<div class="tool-box">
-<div class="tool-header"><span class="tool-title"><span data-lang-tr>SÜRÜM KONTROLÜ</span><span data-lang-en>VERSION CONTROL</span></span></div>
-<ul class="tool-list">
-<li><i class="devicon-git-plain"></i> Git</li>
-<li><i class="devicon-github-original"></i> GitHub</li>
-<li>Git Workflows</li>
-</ul>
-</div>
+  <div class="stack-layer">
+    <div class="stack-layer-label">
+      <span class="stack-layer-num">L2</span>
+      <span data-lang-tr>Ağ</span><span data-lang-en>Network</span>
+    </div>
+    <ul class="tool-list stack-tool-list">
+      <li>ping, traceroute</li>
+      <li>netstat/ss, tcpdump</li>
+      <li>nmap, WireGuard/OpenVPN</li>
+      <li>pfSense, ufw, DNS</li>
+    </ul>
+  </div>
 
-<div class="tool-box">
-<div class="tool-header"><span class="tool-title"><span data-lang-tr>OTOMASYON</span><span data-lang-en>AUTOMATION</span></span></div>
-<ul class="tool-list">
-<li><i class="devicon-bash-plain"></i> Bash Scripting</li>
-<li><i class="devicon-python-plain"></i> Python</li>
-<li>CI/CD Pipelines</li>
-</ul>
-</div>
+  <div class="stack-layer">
+    <div class="stack-layer-label">
+      <span class="stack-layer-num">L3</span>
+      <span data-lang-tr>Konteynerler</span><span data-lang-en>Containers</span>
+    </div>
+    <ul class="tool-list stack-tool-list">
+      <li><i class="devicon-docker-plain"></i> Docker</li>
+      <li>docker-compose</li>
+      <li>Container Orchestration</li>
+      <li>Nginx Reverse Proxy</li>
+    </ul>
+  </div>
 
-<div class="tool-box">
-<div class="tool-header"><span class="tool-title"><span data-lang-tr>VERİ</span><span data-lang-en>DATA</span></span></div>
-<ul class="tool-list">
-<li>SQL</li>
-<li><i class="devicon-r-plain"></i> R (Statistics)</li>
-<li><i class="devicon-postgresql-plain"></i> Relational DB Design</li>
-</ul>
-</div>
+  <div class="stack-layer">
+    <div class="stack-layer-label">
+      <span class="stack-layer-num">L4</span>
+      <span data-lang-tr>CI/CD &amp; Sürüm Kontrolü</span><span data-lang-en>CI/CD &amp; Version Control</span>
+    </div>
+    <ul class="tool-list stack-tool-list">
+      <li><i class="devicon-git-plain"></i> Git</li>
+      <li><i class="devicon-github-original"></i> GitHub</li>
+      <li>GitHub Actions</li>
+      <li>Git Workflows</li>
+    </ul>
+  </div>
 
-<div class="tool-box">
-<div class="tool-header"><span class="tool-title"><span data-lang-tr>AĞ</span><span data-lang-en>NETWORK</span></span></div>
-<ul class="tool-list">
-<li>ping, traceroute</li>
-<li>netstat/ss, tcpdump</li>
-<li>nmap, WireGuard/OpenVPN</li>
-</ul>
-</div>
+  <div class="stack-layer">
+    <div class="stack-layer-label">
+      <span class="stack-layer-num">L5</span>
+      <span data-lang-tr>Gözlemlenebilirlik</span><span data-lang-en>Observability</span>
+    </div>
+    <ul class="tool-list stack-tool-list">
+      <li><i class="devicon-grafana-plain"></i> Grafana</li>
+      <li>Syslog / rsyslog</li>
+      <li>Log Aggregation</li>
+      <li>Prometheus (node_exporter)</li>
+    </ul>
+  </div>
 
-<div class="tool-box">
-<div class="tool-header"><span class="tool-title"><span data-lang-tr>İZLEME</span><span data-lang-en>MONITORING</span></span></div>
-<ul class="tool-list">
-<li><i class="devicon-grafana-plain"></i> Grafana</li>
-<li>Syslog / rsyslog</li>
-<li>Log Aggregation</li>
-</ul>
-</div>
+  <div class="stack-layer">
+    <div class="stack-layer-label">
+      <span class="stack-layer-num">L6</span>
+      <span data-lang-tr>IaC / Yapılandırma</span><span data-lang-en>IaC / Config</span>
+    </div>
+    <ul class="tool-list stack-tool-list">
+      <li>YAML</li>
+      <li>JSON</li>
+      <li><i class="devicon-terraform-plain"></i> Infrastructure as Code</li>
+      <li><i class="devicon-bash-plain"></i> Bash Scripting</li>
+    </ul>
+  </div>
 
-<div class="tool-box">
-<div class="tool-header"><span class="tool-title"><span data-lang-tr>YAPILANDIRMA</span><span data-lang-en>CONFIG</span></span></div>
-<ul class="tool-list">
-<li>YAML</li>
-<li>JSON</li>
-<li><i class="devicon-terraform-plain"></i> Infrastructure as Code</li>
-</ul>
-</div>
+  <div class="stack-layer">
+    <div class="stack-layer-label">
+      <span class="stack-layer-num">L7</span>
+      <span data-lang-tr>Otomasyon / Veri</span><span data-lang-en>Automation / Data</span>
+    </div>
+    <ul class="tool-list stack-tool-list">
+      <li><i class="devicon-python-plain"></i> Python</li>
+      <li>SQL</li>
+      <li><i class="devicon-r-plain"></i> R (Statistics)</li>
+      <li><i class="devicon-postgresql-plain"></i> Relational DB Design</li>
+    </ul>
+  </div>
+
 </div>
 </section>
 
@@ -444,6 +589,26 @@
 <div class="section-header">
 <h2 class="section-title"><span data-lang-tr>iletişim</span><span data-lang-en>contact</span></h2>
 <p class="section-subtitle">ssh user@host | sendmail</p>
+</div>
+
+<!-- Availability Banner -->
+<div class="availability-banner">
+  <div class="avail-row">
+    <span class="avail-key">availability</span><span class="avail-sep">:</span>
+    <span class="avail-val open"><span data-lang-tr>müsait</span><span data-lang-en>open</span></span>
+  </div>
+  <div class="avail-row">
+    <span class="avail-key"><span data-lang-tr>tercih_edilen_roller</span><span data-lang-en>preferred_roles</span></span><span class="avail-sep">:</span>
+    <span class="avail-val">DevOps Engineer, Network Engineer, SysAdmin</span>
+  </div>
+  <div class="avail-row">
+    <span class="avail-key">timezone</span><span class="avail-sep">:</span>
+    <span class="avail-val">Europe/Istanbul (UTC+3)</span>
+  </div>
+  <div class="avail-row">
+    <span class="avail-key"><span data-lang-tr>mod</span><span data-lang-en>mode</span></span><span class="avail-sep">:</span>
+    <span class="avail-val"><span data-lang-tr>uzaktan / hibrit / ofis</span><span data-lang-en>remote / hybrid / on-site</span></span>
+  </div>
 </div>
 
 <div class="contact-grid">
@@ -514,6 +679,17 @@
 </footer>
 
 <button id="backToTop" class="back-to-top" title="Yukarı Çık">cd ~</button>
+
+<!-- Command Palette -->
+<div id="cmd-palette-overlay" role="dialog" aria-modal="true" aria-label="Command palette" aria-hidden="true">
+  <div id="cmd-palette">
+    <div id="cmd-palette-header">
+      <span class="cmd-palette-prompt">❯</span>
+      <input type="text" id="cmd-palette-input" placeholder="type a command..." autocomplete="off" spellcheck="false" aria-label="Command palette search">
+    </div>
+    <ul id="cmd-palette-list" role="listbox" aria-label="Commands"></ul>
+  </div>
+</div>
 
 <!-- AFK Screensaver -->
 <div id="screensaver" role="presentation" aria-hidden="true">
@@ -610,7 +786,7 @@ entry.target.style.transform = 'translateY(0)';
 });
 }, observerOptions);
 
-document.querySelectorAll('.terminal-card, .cert-card, .project-card, .tool-box, .edu-item').forEach(el => {
+document.querySelectorAll('.terminal-card, .cert-card, .project-card, .tool-box, .edu-item, .homelab-card, .verification-card, .stack-layer').forEach(el => {
 el.style.opacity = '0';
 el.style.transform = 'translateY(20px)';
 el.style.transition = 'opacity 0.5s, transform 0.5s';
@@ -2395,6 +2571,251 @@ function stopMatrixRain() {
         }, { passive: false });
 
         document.addEventListener('touchend', endDrag);
+    });
+}());
+
+// ===== Feature 7: Command Palette (Ctrl+K / Cmd+K) =====
+(function () {
+    var overlay = document.getElementById('cmd-palette-overlay');
+    var input = document.getElementById('cmd-palette-input');
+    var list = document.getElementById('cmd-palette-list');
+    if (!overlay || !input || !list) return;
+
+    var activeIdx = -1;
+
+    var COMMANDS = [
+        { icon: '👤', labelTr: 'Hakkımda Git',         labelEn: 'Go to About',       action: function() { scrollToSection('#about'); } },
+        { icon: '📂', labelTr: 'Projelere Git',         labelEn: 'Go to Projects',    action: function() { scrollToSection('#projects'); } },
+        { icon: '🔧', labelTr: 'Araçlara Git',          labelEn: 'Go to Tools',       action: function() { scrollToSection('#tools'); } },
+        { icon: '📜', labelTr: 'Sertifikalara Git',     labelEn: 'Go to Certs',       action: function() { scrollToSection('#certificates'); } },
+        { icon: '📬', labelTr: 'İletişime Git',         labelEn: 'Go to Contact',     action: function() { scrollToSection('#contact'); } },
+        { icon: '💻', labelTr: 'Terminale Git',         labelEn: 'Go to Terminal',    action: function() { scrollToSection('#cli-terminal'); } },
+        { icon: '🌐', labelTr: 'Dil Değiştir',          labelEn: 'Toggle Language',   action: function() { if (typeof toggleLang === 'function') toggleLang(); } },
+        { icon: '📄', labelTr: 'CV İndir (TR)',          labelEn: 'Download CV (TR)',  action: function() { downloadCV('tr'); } },
+        { icon: '📄', labelTr: 'CV İndir (EN)',          labelEn: 'Download CV (EN)',  action: function() { downloadCV('en'); } },
+        { icon: '🔄', labelTr: 'Önyükleme Animasyonu',  labelEn: 'Reboot Animation',  action: function() { if (typeof runBootSequence === 'function') runBootSequence(); } },
+        { icon: '🔊', labelTr: 'Sesi Aç/Kapat',         labelEn: 'Toggle Sounds',     action: function() { var btn = document.getElementById('mute-btn'); if (btn) btn.click(); } },
+    ];
+
+    function scrollToSection(sel) {
+        var el = document.querySelector(sel);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function downloadCV(lang) {
+        var url = lang === 'tr' ? 'Furkan%20SARICA%20CV%20TR.pdf' : 'Furkan%20SARICA%20CV%20EN.pdf';
+        var name = lang === 'tr' ? 'Furkan SARICA CV TR.pdf' : 'Furkan SARICA CV EN.pdf';
+        var a = document.createElement('a');
+        a.href = url; a.download = name;
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    }
+
+    function getLabel(cmd) {
+        return currentLang === 'tr' ? cmd.labelTr : cmd.labelEn;
+    }
+
+    function render(filter) {
+        filter = (filter || '').toLowerCase();
+        var filtered = COMMANDS.filter(function(c) {
+            return !filter || getLabel(c).toLowerCase().indexOf(filter) !== -1;
+        });
+        list.innerHTML = '';
+        activeIdx = filtered.length > 0 ? 0 : -1;
+
+        if (filtered.length === 0) {
+            var empty = document.createElement('li');
+            empty.className = 'cmd-palette-empty';
+            empty.textContent = currentLang === 'tr' ? 'Sonuç bulunamadı.' : 'No results.';
+            list.appendChild(empty);
+            return;
+        }
+
+        filtered.forEach(function(cmd, i) {
+            var li = document.createElement('li');
+            li.className = 'cmd-palette-item' + (i === 0 ? ' active' : '');
+            li.setAttribute('role', 'option');
+            li.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+            li.innerHTML = '<span class="cmd-palette-icon">' + cmd.icon + '</span>'
+                + '<span>' + getLabel(cmd) + '</span>';
+            li.addEventListener('click', function() { runCmd(cmd); });
+            list.appendChild(li);
+        });
+
+        // Store filtered list for keyboard nav
+        list._filtered = filtered;
+    }
+
+    function setActive(idx) {
+        var items = list.querySelectorAll('.cmd-palette-item');
+        items.forEach(function(el, i) {
+            el.classList.toggle('active', i === idx);
+            el.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+        });
+        activeIdx = idx;
+        if (items[idx]) items[idx].scrollIntoView({ block: 'nearest' });
+    }
+
+    function runCmd(cmd) {
+        closePalette();
+        setTimeout(function() { cmd.action(); }, 80);
+    }
+
+    function openPalette() {
+        overlay.classList.add('active');
+        overlay.setAttribute('aria-hidden', 'false');
+        input.value = '';
+        render('');
+        input.focus();
+    }
+
+    function closePalette() {
+        overlay.classList.remove('active');
+        overlay.setAttribute('aria-hidden', 'true');
+        input.value = '';
+    }
+
+    // Ctrl+K / Cmd+K
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            if (overlay.classList.contains('active')) closePalette();
+            else openPalette();
+        }
+    });
+
+    // Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+            closePalette();
+        }
+    });
+
+    // Click outside palette
+    overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) closePalette();
+    });
+
+    // Input: filter + arrow nav
+    input.addEventListener('input', function() {
+        render(input.value);
+    });
+
+    input.addEventListener('keydown', function(e) {
+        var items = list.querySelectorAll('.cmd-palette-item');
+        var filtered = list._filtered || [];
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (items.length > 0) setActive((activeIdx + 1) % items.length);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (items.length > 0) setActive((activeIdx - 1 + items.length) % items.length);
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (activeIdx >= 0 && filtered[activeIdx]) runCmd(filtered[activeIdx]);
+        }
+    });
+}());
+
+// ===== Feature 10: Keyboard-first Navigation =====
+(function () {
+    var sections = ['#about', '#education', '#certificates', '#verification', '#projects', '#tools', '#contact', '#cli-terminal'];
+    var ggTimer = null;
+    var gpTimer = null;
+    var gtTimer = null;
+    var gPending = false;
+
+    function isTyping() {
+        var active = document.activeElement;
+        if (!active) return false;
+        var tag = active.tagName;
+        return tag === 'INPUT' || tag === 'TEXTAREA' || active.isContentEditable;
+    }
+
+    function isPaletteOpen() {
+        var ov = document.getElementById('cmd-palette-overlay');
+        return ov && ov.classList.contains('active');
+    }
+
+    function getCurrentSectionIdx() {
+        var scrollY = window.scrollY + window.innerHeight * 0.3;
+        var best = 0;
+        sections.forEach(function(sel, i) {
+            var el = document.querySelector(sel);
+            if (el && el.getBoundingClientRect().top + window.scrollY <= scrollY) {
+                best = i;
+            }
+        });
+        return best;
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (isTyping() || isPaletteOpen()) return;
+        // Ignore modifier combos handled elsewhere
+        if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+        var key = e.key;
+
+        // j / k — next / prev section
+        if (key === 'j') {
+            e.preventDefault();
+            var cur = getCurrentSectionIdx();
+            var next = Math.min(cur + 1, sections.length - 1);
+            var el = document.querySelector(sections[next]);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return;
+        }
+        if (key === 'k') {
+            e.preventDefault();
+            var cur2 = getCurrentSectionIdx();
+            var prev = Math.max(cur2 - 1, 0);
+            var el2 = document.querySelector(sections[prev]);
+            if (el2) el2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return;
+        }
+
+        // g g — go to top
+        // g p — go to projects
+        // g t — go to terminal
+        if (key === 'g') {
+            if (gPending) {
+                // second g
+                gPending = false;
+                clearTimeout(ggTimer);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+            gPending = true;
+            ggTimer = setTimeout(function() { gPending = false; }, 600);
+
+            // Set up 'p' and 't' listeners for this g press
+            clearTimeout(gpTimer);
+            clearTimeout(gtTimer);
+            var onceKeydown = function(ev) {
+                if (!gPending) { document.removeEventListener('keydown', onceKeydown, true); return; }
+                if (ev.key === 'p') {
+                    ev.preventDefault();
+                    gPending = false;
+                    clearTimeout(ggTimer);
+                    document.removeEventListener('keydown', onceKeydown, true);
+                    var el = document.querySelector('#projects');
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else if (ev.key === 't') {
+                    ev.preventDefault();
+                    gPending = false;
+                    clearTimeout(ggTimer);
+                    document.removeEventListener('keydown', onceKeydown, true);
+                    var el2 = document.querySelector('#cli-terminal');
+                    if (el2) el2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else if (ev.key !== 'g') {
+                    // any other key cancels
+                    gPending = false;
+                    clearTimeout(ggTimer);
+                    document.removeEventListener('keydown', onceKeydown, true);
+                }
+            };
+            document.addEventListener('keydown', onceKeydown, true);
+            return;
+        }
     });
 }());
 
