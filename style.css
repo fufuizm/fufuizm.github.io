@@ -110,7 +110,7 @@ color: var(--text-muted);
 
 /* Hero Section */
 .hero {
-min-height: 100vh;
+min-height: 100dvh;
 display: flex;
 flex-direction: column;
 justify-content: center;
@@ -788,7 +788,7 @@ body.root-mode {
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
     z-index: 9999;
     background-color: var(--bg-primary);
     display: flex;
@@ -909,4 +909,40 @@ body.root-mode {
     background-color: #ffffff !important;
     color: #000000 !important;
     transition: all 0.1s;
+}
+
+/* ===== Shake Animation ===== */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    15%, 45%, 75% { transform: translateX(-8px); }
+    30%, 60%, 90% { transform: translateX(8px); }
+}
+
+body.shake {
+    animation: shake 0.6s ease both;
+}
+
+/* ===== Retro Amber Theme (Konami Easter Egg) ===== */
+body.theme-amber {
+    --terminal-green: #ffb000;
+    --terminal-green-dim: rgba(255, 176, 0, 0.3);
+    --accent-cyan: #ff8c00;
+    --border-accent: #ffb000;
+    --glow: 0 0 20px rgba(255, 176, 0, 0.3);
+    --glow-strong: 0 0 30px rgba(255, 176, 0, 0.5);
+}
+
+/* ===== Draggable Terminal Header ===== */
+.terminal-header {
+    cursor: grab;
+}
+
+.terminal-header:active {
+    cursor: grabbing;
+}
+
+/* Remove double border when #cli-box is inside a .terminal-window wrapper */
+.terminal-window #cli-box {
+    border: none;
+    background: transparent;
 }
