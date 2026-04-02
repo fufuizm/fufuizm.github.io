@@ -15,6 +15,7 @@
 <meta property="og:url" content="https://fufuizm.github.io/">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
 </head>
 <body class="lang-tr">
 
@@ -75,7 +76,7 @@
 
 <div class="about-grid">
 <div class="about-image">
-<img src="Fufuizm.PNG" alt="Furkan Sarıca" class="about-avatar">
+<img src="Fufuizm.PNG" alt="Furkan Sarıca - DevOps ve Ağ Mühendisi Portfolyo Fotoğrafı" class="about-avatar">
 </div>
 <div class="about-text">
 <pre><code class="comment"># DevOps & Network Engineer in training</code>
@@ -317,14 +318,16 @@
 <div class="tool-box">
 <div class="tool-header"><span class="tool-title"><span data-lang-tr>İŞLETİM SİSTEMİ</span><span data-lang-en>OS</span></span></div>
 <ul class="tool-list">
-<li>Linux (Ubuntu/Debian)</li>
+<li><i class="devicon-linux-plain"></i> Linux</li>
+<li><i class="devicon-ubuntu-plain"></i> Ubuntu</li>
+<li><i class="devicon-debian-plain"></i> Debian</li>
 </ul>
 </div>
 
 <div class="tool-box">
 <div class="tool-header"><span class="tool-title"><span data-lang-tr>KONTEYNERLER</span><span data-lang-en>CONTAINERS</span></span></div>
 <ul class="tool-list">
-<li>Docker</li>
+<li><i class="devicon-docker-plain"></i> Docker</li>
 <li>docker-compose</li>
 <li>Container Orchestration</li>
 </ul>
@@ -333,8 +336,8 @@
 <div class="tool-box">
 <div class="tool-header"><span class="tool-title"><span data-lang-tr>SÜRÜM KONTROLÜ</span><span data-lang-en>VERSION CONTROL</span></span></div>
 <ul class="tool-list">
-<li>Git</li>
-<li>GitHub</li>
+<li><i class="devicon-git-plain"></i> Git</li>
+<li><i class="devicon-github-original"></i> GitHub</li>
 <li>Git Workflows</li>
 </ul>
 </div>
@@ -342,8 +345,8 @@
 <div class="tool-box">
 <div class="tool-header"><span class="tool-title"><span data-lang-tr>OTOMASYON</span><span data-lang-en>AUTOMATION</span></span></div>
 <ul class="tool-list">
-<li>Bash Scripting</li>
-<li>Python</li>
+<li><i class="devicon-bash-plain"></i> Bash Scripting</li>
+<li><i class="devicon-python-plain"></i> Python</li>
 <li>CI/CD Pipelines</li>
 </ul>
 </div>
@@ -352,8 +355,8 @@
 <div class="tool-header"><span class="tool-title"><span data-lang-tr>VERİ</span><span data-lang-en>DATA</span></span></div>
 <ul class="tool-list">
 <li>SQL</li>
-<li>R (Statistics)</li>
-<li>Relational DB Design</li>
+<li><i class="devicon-r-plain"></i> R (Statistics)</li>
+<li><i class="devicon-postgresql-plain"></i> Relational DB Design</li>
 </ul>
 </div>
 
@@ -369,8 +372,8 @@
 <div class="tool-box">
 <div class="tool-header"><span class="tool-title"><span data-lang-tr>İZLEME</span><span data-lang-en>MONITORING</span></span></div>
 <ul class="tool-list">
+<li><i class="devicon-grafana-plain"></i> Grafana</li>
 <li>Syslog / rsyslog</li>
-<li>Grafana</li>
 <li>Log Aggregation</li>
 </ul>
 </div>
@@ -380,7 +383,7 @@
 <ul class="tool-list">
 <li>YAML</li>
 <li>JSON</li>
-<li>Infrastructure as Code</li>
+<li><i class="devicon-terraform-plain"></i> Infrastructure as Code</li>
 </ul>
 </div>
 </div>
@@ -434,6 +437,8 @@
 </p>
 </footer>
 
+<button id="backToTop" class="back-to-top" title="Yukarı Çık">cd ~</button>
+
 <script>
 // Language state
 let currentLang = 'tr';
@@ -447,6 +452,10 @@ document.documentElement.lang = currentLang;
 // Update toggle button
 document.getElementById('lang-tr-btn').classList.toggle('active', currentLang === 'tr');
 document.getElementById('lang-en-btn').classList.toggle('active', currentLang === 'en');
+
+// Update back-to-top button title
+const btn = document.getElementById('backToTop');
+if (btn) btn.title = currentLang === 'tr' ? 'Yukarı Çık' : 'Back to Top';
 }
 
 // Typing effect for hero
@@ -494,6 +503,19 @@ el.style.opacity = '0';
 el.style.transform = 'translateY(20px)';
 el.style.transition = 'opacity 0.5s, transform 0.5s';
 observer.observe(el);
+});
+
+// Back to Top Button
+const backToTopBtn = document.getElementById('backToTop');
+backToTopBtn.addEventListener('click', () => {
+window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+window.addEventListener('scroll', () => {
+if (window.scrollY > 300) {
+backToTopBtn.classList.add('visible');
+} else {
+backToTopBtn.classList.remove('visible');
+}
 });
 </script>
 
