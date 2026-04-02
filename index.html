@@ -453,11 +453,18 @@
     <p class="section-subtitle">furkan@devops:~$ _</p>
   </div>
   <div id="server-metrics"></div>
-  <div id="cli-box">
-    <div id="cli-output"></div>
-    <div id="cli-input-line">
-      <span id="cli-prompt">furkan@devops:~$</span>
-      <input type="text" id="cli-input" autocomplete="off" spellcheck="false" aria-label="Terminal input">
+  <div class="terminal-window">
+    <div class="terminal-header">
+      <span class="t-btn t-btn-red"></span>
+      <span class="t-btn t-btn-yellow"></span>
+      <span class="t-btn t-btn-green"></span>
+    </div>
+    <div id="cli-box">
+      <div id="cli-output"></div>
+      <div id="cli-input-line">
+        <span id="cli-prompt">furkan@devops:~$</span>
+        <input type="text" id="cli-input" autocomplete="off" spellcheck="false" aria-label="Terminal input">
+      </div>
     </div>
   </div>
 </section>
@@ -710,6 +717,10 @@ console.log("%c[!] Merhaba geliştirici! / Hello developer! 🚀\nKodlarımı in
 
     var cliCommands = ['help', 'projects', 'about', 'education', 'certificates', 'tools', 'contact', 'clear', 'whoami', 'sudo', 'ip a', 'ifconfig', 'theme light', 'ls', 'pwd', 'uname -a', 'exit'];
 
+    // Command history
+    var cmdHistory = [];
+    var historyIndex = -1;
+
     function fetchIpAndPrint() {
         var ua = navigator.userAgent.slice(0, 80);
         fetch('https://api.ipify.org?format=json')
@@ -723,6 +734,25 @@ console.log("%c[!] Merhaba geliştirici! / Hello developer! 🚀\nKodlarımı in
     }
 
     input.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (historyIndex < cmdHistory.length - 1) {
+                historyIndex++;
+                input.value = cmdHistory[historyIndex];
+            }
+            return;
+        }
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (historyIndex > 0) {
+                historyIndex--;
+                input.value = cmdHistory[historyIndex];
+            } else {
+                historyIndex = -1;
+                input.value = '';
+            }
+            return;
+        }
         if (e.key === 'Tab') {
             e.preventDefault();
             var val = input.value;
@@ -735,6 +765,8 @@ console.log("%c[!] Merhaba geliştirici! / Hello developer! 🚀\nKodlarımı in
         var cmd = input.value.trim();
         input.value = '';
         if (!cmd) return;
+        cmdHistory.unshift(cmd);
+        historyIndex = -1;
         echoCmd(cmd);
         var c = cmd.toLowerCase();
 
@@ -763,8 +795,9 @@ console.log("%c[!] Merhaba geliştirici! / Hello developer! 🚀\nKodlarımı in
         } else if (c === 'uname -a') {
             addLine('Linux devops 6.5.0-fufuizm #1 SMP Thu Jan 01 00:00:00 UTC 2026 x86_64 GNU/Linux');
         } else if (c === 'theme light' || c === 'theme set light' || c === 'light') {
-            document.body.classList.add('light-troll');
+            document.body.classList.add('light-troll', 'shake');
             addLine('FATAL ERROR: SysAdmins don\'t use light theme!', 'err');
+            setTimeout(function () { document.body.classList.remove('shake'); }, 600);
             setTimeout(function () {
                 document.body.classList.remove('light-troll');
                 addLine('Reverted to safe dark mode.', 'ok');
@@ -816,27 +849,35 @@ function startMatrixRain() {
     var drops = [];
     for (var i = 0; i < cols; i++) drops[i] = Math.random() * -100;
 
-    var interval = setInterval(function () {
-        if (!document.getElementById('matrix-rain')) { clearInterval(interval); return; }
-        ctx.fillStyle = 'rgba(10, 10, 10, 0.05)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = document.body.classList.contains('root-mode') ? '#ff3333' : '#00ff88';
-        ctx.font = fontSize + 'px JetBrains Mono, monospace';
-        for (var j = 0; j < drops.length; j++) {
-            var ch = chars[Math.floor(Math.random() * chars.length)];
-            ctx.fillText(ch, j * fontSize, drops[j] * fontSize);
-            if (drops[j] * fontSize > canvas.height && Math.random() > 0.975) drops[j] = 0;
-            drops[j]++;
+    var lastTime = 0;
+    var frameInterval = 33; // ~30 fps
+
+    function draw(timestamp) {
+        if (!document.getElementById('matrix-rain')) return;
+        if (timestamp - lastTime >= frameInterval) {
+            lastTime = timestamp;
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = document.body.classList.contains('root-mode') ? '#ff3333' : '#00ff88';
+            ctx.font = fontSize + 'px JetBrains Mono, monospace';
+            for (var j = 0; j < drops.length; j++) {
+                var ch = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(ch, j * fontSize, drops[j] * fontSize);
+                if (drops[j] * fontSize > canvas.height && Math.random() > 0.975) drops[j] = 0;
+                drops[j]++;
+            }
         }
-    }, 33);
-    canvas._matrixInterval = interval;
+        canvas._matrixRafId = requestAnimationFrame(draw);
+    }
+
+    canvas._matrixRafId = requestAnimationFrame(draw);
     canvas._resizeHandler = resize;
 }
 
 function stopMatrixRain() {
     var canvas = document.getElementById('matrix-rain');
     if (!canvas) return;
-    clearInterval(canvas._matrixInterval);
+    cancelAnimationFrame(canvas._matrixRafId);
     window.removeEventListener('resize', canvas._resizeHandler);
     canvas.parentNode.removeChild(canvas);
 }
@@ -859,6 +900,88 @@ function stopMatrixRain() {
             }
             typed = '';
         }
+    });
+}());
+
+// ===== Easter Egg: Konami Code → Retro Amber Theme =====
+(function () {
+    var konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    var konamiIndex = 0;
+    document.addEventListener('keydown', function (e) {
+        var active = document.activeElement;
+        if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) return;
+        if (e.key === konamiCode[konamiIndex]) {
+            konamiIndex++;
+            if (konamiIndex === konamiCode.length) {
+                konamiIndex = 0;
+                document.body.classList.toggle('theme-amber');
+            }
+        } else {
+            konamiIndex = (e.key === konamiCode[0]) ? 1 : 0;
+        }
+    });
+}());
+
+// ===== Feature: Draggable Terminal Windows =====
+(function () {
+    document.querySelectorAll('.terminal-window').forEach(function (win) {
+        var header = win.querySelector('.terminal-header');
+        if (!header) return;
+
+        var isDragging = false;
+        var startX, startY;
+
+        function startDrag(clientX, clientY) {
+            var rect = win.getBoundingClientRect();
+            win.style.position = 'fixed';
+            win.style.left = rect.left + 'px';
+            win.style.top = rect.top + 'px';
+            win.style.width = rect.width + 'px';
+            win.style.zIndex = '5000';
+            win.style.margin = '0';
+            startX = clientX - rect.left;
+            startY = clientY - rect.top;
+            isDragging = true;
+            header.style.cursor = 'grabbing';
+        }
+
+        function doDrag(clientX, clientY) {
+            if (!isDragging) return;
+            win.style.left = (clientX - startX) + 'px';
+            win.style.top = (clientY - startY) + 'px';
+        }
+
+        function endDrag() {
+            if (!isDragging) return;
+            isDragging = false;
+            header.style.cursor = 'grab';
+        }
+
+        header.addEventListener('mousedown', function (e) {
+            if (e.target.classList.contains('t-btn')) return;
+            startDrag(e.clientX, e.clientY);
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', function (e) { doDrag(e.clientX, e.clientY); });
+        document.addEventListener('mouseup', endDrag);
+
+        header.addEventListener('touchstart', function (e) {
+            if (e.target.classList.contains('t-btn')) return;
+            var touch = e.touches[0];
+            startDrag(touch.clientX, touch.clientY);
+            e.preventDefault();
+        }, { passive: false });
+
+        document.addEventListener('touchmove', function (e) {
+            if (isDragging) {
+                var touch = e.touches[0];
+                doDrag(touch.clientX, touch.clientY);
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        document.addEventListener('touchend', endDrag);
     });
 }());
 
