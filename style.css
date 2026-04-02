@@ -1016,3 +1016,89 @@ body.theme-amber {
     margin-top: 0.4rem;
     font-family: 'JetBrains Mono', monospace;
 }
+
+/* ===== Theme: Dracula ===== */
+body.theme-dracula {
+    --bg-primary: #282a36;
+    --bg-secondary: #1e2029;
+    --bg-card: #2d2f3f;
+    --terminal-green: #50fa7b;
+    --terminal-green-dim: rgba(80, 250, 123, 0.3);
+    --accent-cyan: #8be9fd;
+    --accent-amber: #f1fa8c;
+    --accent-purple: #ff79c6;
+    --text-primary: #f8f8f2;
+    --text-secondary: #6272a4;
+    --text-muted: #44475a;
+    --border-color: #44475a;
+    --glow: 0 0 20px rgba(80, 250, 123, 0.3);
+    --glow-strong: 0 0 30px rgba(80, 250, 123, 0.5);
+}
+
+/* ===== Theme: Monokai ===== */
+body.theme-monokai {
+    --bg-primary: #272822;
+    --bg-secondary: #1e1f1a;
+    --bg-card: #2d2e27;
+    --terminal-green: #a6e22e;
+    --terminal-green-dim: rgba(166, 226, 46, 0.3);
+    --accent-cyan: #66d9e8;
+    --accent-amber: #fd971f;
+    --accent-purple: #ae81ff;
+    --text-primary: #f8f8f2;
+    --text-secondary: #75715e;
+    --text-muted: #49483e;
+    --border-color: #49483e;
+    --glow: 0 0 20px rgba(166, 226, 46, 0.3);
+    --glow-strong: 0 0 30px rgba(166, 226, 46, 0.5);
+}
+
+/* ===== Theme: Cyberpunk ===== */
+body.theme-cyberpunk {
+    --bg-primary: #0d0015;
+    --bg-secondary: #10001f;
+    --bg-card: #160028;
+    --terminal-green: #00ff41;
+    --terminal-green-dim: rgba(0, 255, 65, 0.3);
+    --accent-cyan: #ff00ff;
+    --accent-amber: #ffff00;
+    --accent-purple: #ff0080;
+    --text-primary: #e0e0e0;
+    --text-secondary: #a0a0c0;
+    --text-muted: #606080;
+    --border-color: #440066;
+    --glow: 0 0 20px rgba(0, 255, 65, 0.4);
+    --glow-strong: 0 0 40px rgba(0, 255, 65, 0.6);
+}
+
+/* ===== Theme: Ubuntu ===== */
+body.theme-ubuntu {
+    --bg-primary: #300924;
+    --bg-secondary: #2c0921;
+    --bg-card: #3a0d2c;
+    --terminal-green: #e95420;
+    --terminal-green-dim: rgba(233, 84, 32, 0.3);
+    --accent-cyan: #77216f;
+    --accent-amber: #eba71e;
+    --accent-purple: #5e2750;
+    --text-primary: #f5f5f5;
+    --text-secondary: #aea79f;
+    --text-muted: #77706b;
+    --border-color: #5e2750;
+    --glow: 0 0 20px rgba(233, 84, 32, 0.3);
+    --glow-strong: 0 0 30px rgba(233, 84, 32, 0.5);
+}
+
+/* ===== Self-Destruct Glitch Animation ===== */
+@keyframes glitch-skew {
+    0%   { transform: skewX(0deg); }
+    20%  { transform: skewX(-6deg) translateX(4px); }
+    40%  { transform: skewX(4deg) translateX(-6px); }
+    60%  { transform: skewX(-3deg) translateX(3px); }
+    80%  { transform: skewX(2deg) translateX(-2px); }
+    100% { transform: skewX(0deg); }
+}
+
+body.glitch-mode {
+    animation: glitch-skew 0.18s infinite;
+}

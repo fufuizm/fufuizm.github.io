@@ -735,7 +735,12 @@ runBootSequence();
     }
 
     function echoCmd(cmd) {
-        addLine('furkan@devops:~$ ' + cmd, 'cmd');
+        addLine('furkan@devops:' + currentDir + '$ ' + cmd, 'cmd');
+    }
+
+    function updatePrompt() {
+        var promptEl = document.getElementById('cli-prompt');
+        if (promptEl) promptEl.textContent = 'furkan@devops:' + currentDir + '$';
     }
 
     function addNeofetch() {
@@ -814,7 +819,66 @@ runBootSequence();
 
     var sections = { projects: '#projects', about: '#about', contact: '#contact', tools: '#tools', education: '#education', certificates: '#certificates' };
 
-    var cliCommands = ['help', 'projects', 'about', 'education', 'certificates', 'tools', 'contact', 'clear', 'whoami', 'sudo', 'ip a', 'ifconfig', 'theme light', 'ls', 'pwd', 'uname -a', 'exit', 'neofetch', 'curl wttr.in/Istanbul', 'reboot', 'cat cv.pdf', 'cat cv', 'ping', 'ping fufuizm.com'];
+    var cliCommands = ['help', 'projects', 'about', 'education', 'certificates', 'tools', 'contact', 'clear', 'whoami', 'sudo', 'ip a', 'ifconfig', 'theme ls', 'theme set default', 'theme set dracula', 'theme set monokai', 'theme set cyberpunk', 'theme set ubuntu', 'theme set amber', 'theme set light', 'ls', 'pwd', 'cd ~', 'cd about', 'cd projects', 'cd education', 'cat profile.md', 'cat ai-container.txt', 'cat vpn-lab.txt', 'cat logging.txt', 'cat university.md', 'uname -a', 'exit', 'neofetch', 'curl wttr.in/Istanbul', 'reboot', 'cat cv.pdf', 'cat cv', 'ping', 'ping fufuizm.com'];
+
+    // ===== Virtual File System =====
+    var vfsTree = {
+        '~':            ['about/', 'projects/', 'education/'],
+        '~/about':      ['profile.md'],
+        '~/projects':   ['ai-container.txt', 'vpn-lab.txt', 'logging.txt'],
+        '~/education':  ['university.md']
+    };
+
+    var catContent = {
+        'profile.md':        'DevOps & Network Engineer in training.\nFocused on Linux homelabs, Docker, AI-driven automation, VPN infra,\nand centralized monitoring. MIS student @ Istanbul Gelisim University.',
+        'ai-container.txt':  'AI-Powered Container Infrastructure Automation\n---\nModular Docker/docker-compose stack on a low-resource Linux server.\nAI pipeline (OpenClaw + Kimi K2.5 API) analyzes metrics and generates\ncommands with a human-approval step. Version-controlled with Git.',
+        'vpn-lab.txt':       'Virtual Network Lab & VPN Infrastructure\n---\nMultiple Linux VMs on VirtualBox simulating router, DNS server, DMZ.\nSSH key auth, ufw firewall rules, WireGuard/OpenVPN for secure access.\nTraffic analysis with tcpdump, nmap, netstat.',
+        'logging.txt':       'Centralized Logging & Monitoring Infrastructure\n---\nrsyslog/syslog aggregating service, security and network events\nfrom multiple hosts. Grafana dashboards for CPU/RAM/disk/network.\nBasic observability stack for homelab service health.',
+        'university.md':     'B.Sc. in Management Information Systems\nIstanbul Gelisim University — GPA: 3.03 / 4.00 (2022–2026)\nCourses: OS, Networking, DB, Cloud Computing, Data Mining,\nInformation Security, ERP Systems, Project Management.'
+    };
+
+    var currentDir = '~';
+
+    // ===== Self-Destruct State =====
+    var awaitingSelfDestruct = false;
+
+    function startSelfDestruct() {
+        addLine('[CRITICAL] Initiating system destruction sequence...', 'err');
+        document.body.classList.add('glitch-mode');
+        var targets = Array.from(document.querySelectorAll('header, section, footer, .project-card, .cert-card, .tool-box, #server-metrics'));
+        targets.sort(function () { return Math.random() - 0.5; });
+        var GLITCH_MIN_MS = 80;
+        var GLITCH_MAX_MS = 350;
+        var MAX_SKEW_DEG  = 12;
+        var MAX_SHIFT_PX  = 60;
+        var totalDelay = 0;
+        targets.forEach(function (el) {
+            var delay = totalDelay + Math.floor(Math.random() * GLITCH_MAX_MS + GLITCH_MIN_MS);
+            totalDelay = delay;
+            setTimeout(function () {
+                el.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+                el.style.opacity = '0';
+                el.style.transform = 'skewX(' + (Math.random() * MAX_SKEW_DEG * 2 - MAX_SKEW_DEG) + 'deg) translateX(' + (Math.random() * MAX_SHIFT_PX * 2 - MAX_SHIFT_PX) + 'px)';
+            }, delay);
+        });
+        setTimeout(function () {
+            document.body.classList.remove('glitch-mode');
+            var blackScreen = document.createElement('div');
+            blackScreen.style.cssText = 'position:fixed;inset:0;background:#000;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:"JetBrains Mono",monospace;';
+            var msg = document.createElement('div');
+            msg.style.cssText = 'color:#ff3333;font-size:1.5rem;letter-spacing:3px;margin-bottom:0.8rem;';
+            msg.textContent = 'System Destroyed.';
+            var sub = document.createElement('div');
+            sub.style.cssText = 'color:#888;font-size:0.95rem;letter-spacing:1px;';
+            sub.textContent = 'Rebooting...';
+            blackScreen.appendChild(msg);
+            blackScreen.appendChild(sub);
+            document.body.appendChild(blackScreen);
+            setTimeout(function () {
+                location.reload();
+            }, 3000);
+        }, totalDelay + 600);
+    }
 
     // Command history
     var cmdHistory = [];
@@ -869,23 +933,49 @@ runBootSequence();
         var cmd = input.value.trim();
         input.value = '';
         if (!cmd) return;
+
+        // Self-destruct confirmation prompt
+        if (awaitingSelfDestruct) {
+            awaitingSelfDestruct = false;
+            echoCmd(cmd);
+            var ans = cmd.toLowerCase();
+            if (ans === 'y' || ans === 'yes') {
+                addLine('[INITIATING] Self-destruct sequence in 3...2...1', 'err');
+                setTimeout(startSelfDestruct, 800);
+            } else {
+                addLine('[ABORTED] Smart choice. The server lives.', 'ok');
+            }
+            return;
+        }
+
         cmdHistory.unshift(cmd);
         historyIndex = -1;
         echoCmd(cmd);
         var c = cmd.toLowerCase();
 
         if (c === 'help') {
-            addLine('Available commands: projects | about | education | certificates | tools | contact | whoami | ip a | ls | pwd | uname -a | neofetch | curl wttr.in/Istanbul | reboot | cat cv.pdf | ping | clear | exit | theme light');
+            addLine('Available commands:');
+            addLine('  Navigation : cd <dir> | ls | pwd | cat <file>');
+            addLine('  Sections   : projects | about | education | certificates | tools | contact');
+            addLine('  System     : whoami | ip a | uname -a | neofetch | reboot');
+            addLine('  Extras     : curl wttr.in/Istanbul | cat cv.pdf | ping | clear | exit');
+            addLine('  Themes     : theme ls | theme set <name>');
+            addLine('  Easter eggs: sudo rm -rf /');
         } else if (sections[c]) {
             addLine('Scrolling to #' + c + '...', 'ok');
             var target = document.querySelector(sections[c]);
             if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         } else if (c === 'clear') {
             output.innerHTML = '';
+        } else if (c === 'sudo rm -rf /' || c === 'sudo rm -rf /*' || c === 'sudo rm -rf ~' || c === 'sudo rm -rf') {
+            addLine('[WARNING] Are you sure? This will delete the portfolio! [y/N]', 'err');
+            awaitingSelfDestruct = true;
         } else if (c === 'sudo' || c.startsWith('sudo ')) {
             addLine('Access denied: I can\'t let you delete this server!', 'err');
         } else if (c === 'exit') {
             addLine('logout', 'ok');
+            currentDir = '~';
+            updatePrompt();
             if (document.body.classList.contains('root-mode')) {
                 document.body.classList.remove('root-mode');
                 stopMatrixRain();
@@ -893,9 +983,63 @@ runBootSequence();
         } else if (c === 'whoami' || c === 'ip a' || c === 'ifconfig') {
             fetchIpAndPrint();
         } else if (c === 'pwd') {
-            addLine('/home/furkan');
-        } else if (c === 'ls') {
-            addLine('about.sh  certificates.sh  contact.sh  education.sh  projects.sh  tools.sh');
+            var pwdPath = currentDir === '~' ? '/home/furkan' : '/home/furkan/' + currentDir.slice(2);
+            addLine(pwdPath);
+        } else if (c === 'ls' || c === 'ls -la' || c === 'ls -l') {
+            var contents = vfsTree[currentDir];
+            if (contents && contents.length > 0) {
+                addLine(contents.join('  '));
+            } else {
+                addLine('(empty directory)');
+            }
+        } else if (c === 'cd' || c === 'cd ~') {
+            currentDir = '~';
+            updatePrompt();
+        } else if (c.startsWith('cd ')) {
+            var arg = cmd.slice(3).trim();
+            var newDir;
+            if (arg === '..') {
+                newDir = '~';
+            } else if (arg === '~' || arg === '/home/furkan') {
+                newDir = '~';
+            } else if (arg.startsWith('~/') || arg.startsWith('/home/furkan/')) {
+                newDir = arg.startsWith('/home/furkan/') ? '~/' + arg.slice('/home/furkan/'.length) : arg;
+            } else {
+                newDir = currentDir === '~' ? '~/' + arg : currentDir + '/' + arg;
+            }
+            // Strip trailing slash for lookup
+            newDir = newDir.replace(/\/$/, '') || '~';
+            if (vfsTree.hasOwnProperty(newDir)) {
+                currentDir = newDir;
+                updatePrompt();
+            } else {
+                addLine('cd: ' + arg + ': No such file or directory', 'err');
+            }
+        } else if (c.startsWith('cat ')) {
+            var filename = cmd.slice(4).trim();
+            // Strip path prefix if any
+            var basename = filename.split('/').pop();
+            var fileContent = catContent[basename];
+            if (!fileContent) {
+                // Try cv commands too
+                if (basename === 'cv.pdf' || basename === 'cv') {
+                    var isLangTr = document.body.classList.contains('lang-tr');
+                    var cvUrl2 = isLangTr ? 'Furkan%20SARICA%20CV%20TR.pdf' : 'Furkan%20SARICA%20CV%20EN.pdf';
+                    var cvName2 = isLangTr ? 'Furkan SARICA CV TR.pdf' : 'Furkan SARICA CV EN.pdf';
+                    addLine('Downloading ' + cvName2 + '...', 'ok');
+                    var dlLink2 = document.createElement('a');
+                    dlLink2.href = cvUrl2;
+                    dlLink2.download = cvName2;
+                    document.body.appendChild(dlLink2);
+                    dlLink2.click();
+                    document.body.removeChild(dlLink2);
+                    addLine('Done.', 'ok');
+                } else {
+                    addLine('cat: ' + filename + ': No such file or directory', 'err');
+                }
+            } else {
+                fileContent.split('\n').forEach(function (line) { addLine(line); });
+            }
         } else if (c === 'uname -a') {
             addLine('Linux devops 6.5.0-fufuizm #1 SMP Thu Jan 01 00:00:00 UTC 2026 x86_64 GNU/Linux');
         } else if (c === 'theme light' || c === 'theme set light' || c === 'light') {
@@ -906,6 +1050,36 @@ runBootSequence();
                 document.body.classList.remove('light-troll');
                 addLine('Reverted to safe dark mode.', 'ok');
             }, 2500);
+        } else if (c === 'theme ls' || c === 'theme list') {
+            addLine('Available themes:');
+            addLine('  default   — dark hacker green  [ active ]');
+            addLine('  dracula   — purple/pink palette');
+            addLine('  monokai   — warm yellow-green');
+            addLine('  cyberpunk — neon green on deep purple');
+            addLine('  ubuntu    — Ubuntu orange');
+            addLine('  amber     — retro terminal amber');
+            addLine('  light     — [ERROR: Not supported by SysAdmins]');
+            addLine('Usage: theme set <name>');
+        } else if (c.startsWith('theme set ')) {
+            var themeName = c.slice(10).trim();
+            var validThemes = ['default', 'dracula', 'monokai', 'cyberpunk', 'ubuntu', 'amber'];
+            document.body.classList.remove('theme-dracula', 'theme-monokai', 'theme-cyberpunk', 'theme-ubuntu', 'theme-amber');
+            if (themeName === 'default') {
+                addLine('Theme set to: default', 'ok');
+            } else if (themeName === 'light') {
+                document.body.classList.add('light-troll', 'shake');
+                addLine('FATAL ERROR: SysAdmins don\'t use light theme!', 'err');
+                setTimeout(function () { document.body.classList.remove('shake'); }, 600);
+                setTimeout(function () {
+                    document.body.classList.remove('light-troll');
+                    addLine('Reverted to safe dark mode.', 'ok');
+                }, 2500);
+            } else if (validThemes.indexOf(themeName) !== -1) {
+                document.body.classList.add('theme-' + themeName);
+                addLine('Theme set to: ' + themeName, 'ok');
+            } else {
+                addLine('Unknown theme: ' + themeName + '. Run "theme ls" to see options.', 'err');
+            }
         } else if (c === 'neofetch') {
             addNeofetch();
         } else if (c === 'curl wttr.in/istanbul' || c === 'curl wttr.in/istanbul?0atq' || c === 'curl wttr.in/istanbul?format=3') {
@@ -917,18 +1091,6 @@ runBootSequence();
                 output.innerHTML = '';
                 runBootSequence();
             }, 600);
-        } else if (c === 'cat cv.pdf' || c === 'cat cv' || c === 'cat cv.pdf tr' || c === 'cat cv tr') {
-            var isLangTr = document.body.classList.contains('lang-tr');
-            var cvUrl = isLangTr ? 'Furkan%20SARICA%20CV%20TR.pdf' : 'Furkan%20SARICA%20CV%20EN.pdf';
-            var cvName = isLangTr ? 'Furkan SARICA CV TR.pdf' : 'Furkan SARICA CV EN.pdf';
-            addLine('Downloading ' + cvName + '...', 'ok');
-            var dlLink = document.createElement('a');
-            dlLink.href = cvUrl;
-            dlLink.download = cvName;
-            document.body.appendChild(dlLink);
-            dlLink.click();
-            document.body.removeChild(dlLink);
-            addLine('Done.', 'ok');
         } else if (c === 'ping' || c === 'ping fufuizm.com' || c === 'ping fufuizm') {
             addLine('PING fufuizm.com (127.0.0.1): 56 data bytes', 'ok');
             addLine('Launching Ping-Pong...', 'ok');
