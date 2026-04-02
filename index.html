@@ -30,7 +30,6 @@
 
 <!-- Hero Section -->
 <header class="hero">
-<canvas id="network-canvas"></canvas>
 <div class="hero-prompt">whoami</div>
 
 <div class="ascii-header">
@@ -560,69 +559,6 @@ console.log("%c[!] Merhaba geliştirici! / Hello developer! 🚀\nKodlarımı in
     });
 }());
 
-// Feature 3: Network Topology Canvas
-(function () {
-    var canvas = document.getElementById('network-canvas');
-    if (!canvas) return;
-    var ctx = canvas.getContext('2d');
-    var NODES = 40;
-    var MAX_DIST = 120;
-    var nodes = [];
-
-    function resize() {
-        canvas.width = canvas.offsetWidth || canvas.parentElement.offsetWidth;
-        canvas.height = canvas.offsetHeight || canvas.parentElement.offsetHeight;
-    }
-
-    function init() {
-        resize();
-        nodes = [];
-        for (var i = 0; i < NODES; i++) {
-            nodes.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                vx: (Math.random() - 0.5) * 0.5,
-                vy: (Math.random() - 0.5) * 0.5,
-                r: Math.random() * 2 + 1
-            });
-        }
-    }
-
-    function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (var i = 0; i < nodes.length; i++) {
-            var n = nodes[i];
-            n.x += n.vx;
-            n.y += n.vy;
-            if (n.x < 0 || n.x > canvas.width) n.vx *= -1;
-            if (n.y < 0 || n.y > canvas.height) n.vy *= -1;
-            ctx.beginPath();
-            ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-            ctx.fillStyle = '#00ff88';
-            ctx.fill();
-        }
-        for (var i = 0; i < nodes.length; i++) {
-            for (var j = i + 1; j < nodes.length; j++) {
-                var dx = nodes[i].x - nodes[j].x;
-                var dy = nodes[i].y - nodes[j].y;
-                var dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < MAX_DIST) {
-                    ctx.beginPath();
-                    ctx.moveTo(nodes[i].x, nodes[i].y);
-                    ctx.lineTo(nodes[j].x, nodes[j].y);
-                    ctx.strokeStyle = 'rgba(0, 255, 136, ' + (1 - dist / MAX_DIST) * 0.6 + ')';
-                    ctx.lineWidth = 0.5;
-                    ctx.stroke();
-                }
-            }
-        }
-        requestAnimationFrame(draw);
-    }
-
-    init();
-    window.addEventListener('resize', init);
-    draw();
-}());
 </script>
 
 </body>
