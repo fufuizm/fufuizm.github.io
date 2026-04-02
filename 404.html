@@ -147,9 +147,9 @@
             <div id="canvas-wrap">
                 <canvas id="snake-canvas"></canvas>
                 <div id="overlay">
-                    <span>▶ SNAKE OYUNU</span>
-                    <span>Ok tuşları veya WASD ile oyna</span>
-                    <span class="overlay-key">[ Başlamak için tıkla veya Space ]</span>
+                    <span>▶ SNAKE</span>
+                    <span id="overlay-controls">Ok tuşları / WASD / Swipe</span>
+                    <span class="overlay-key" id="overlay-hint">[ Başlamak için tıkla veya Space ]</span>
                 </div>
             </div>
             <div id="game-status">
@@ -171,6 +171,32 @@
         var overlay = document.getElementById('overlay');
         var scoreEl = document.getElementById('score-display');
         var stateEl = document.getElementById('state-display');
+        var overlayControls = document.getElementById('overlay-controls');
+        var overlayHint = document.getElementById('overlay-hint');
+
+        // Detect site language preference (matches index.html)
+        var lang = (function () {
+            try { return localStorage.getItem('lang') || 'tr'; } catch (e) { return 'tr'; }
+        }());
+        var TR = {
+            controls: 'Ok tuşları / WASD / Kaydır',
+            hint: '[ Başlamak için tıkla veya Space ]',
+            running: 'ÇALIŞIYOR',
+            ready: 'HAZIR',
+            gameOver: 'OYUN BİTTİ',
+            goMsg: function (s) { return '✗ GAME OVER — Skor: ' + s; },
+            replay: '[ Tekrar oynamak için tıkla ]'
+        };
+        var EN = {
+            controls: 'Arrow keys / WASD / Swipe',
+            hint: '[ Click or Space to start ]',
+            running: 'RUNNING',
+            ready: 'READY',
+            gameOver: 'GAME OVER',
+            goMsg: function (s) { return '✗ GAME OVER — Score: ' + s; },
+            replay: '[ Click to play again ]'
+        };
+        var L = lang === 'en' ? EN : TR;
 
         function resize() {
             var maxW = Math.min(document.getElementById('game-wrapper').clientWidth, 600);
@@ -182,6 +208,9 @@
         }
         resize();
         window.addEventListener('resize', function () { resize(); if (!running) drawFrame(); });
+
+        overlayControls.textContent = L.controls;
+        overlayHint.textContent = L.hint;
 
         var GREEN      = '#00ff88';
         var GREEN_DIM  = 'rgba(0,255,136,0.35)';
@@ -200,7 +229,7 @@
             running = false;
             dead = false;
             scoreEl.textContent = '0';
-            stateEl.textContent = 'READY';
+            stateEl.textContent = L.ready;
         }
 
         function randomFood() {
@@ -268,12 +297,12 @@
             running = false;
             dead = true;
             clearInterval(loopId);
-            stateEl.textContent = 'GAME OVER';
+            stateEl.textContent = L.gameOver;
             drawFrame();
             // Flash red over head
             ctx.fillStyle = 'rgba(255,85,85,0.35)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            overlay.innerHTML = '<span style="color:#ff5555">✗ GAME OVER</span><span>Skor: ' + score + '</span><span class="overlay-key">[ Tekrar oynamak için tıkla ]</span>';
+            overlay.innerHTML = '<span style="color:#ff5555">' + L.goMsg(score) + '</span><span class="overlay-key">' + L.replay + '</span>';
             overlay.style.display = 'flex';
         }
 
@@ -282,7 +311,7 @@
             init();
             overlay.style.display = 'none';
             running = true;
-            stateEl.textContent = 'RUNNING';
+            stateEl.textContent = L.running;
             drawFrame();
             var speed = 150;
             loopId = setInterval(function () {
@@ -337,12 +366,16 @@
             var dy = e.changedTouches[0].clientY - touchStart.clientY;
             touchStart = null;
             if (!running) { startGame(); return; }
+            // Ignore taps (negligible movement)
+            if (Math.abs(dx) < 10 && Math.abs(dy) < 10) return;
+            var d;
             if (Math.abs(dx) > Math.abs(dy)) {
-                nextDir = dx > 0 ? {x:1,y:0} : {x:-1,y:0};
+                d = dx > 0 ? {x:1,y:0} : {x:-1,y:0};
             } else {
-                nextDir = dy > 0 ? {x:0,y:1} : {x:0,y:-1};
+                d = dy > 0 ? {x:0,y:1} : {x:0,y:-1};
             }
-            if (nextDir.x === -dir.x && nextDir.y === -dir.y) nextDir = dir;
+            // Prevent reversing
+            if (d.x !== -dir.x || d.y !== -dir.y) nextDir = d;
         }, {passive: true});
 
         init();
