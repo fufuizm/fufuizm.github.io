@@ -946,3 +946,73 @@ body.theme-amber {
     border: none;
     background: transparent;
 }
+
+/* ===== Mute Toggle Button ===== */
+.mute-toggle {
+    position: fixed;
+    top: 1.2rem;
+    right: 8rem;
+    z-index: 10000;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    line-height: 1;
+    user-select: none;
+}
+
+.mute-toggle:hover {
+    border-color: var(--terminal-green);
+    box-shadow: var(--glow);
+}
+
+@media (max-width: 768px) {
+    .mute-toggle { top: 0.8rem; right: 6.5rem; }
+}
+
+/* ===== AFK Screensaver ===== */
+#screensaver {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 99999;
+    overflow: hidden;
+    cursor: none;
+}
+
+#screensaver-text {
+    position: absolute;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+    text-shadow: 0 0 24px currentColor;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* ===== Ping Pong Overlay ===== */
+#ping-pong-overlay {
+    display: none;
+    padding: 0.5rem 0;
+}
+
+#ping-pong-canvas {
+    display: block;
+    border: 1px solid var(--terminal-green-dim);
+    background: var(--bg-primary);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+#ping-pong-info {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 0.4rem;
+    font-family: 'JetBrains Mono', monospace;
+}

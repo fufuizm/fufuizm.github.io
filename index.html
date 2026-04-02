@@ -33,6 +33,9 @@
 <span class="lang-option" id="lang-en-btn">EN</span>
 </button>
 
+<!-- Sound Toggle -->
+<button class="mute-toggle" id="mute-btn" title="Enable sounds / Sesi aç" aria-label="Toggle sound">🔇</button>
+
 <!-- Hero Section -->
 <header class="hero">
 <div class="hero-prompt">whoami</div>
@@ -460,6 +463,10 @@
       <span class="t-btn t-btn-green"></span>
     </div>
     <div id="cli-box">
+      <div id="ping-pong-overlay">
+        <canvas id="ping-pong-canvas" width="600" height="200"></canvas>
+        <div id="ping-pong-info">↑ ↓ to move &nbsp;·&nbsp; ESC or Q to exit</div>
+      </div>
       <div id="cli-output"></div>
       <div id="cli-input-line">
         <span id="cli-prompt">furkan@devops:~$</span>
@@ -483,6 +490,11 @@
 </footer>
 
 <button id="backToTop" class="back-to-top" title="Yukarı Çık">cd ~</button>
+
+<!-- AFK Screensaver -->
+<div id="screensaver" role="presentation" aria-hidden="true">
+  <div id="screensaver-text">&lt; fufuizm /&gt;</div>
+</div>
 
 <script>
 // Language state
@@ -656,7 +668,9 @@ console.log("%c[!] Merhaba geliştirici! / Hello developer! 🚀\nKodlarımı in
 }());
 
 // ===== Feature: Linux Boot Preloader =====
-(function () {
+var _pageLoadTime = Date.now();
+
+function runBootSequence() {
     var bootLines = [
         '[ OK ] Initializing kernel modules...',
         '[ OK ] Mounting filesystems...',
@@ -671,6 +685,9 @@ console.log("%c[!] Merhaba geliştirici! / Hello developer! 🚀\nKodlarımı in
     var screen = document.getElementById('boot-screen');
     var log = document.getElementById('boot-log');
     if (!screen || !log) return;
+    log.textContent = '';
+    screen.style.display = 'flex';
+    screen.style.opacity = '1';
 
     var idx = 0;
     var delay = 160;
@@ -691,7 +708,9 @@ console.log("%c[!] Merhaba geliştirici! / Hello developer! 🚀\nKodlarımı in
     }
 
     printNext();
-}());
+}
+
+runBootSequence();
 
 // ===== Feature: Interactive Mini CLI Terminal =====
 (function () {
@@ -707,15 +726,95 @@ console.log("%c[!] Merhaba geliştirici! / Hello developer! 🚀\nKodlarımı in
         output.parentElement.scrollTop = output.parentElement.scrollHeight;
     }
 
+    function addBlock(html) {
+        var block = document.createElement('div');
+        block.className = 'cli-history-line';
+        block.innerHTML = html;
+        output.appendChild(block);
+        output.parentElement.scrollTop = output.parentElement.scrollHeight;
+    }
+
     function echoCmd(cmd) {
         addLine('furkan@devops:~$ ' + cmd, 'cmd');
+    }
+
+    function addNeofetch() {
+        var uptime = Math.floor((Date.now() - _pageLoadTime) / 1000);
+        var uptimeStr = uptime < 60 ? uptime + 's' : Math.floor(uptime / 60) + 'm ' + (uptime % 60) + 's';
+        var logo = [
+            ' ██████╗ ',
+            ' ██╔════╝',
+            ' █████╗  ',
+            ' ██╔══╝  ',
+            ' ██║     ',
+            ' ╚═╝     ',
+        ];
+        var res = window.screen ? window.screen.width + 'x' + window.screen.height : 'N/A';
+        var stats = [
+            '<span style="color:var(--terminal-green)">furkan</span>@<span style="color:var(--terminal-green)">devops</span>',
+            '<span style="color:var(--text-muted)">─────────────────────────</span>',
+            '<span style="color:var(--accent-cyan)">OS</span>: fufuizm-linux x86_64',
+            '<span style="color:var(--accent-cyan)">Kernel</span>: 6.5.0-fufuizm',
+            '<span style="color:var(--accent-cyan)">Uptime</span>: ' + uptimeStr,
+            '<span style="color:var(--accent-cyan)">Shell</span>: bash 5.2.0',
+            '<span style="color:var(--accent-cyan)">Resolution</span>: ' + res,
+            '<span style="color:var(--accent-cyan)">CPU</span>: Intel Core i7',
+            '<span style="color:var(--accent-cyan)">RAM</span>: 1024MiB / 4096MiB',
+            '<span style="color:var(--accent-cyan)">Terminal</span>: fufuizm-terminal',
+        ];
+        var maxLen = Math.max(logo.length, stats.length);
+        var html = '<div style="font-family:JetBrains Mono,monospace;line-height:1.7">';
+        for (var i = 0; i < maxLen; i++) {
+            var ll = logo[i] || '         ';
+            var sl = stats[i] || '';
+            html += '<div style="display:flex;gap:1.5em;align-items:baseline">'
+                + '<span style="color:var(--terminal-green);white-space:pre">' + ll + '</span>'
+                + '<span>' + sl + '</span>'
+                + '</div>';
+        }
+        html += '<div style="margin-top:0.4rem"><span style="color:#ff5f57">██</span>'
+            + '<span style="color:#febc2e">██</span><span style="color:#28c840">██</span>'
+            + '<span style="color:var(--terminal-green)">██</span><span style="color:var(--accent-cyan)">██</span>'
+            + '<span style="color:var(--accent-purple)">██</span><span style="color:var(--accent-amber)">██</span></div>';
+        html += '</div>';
+        addBlock(html);
+    }
+
+    function fetchWeather() {
+        var staticLines = [
+            'Weather report: Istanbul',
+            '',
+            '       .--.       Partly Cloudy',
+            '    .-(    ).    +18 °C (feels like 15 °C)',
+            '   (___.__)__)   ↙ 12 km/h',
+            '                 Humidity: 65%',
+            '                 Visibility: 10 km',
+            '',
+            '[ Note: Install curl for live data ]'
+        ];
+        fetch('https://wttr.in/Istanbul?format=j1')
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                var conditions = data && data.current_condition;
+                if (!conditions || !conditions[0]) throw new Error('unexpected response');
+                var cur = conditions[0];
+                addLine('Weather report: Istanbul', 'ok');
+                addLine('');
+                addLine('Condition:   ' + (cur.weatherDesc && cur.weatherDesc[0] ? cur.weatherDesc[0].value : 'N/A'));
+                addLine('Temperature: ' + cur.temp_C + ' °C (feels like ' + cur.FeelsLikeC + ' °C)');
+                addLine('Wind:        ' + cur.winddir16Point + ' ' + cur.windspeedKmph + ' km/h');
+                addLine('Humidity:    ' + cur.humidity + '%');
+            })
+            .catch(function () {
+                staticLines.forEach(function (line) { addLine(line); });
+            });
     }
 
     addLine('Type "help" to see available commands.', 'ok');
 
     var sections = { projects: '#projects', about: '#about', contact: '#contact', tools: '#tools', education: '#education', certificates: '#certificates' };
 
-    var cliCommands = ['help', 'projects', 'about', 'education', 'certificates', 'tools', 'contact', 'clear', 'whoami', 'sudo', 'ip a', 'ifconfig', 'theme light', 'ls', 'pwd', 'uname -a', 'exit'];
+    var cliCommands = ['help', 'projects', 'about', 'education', 'certificates', 'tools', 'contact', 'clear', 'whoami', 'sudo', 'ip a', 'ifconfig', 'theme light', 'ls', 'pwd', 'uname -a', 'exit', 'neofetch', 'curl wttr.in/Istanbul', 'reboot', 'cat cv.pdf', 'cat cv', 'ping', 'ping fufuizm.com'];
 
     // Command history
     var cmdHistory = [];
@@ -734,6 +833,11 @@ console.log("%c[!] Merhaba geliştirici! / Hello developer! 🚀\nKodlarımı in
     }
 
     input.addEventListener('keydown', function (e) {
+        // Play typing click sound
+        if (e.key.length === 1 || e.key === 'Backspace') {
+            if (window.playClick) window.playClick();
+        }
+
         if (e.key === 'ArrowUp') {
             e.preventDefault();
             if (historyIndex < cmdHistory.length - 1) {
@@ -771,7 +875,7 @@ console.log("%c[!] Merhaba geliştirici! / Hello developer! 🚀\nKodlarımı in
         var c = cmd.toLowerCase();
 
         if (c === 'help') {
-            addLine('Available commands: projects | about | education | certificates | tools | contact | whoami | ip a | ifconfig | ls | pwd | uname -a | clear | exit | sudo rm -rf / | theme light');
+            addLine('Available commands: projects | about | education | certificates | tools | contact | whoami | ip a | ls | pwd | uname -a | neofetch | curl wttr.in/Istanbul | reboot | cat cv.pdf | ping | clear | exit | theme light');
         } else if (sections[c]) {
             addLine('Scrolling to #' + c + '...', 'ok');
             var target = document.querySelector(sections[c]);
@@ -802,8 +906,36 @@ console.log("%c[!] Merhaba geliştirici! / Hello developer! 🚀\nKodlarımı in
                 document.body.classList.remove('light-troll');
                 addLine('Reverted to safe dark mode.', 'ok');
             }, 2500);
+        } else if (c === 'neofetch') {
+            addNeofetch();
+        } else if (c === 'curl wttr.in/istanbul' || c === 'curl wttr.in/istanbul?0atq' || c === 'curl wttr.in/istanbul?format=3') {
+            addLine('Fetching weather for Istanbul...', 'ok');
+            fetchWeather();
+        } else if (c === 'reboot') {
+            addLine('Rebooting system...', 'ok');
+            setTimeout(function () {
+                output.innerHTML = '';
+                runBootSequence();
+            }, 600);
+        } else if (c === 'cat cv.pdf' || c === 'cat cv' || c === 'cat cv.pdf tr' || c === 'cat cv tr') {
+            var isLangTr = document.body.classList.contains('lang-tr');
+            var cvUrl = isLangTr ? 'Furkan%20SARICA%20CV%20TR.pdf' : 'Furkan%20SARICA%20CV%20EN.pdf';
+            var cvName = isLangTr ? 'Furkan SARICA CV TR.pdf' : 'Furkan SARICA CV EN.pdf';
+            addLine('Downloading ' + cvName + '...', 'ok');
+            var dlLink = document.createElement('a');
+            dlLink.href = cvUrl;
+            dlLink.download = cvName;
+            document.body.appendChild(dlLink);
+            dlLink.click();
+            document.body.removeChild(dlLink);
+            addLine('Done.', 'ok');
+        } else if (c === 'ping' || c === 'ping fufuizm.com' || c === 'ping fufuizm') {
+            addLine('PING fufuizm.com (127.0.0.1): 56 data bytes', 'ok');
+            addLine('Launching Ping-Pong...', 'ok');
+            setTimeout(function () { if (window.startPingPong) window.startPingPong(); }, 400);
         } else {
             addLine('Command not found: ' + cmd + " — type 'help'", 'err');
+            if (window.playBeep) window.playBeep();
         }
     });
 }());
@@ -826,6 +958,286 @@ console.log("%c[!] Merhaba geliştirici! / Hello developer! 🚀\nKodlarımı in
         var ram = 1024 + Math.floor(Math.random() * 50);
         metricsEl.textContent = '[ UPTIME: ' + uptime + ' ] | [ CPU: ' + cpuStr + ' ' + cpu + '% ] | [ RAM: ' + ram + 'MB / 4096MB ]';
     }, 1000);
+}());
+
+// ===== Feature: Sound Effects =====
+(function () {
+    var soundEnabled = false;
+    var audioCtx = null;
+
+    function getCtx() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        return audioCtx;
+    }
+
+    window.playClick = function () {
+        if (!soundEnabled) return;
+        try {
+            var ctx = getCtx();
+            var buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.04), ctx.sampleRate);
+            var data = buf.getChannelData(0);
+            for (var i = 0; i < data.length; i++) {
+                data[i] = (Math.random() * 2 - 1) * (1 - i / data.length);
+            }
+            var src = ctx.createBufferSource();
+            src.buffer = buf;
+            var gain = ctx.createGain();
+            gain.gain.value = 0.12;
+            src.connect(gain);
+            gain.connect(ctx.destination);
+            src.start();
+        } catch (e) {}
+    };
+
+    window.playBeep = function () {
+        if (!soundEnabled) return;
+        try {
+            var ctx = getCtx();
+            var osc = ctx.createOscillator();
+            var gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = 440;
+            gain.gain.setValueAtTime(0.2, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.18);
+        } catch (e) {}
+    };
+
+    var muteBtn = document.getElementById('mute-btn');
+    if (muteBtn) {
+        muteBtn.addEventListener('click', function () {
+            soundEnabled = !soundEnabled;
+            muteBtn.textContent = soundEnabled ? '🔊' : '🔇';
+            muteBtn.title = soundEnabled ? 'Mute sounds / Sesi kapat' : 'Enable sounds / Sesi aç';
+        });
+    }
+}());
+
+// ===== Feature: Ping Pong Mini-game =====
+(function () {
+    var gameActive = false;
+    var animId = null;
+    var gameKeyHandler = null;
+    var gameKeys = {};
+
+    var overlay = document.getElementById('ping-pong-overlay');
+    var canvas = document.getElementById('ping-pong-canvas');
+    var cliOutput = document.getElementById('cli-output');
+    var cliInputLine = document.getElementById('cli-input-line');
+
+    function addCliLine(text, cls) {
+        if (!cliOutput) return;
+        var line = document.createElement('div');
+        line.className = 'cli-history-line cli-line' + (cls ? ' ' + cls : '');
+        line.textContent = text;
+        cliOutput.appendChild(line);
+        var box = document.getElementById('cli-box');
+        if (box) box.scrollTop = box.scrollHeight;
+    }
+
+    function startGame() {
+        if (gameActive || !overlay || !canvas) return;
+        gameActive = true;
+
+        overlay.style.display = 'block';
+        if (cliOutput) cliOutput.style.display = 'none';
+        if (cliInputLine) cliInputLine.style.display = 'none';
+
+        var W = (overlay.offsetWidth || 600);
+        var H = 200;
+        canvas.width = W;
+        canvas.height = H;
+        var ctx = canvas.getContext('2d');
+
+        var paddleW = 8, paddleH = 50;
+        var ballSz = 7;
+        var playerY = H / 2 - paddleH / 2;
+        var aiY = H / 2 - paddleH / 2;
+        var ballX = W / 2, ballY = H / 2;
+        var ballVX = 3, ballVY = 2;
+        var playerScore = 0, aiScore = 0;
+        gameKeys = {};
+
+        gameKeyHandler = function (e) {
+            if (e.type === 'keydown') {
+                gameKeys[e.key] = true;
+                if (e.key === 'Escape' || e.key === 'q' || e.key === 'Q') {
+                    e.preventDefault();
+                    stopGame();
+                    return;
+                }
+                if (e.key === 'ArrowUp' || e.key === 'ArrowDown') e.preventDefault();
+            } else {
+                gameKeys[e.key] = false;
+            }
+        };
+        document.addEventListener('keydown', gameKeyHandler);
+        document.addEventListener('keyup', gameKeyHandler);
+
+        function resetBall() {
+            ballX = W / 2; ballY = H / 2;
+            ballVX = (Math.random() > 0.5 ? 1 : -1) * 3;
+            ballVY = (Math.random() > 0.5 ? 1 : -1) * 2;
+        }
+
+        function drawFrame() {
+            if (!gameActive) return;
+
+            if ((gameKeys['ArrowUp'] || gameKeys['w'] || gameKeys['W']) && playerY > 0) playerY -= 4;
+            if ((gameKeys['ArrowDown'] || gameKeys['s'] || gameKeys['S']) && playerY + paddleH < H) playerY += 4;
+
+            var aiCenter = aiY + paddleH / 2;
+            if (aiCenter < ballY - 2) aiY = Math.min(aiY + 3, H - paddleH);
+            if (aiCenter > ballY + 2) aiY = Math.max(aiY - 3, 0);
+
+            ballX += ballVX; ballY += ballVY;
+
+            if (ballY - ballSz / 2 <= 0) { ballY = ballSz / 2; ballVY = Math.abs(ballVY); }
+            if (ballY + ballSz / 2 >= H) { ballY = H - ballSz / 2; ballVY = -Math.abs(ballVY); }
+
+            if (ballX - ballSz / 2 <= paddleW && ballY >= playerY && ballY <= playerY + paddleH) {
+                ballX = paddleW + ballSz / 2;
+                ballVX = Math.abs(ballVX) * 1.05;
+                ballVY += (ballY - (playerY + paddleH / 2)) * 0.15;
+            }
+            if (ballX + ballSz / 2 >= W - paddleW && ballY >= aiY && ballY <= aiY + paddleH) {
+                ballX = W - paddleW - ballSz / 2;
+                ballVX = -Math.abs(ballVX) * 1.05;
+                ballVY += (ballY - (aiY + paddleH / 2)) * 0.15;
+            }
+
+            var maxVX = 10, maxVY = 7;
+            if (Math.abs(ballVX) > maxVX) ballVX = maxVX * Math.sign(ballVX);
+            if (Math.abs(ballVY) > maxVY) ballVY = maxVY * Math.sign(ballVY);
+
+            if (ballX < 0) { aiScore++; resetBall(); }
+            if (ballX > W) { playerScore++; resetBall(); }
+
+            ctx.fillStyle = '#0a0c10';
+            ctx.fillRect(0, 0, W, H);
+
+            ctx.fillStyle = '#00ff88';
+            ctx.fillRect(0, playerY, paddleW, paddleH);
+            ctx.fillRect(W - paddleW, aiY, paddleW, paddleH);
+            ctx.fillRect(ballX - ballSz / 2, ballY - ballSz / 2, ballSz, ballSz);
+
+            ctx.strokeStyle = 'rgba(0,255,136,0.2)';
+            ctx.setLineDash([5, 10]);
+            ctx.beginPath();
+            ctx.moveTo(W / 2, 0); ctx.lineTo(W / 2, H);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.fillStyle = 'rgba(0,255,136,0.8)';
+            ctx.font = '13px JetBrains Mono, monospace';
+            ctx.textAlign = 'left';
+            ctx.fillText('YOU: ' + playerScore, 10, 18);
+            ctx.textAlign = 'right';
+            ctx.fillText('CPU: ' + aiScore, W - 10, 18);
+
+            animId = requestAnimationFrame(drawFrame);
+        }
+
+        drawFrame();
+    }
+
+    function stopGame() {
+        if (!gameActive) return;
+        gameActive = false;
+        if (animId) cancelAnimationFrame(animId);
+        if (gameKeyHandler) {
+            document.removeEventListener('keydown', gameKeyHandler);
+            document.removeEventListener('keyup', gameKeyHandler);
+        }
+        if (overlay) overlay.style.display = 'none';
+        if (cliOutput) cliOutput.style.display = '';
+        if (cliInputLine) cliInputLine.style.display = '';
+        addCliLine('Game over. Connection closed.', 'ok');
+        var inp = document.getElementById('cli-input');
+        if (inp) inp.focus();
+    }
+
+    window.startPingPong = startGame;
+    window.stopPingPong = stopGame;
+}());
+
+// ===== Feature: AFK Screensaver (DVD Logo style) =====
+(function () {
+    var overlay = document.getElementById('screensaver');
+    var textEl = document.getElementById('screensaver-text');
+    if (!overlay || !textEl) return;
+
+    var isActive = false;
+    var idleTimer = null;
+    var animId = null;
+    var x = 60, y = 60, vx = 2, vy = 1.5;
+    var colors = ['#00ff88', '#00d4ff', '#bd93f9', '#ffb000', '#ff5f57', '#ff79c6'];
+    var colorIdx = 0;
+    var IDLE_MS = 60000;
+
+    function show() {
+        if (isActive) return;
+        isActive = true;
+        overlay.style.display = 'block';
+        overlay.setAttribute('aria-hidden', 'false');
+        x = Math.random() * Math.max(1, window.innerWidth * 0.4);
+        y = Math.random() * Math.max(1, window.innerHeight * 0.4);
+        textEl.style.color = colors[colorIdx];
+        animate();
+    }
+
+    function hide() {
+        if (!isActive) return;
+        isActive = false;
+        overlay.style.display = 'none';
+        overlay.setAttribute('aria-hidden', 'true');
+        if (animId) cancelAnimationFrame(animId);
+        resetIdle();
+    }
+
+    function animate() {
+        if (!isActive) return;
+        var tw = textEl.offsetWidth;
+        var th = textEl.offsetHeight;
+        var W = window.innerWidth;
+        var H = window.innerHeight;
+        var hit = false;
+
+        x += vx; y += vy;
+
+        if (x + tw >= W) { x = W - tw; vx = -Math.abs(vx); hit = true; }
+        if (x <= 0)      { x = 0;      vx =  Math.abs(vx); hit = true; }
+        if (y + th >= H) { y = H - th; vy = -Math.abs(vy); hit = true; }
+        if (y <= 0)      { y = 0;      vy =  Math.abs(vy); hit = true; }
+
+        if (hit) {
+            colorIdx = (colorIdx + 1) % colors.length;
+            textEl.style.color = colors[colorIdx];
+        }
+
+        textEl.style.left = x + 'px';
+        textEl.style.top = y + 'px';
+        animId = requestAnimationFrame(animate);
+    }
+
+    function resetIdle() {
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(show, IDLE_MS);
+    }
+
+    ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll'].forEach(function (evt) {
+        document.addEventListener(evt, function () {
+            if (isActive) hide();
+            else resetIdle();
+        }, { passive: true });
+    });
+
+    resetIdle();
 }());
 
 // ===== Feature: Matrix / Binary Rain in Root Mode =====
