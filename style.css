@@ -685,3 +685,31 @@ body.lang-en [data-lang-en-grid] { display: grid; }
     font-size: 1.1em;
     vertical-align: middle;
 }
+
+/* CV Download Button */
+.hero-nav a.cv-download[data-lang-tr],
+.hero-nav a.cv-download[data-lang-en] {
+    display: none;
+}
+
+body.lang-tr .hero-nav a.cv-download[data-lang-tr],
+body.lang-en .hero-nav a.cv-download[data-lang-en] {
+    display: block;
+}
+
+.hero-nav a.cv-download {
+    border-color: var(--terminal-green);
+    color: var(--terminal-green);
+    box-shadow: var(--glow);
+}
+
+.hero-nav a.cv-download::before {
+    content: '↓ ';
+    color: var(--terminal-green);
+    opacity: 1;
+}
+
+.hero-nav a.cv-download:hover {
+    box-shadow: var(--glow-strong);
+    transform: translateX(5px);
+}
