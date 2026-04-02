@@ -538,8 +538,26 @@
   </div>
 </div>
 
-<!-- Background Scrolling Logs -->
+<!-- Interactive Mouse-Tracking Logs -->
 <div id="bg-logs" aria-hidden="true"></div>
+
+<!-- Vim Overlay -->
+<div id="vim-overlay" tabindex="-1" aria-hidden="true">
+  <div id="vim-main"></div>
+  <div id="vim-status-bar">
+    <span id="vim-mode-indicator"></span>
+    <span id="vim-filename"></span>
+    <span id="vim-position">0,0-1  All</span>
+  </div>
+  <div id="vim-cmdline"></div>
+</div>
+
+<!-- Kernel Panic Overlay -->
+<div id="kernel-panic" aria-hidden="true">
+  <div id="kernel-panic-title">Kernel panic - not syncing: Fatal exception</div>
+  <pre id="kernel-panic-text"></pre>
+  <div id="kernel-panic-countdown"></div>
+</div>
 
 <script>
 // Language state
@@ -864,11 +882,11 @@ runBootSequence();
 
     var sections = { projects: '#projects', about: '#about', contact: '#contact', tools: '#tools', education: '#education', certificates: '#certificates' };
 
-    var cliCommands = ['help', 'projects', 'about', 'education', 'certificates', 'tools', 'contact', 'clear', 'whoami', 'sudo', 'ip a', 'ifconfig', 'theme ls', 'theme set default', 'theme set dracula', 'theme set monokai', 'theme set cyberpunk', 'theme set ubuntu', 'theme set amber', 'theme set light', 'ls', 'pwd', 'cd ~', 'cd about', 'cd projects', 'cd education', 'cat profile.md', 'cat ai-container.txt', 'cat vpn-lab.txt', 'cat logging.txt', 'cat university.md', 'uname -a', 'exit', 'neofetch', 'curl wttr.in/Istanbul', 'reboot', 'cat cv.pdf', 'cat cv', 'ping', 'ping fufuizm.com', 'docker ps', 'docker stop portfolio-ui', 'docker start portfolio-ui', 'kubectl get pods', 'nmap fufuizm.com', 'nmap localhost', 'traceroute fufuizm.com', 'traceroute'];
+    var cliCommands = ['help', 'projects', 'about', 'education', 'certificates', 'tools', 'contact', 'clear', 'whoami', 'sudo', 'ip a', 'ifconfig', 'theme ls', 'theme set default', 'theme set dracula', 'theme set monokai', 'theme set cyberpunk', 'theme set ubuntu', 'theme set amber', 'theme set light', 'ls', 'pwd', 'cd ~', 'cd about', 'cd projects', 'cd education', 'cat profile.md', 'cat ai-container.txt', 'cat vpn-lab.txt', 'cat logging.txt', 'cat university.md', 'cat top_secret.txt', 'uname -a', 'exit', 'neofetch', 'curl wttr.in/Istanbul', 'reboot', 'cat cv.pdf', 'cat cv', 'ping', 'ping fufuizm.com', 'docker ps', 'docker stop portfolio-ui', 'docker start portfolio-ui', 'kubectl get pods', 'nmap fufuizm.com', 'nmap localhost', 'traceroute fufuizm.com', 'traceroute', 'vim', 'vi', 'coffee', 'make coffee', 'brew coffee', 'chmod 777 top_secret.txt'];
 
     // ===== Virtual File System =====
     var vfsTree = {
-        '~':            ['about/', 'projects/', 'education/'],
+        '~':            ['about/', 'projects/', 'education/', 'top_secret.txt'],
         '~/about':      ['profile.md'],
         '~/projects':   ['ai-container.txt', 'vpn-lab.txt', 'logging.txt'],
         '~/education':  ['university.md']
@@ -886,6 +904,13 @@ runBootSequence();
 
     // ===== Self-Destruct State =====
     var awaitingSelfDestruct = false;
+
+    // ===== Permission Puzzle State =====
+    var topSecretUnlocked = false;
+
+    // ===== Fail2Ban State =====
+    var invalidCount = 0;
+    var fail2banActive = false;
 
     function startSelfDestruct() {
         addLine('[CRITICAL] Initiating system destruction sequence...', 'err');
@@ -941,7 +966,211 @@ runBootSequence();
             });
     }
 
+    // ===== Vim Trap =====
+    var vimActive = false;
+    var vimCmdMode = false;
+    var vimCmdLine = '';
+
+    function showVimOverlay(filename) {
+        var overlay = document.getElementById('vim-overlay');
+        var mainEl = document.getElementById('vim-main');
+        var filenameEl = document.getElementById('vim-filename');
+        var modeEl = document.getElementById('vim-mode-indicator');
+        var cmdlineEl = document.getElementById('vim-cmdline');
+        if (!overlay || !mainEl) return;
+
+        // Build tilde lines to fill the viewport
+        var lineCount = Math.max(30, Math.floor(window.innerHeight / 22));
+        var linesHtml = '';
+        for (var i = 0; i < lineCount; i++) {
+            linesHtml += '<div class="vim-line"><span class="vim-tilde">~</span></div>';
+        }
+        mainEl.innerHTML = linesHtml;
+
+        var displayName = (filename && filename !== '') ? filename : '[No Name]';
+        if (filenameEl) filenameEl.textContent = '"' + displayName + '"  0L, 0C';
+        if (modeEl) modeEl.textContent = '';
+        if (cmdlineEl) cmdlineEl.textContent = '';
+
+        vimActive = true;
+        vimCmdMode = false;
+        vimCmdLine = '';
+
+        overlay.classList.add('active');
+        overlay.setAttribute('aria-hidden', 'false');
+        overlay.focus();
+    }
+
+    function closeVimOverlay() {
+        var overlay = document.getElementById('vim-overlay');
+        if (overlay) {
+            overlay.classList.remove('active');
+            overlay.setAttribute('aria-hidden', 'true');
+        }
+        vimActive = false;
+        vimCmdMode = false;
+        vimCmdLine = '';
+        if (input) input.focus();
+    }
+
+    document.addEventListener('keydown', function (e) {
+        if (!vimActive) return;
+        e.preventDefault();
+        e.stopPropagation();
+
+        var modeEl = document.getElementById('vim-mode-indicator');
+        var cmdlineEl = document.getElementById('vim-cmdline');
+
+        if (vimCmdMode) {
+            if (e.key === 'Enter') {
+                var trimmed = vimCmdLine.trim();
+                if (trimmed === ':q' || trimmed === ':wq' || trimmed === ':q!' || trimmed === ':wq!') {
+                    closeVimOverlay();
+                    addLine('[vim] Saved. Welcome back.', 'ok');
+                } else {
+                    if (cmdlineEl) cmdlineEl.textContent = 'E492: Not an editor command: ' + vimCmdLine.slice(1);
+                    vimCmdMode = false;
+                    vimCmdLine = '';
+                    if (modeEl) modeEl.textContent = '';
+                }
+            } else if (e.key === 'Escape') {
+                vimCmdMode = false;
+                vimCmdLine = '';
+                if (cmdlineEl) cmdlineEl.textContent = '';
+                if (modeEl) modeEl.textContent = '';
+            } else if (e.key === 'Backspace') {
+                if (vimCmdLine.length > 1) {
+                    vimCmdLine = vimCmdLine.slice(0, -1);
+                    if (cmdlineEl) cmdlineEl.textContent = vimCmdLine;
+                } else {
+                    vimCmdMode = false;
+                    vimCmdLine = '';
+                    if (cmdlineEl) cmdlineEl.textContent = '';
+                    if (modeEl) modeEl.textContent = '';
+                }
+            } else if (e.key.length === 1) {
+                vimCmdLine += e.key;
+                if (cmdlineEl) cmdlineEl.textContent = vimCmdLine;
+            }
+        } else {
+            // Normal mode
+            if (e.key === ':') {
+                vimCmdMode = true;
+                vimCmdLine = ':';
+                if (cmdlineEl) cmdlineEl.textContent = vimCmdLine;
+                if (modeEl) modeEl.textContent = '';
+            } else if (e.key === 'i' || e.key === 'a' || e.key === 'o' || e.key === 'O' || e.key === 'A' || e.key === 'I') {
+                if (modeEl) modeEl.textContent = '-- INSERT --';
+            } else if (e.key === 'v') {
+                if (modeEl) modeEl.textContent = '-- VISUAL --';
+            } else if (e.key === 'Escape') {
+                if (modeEl) modeEl.textContent = '';
+                if (cmdlineEl) cmdlineEl.textContent = '';
+            }
+        }
+    }, true);
+
+    // ===== Fork Bomb =====
+    function triggerForkBomb() {
+        addLine(':(){ :|:& };:', 'err');
+        var garbage = ['fork: retry: Resource temporarily unavailable',
+            'fork: retry: No child processes',
+            'bash: fork: Cannot allocate memory'];
+        var spamCount = 0;
+        var maxSpam = 60;
+        var spamInterval = setInterval(function () {
+            spamCount++;
+            if (spamCount > maxSpam) { clearInterval(spamInterval); return; }
+            if (Math.random() > 0.4) {
+                addLine(garbage[Math.floor(Math.random() * garbage.length)], 'err');
+            } else {
+                var chars = '!@#$%^&*()_+{}|:<>?ABCDEFGabcdefg0123456789';
+                var garb = '';
+                for (var j = 0; j < 45; j++) {
+                    garb += chars[Math.floor(Math.random() * chars.length)];
+                }
+                addLine(garb, 'err');
+            }
+        }, 60);
+
+        setTimeout(function () {
+            clearInterval(spamInterval);
+            showKernelPanic();
+        }, 2800);
+    }
+
+    function showKernelPanic() {
+        var overlay = document.getElementById('kernel-panic');
+        var textEl = document.getElementById('kernel-panic-text');
+        var cdEl = document.getElementById('kernel-panic-countdown');
+        if (!overlay) return;
+
+        function kts() { return (Math.random() * 5 + 1).toFixed(6); }
+        var panicLines = [
+            '',
+            '[  ' + kts() + '] CPU: 0 PID: 1 Comm: init Not tainted 6.5.0-fufuizm #1',
+            '[  ' + kts() + '] Hardware name: fufuizm DevOps Lab',
+            '[  ' + kts() + '] Call Trace:',
+            '[  ' + kts() + ']  dump_stack_lvl+0x48/0x70',
+            '[  ' + kts() + ']  panic+0x101/0x340',
+            '[  ' + kts() + ']  do_exit+0x8a3/0xb40',
+            '[  ' + kts() + ']  fork_bomb_detected+0x0/0x1',
+            '[  ' + kts() + '] ---[ end Kernel panic - not syncing: Fatal exception ]---',
+            '',
+            'System will reboot in 5 seconds...',
+        ];
+        if (textEl) textEl.textContent = panicLines.join('\n');
+
+        overlay.classList.add('active');
+        overlay.setAttribute('aria-hidden', 'false');
+
+        var countdown = 5;
+        if (cdEl) cdEl.textContent = 'Reloading in ' + countdown + 's...';
+        var cdInterval = setInterval(function () {
+            countdown--;
+            if (countdown <= 0) {
+                clearInterval(cdInterval);
+                location.reload();
+            } else {
+                if (cdEl) cdEl.textContent = 'Reloading in ' + countdown + 's...';
+            }
+        }, 1000);
+    }
+
+    // ===== Fail2Ban Lockout =====
+    function triggerFail2Ban() {
+        fail2banActive = true;
+        invalidCount = 0;
+        input.disabled = true;
+        input.classList.add('fail2ban-locked');
+        var promptEl = document.getElementById('cli-prompt');
+        if (promptEl) promptEl.classList.add('fail2ban-locked');
+
+        addLine('', '');
+        addLine('[Fail2Ban] *** INTRUSION DETECTED ***', 'err');
+        addLine('[Fail2Ban] Too many invalid attempts. Your IP has been temporarily banned for malicious activity.', 'err');
+
+        var remaining = 10;
+        function tick() {
+            addLine('[Fail2Ban] Ban expires in: ' + remaining + 's', 'err');
+            if (remaining <= 0) {
+                fail2banActive = false;
+                input.disabled = false;
+                input.classList.remove('fail2ban-locked');
+                if (promptEl) promptEl.classList.remove('fail2ban-locked');
+                addLine('[Fail2Ban] Ban lifted. Your IP has been removed from the blocklist.', 'ok');
+                input.focus();
+            } else {
+                remaining--;
+                setTimeout(tick, 1000);
+            }
+        }
+        setTimeout(tick, 500);
+    }
+
     input.addEventListener('keydown', function (e) {
+        if (fail2banActive) { e.preventDefault(); return; }
+
         // Play typing click sound
         if (e.key.length === 1 || e.key === 'Backspace') {
             if (window.playClick) window.playClick();
@@ -997,6 +1226,7 @@ runBootSequence();
         historyIndex = -1;
         echoCmd(cmd);
         var c = cmd.toLowerCase();
+        var cmdHandled = true; // track whether command was recognized
 
         if (c === 'help') {
             addLine('Available commands:');
@@ -1008,7 +1238,7 @@ runBootSequence();
             addLine('  Docker     : docker ps | docker stop <name> | docker start <name>');
             addLine('  Kubernetes : kubectl get pods | kubectl delete pod <name>');
             addLine('  Network    : nmap fufuizm.com | traceroute fufuizm.com');
-            addLine('  Easter eggs: sudo rm -rf /');
+            addLine('  Easter eggs: sudo rm -rf / | vim <file> | make coffee | chmod 777 top_secret.txt');
         } else if (sections[c]) {
             addLine('Scrolling to #' + c + '...', 'ok');
             var target = document.querySelector(sections[c]);
@@ -1067,26 +1297,56 @@ runBootSequence();
             var filename = cmd.slice(4).trim();
             // Strip path prefix if any
             var basename = filename.split('/').pop();
-            var fileContent = catContent[basename];
-            if (!fileContent) {
-                // Try cv commands too
-                if (basename === 'cv.pdf' || basename === 'cv') {
-                    var isLangTr = document.body.classList.contains('lang-tr');
-                    var cvUrl2 = isLangTr ? 'Furkan%20SARICA%20CV%20TR.pdf' : 'Furkan%20SARICA%20CV%20EN.pdf';
-                    var cvName2 = isLangTr ? 'Furkan SARICA CV TR.pdf' : 'Furkan SARICA CV EN.pdf';
-                    addLine('Downloading ' + cvName2 + '...', 'ok');
-                    var dlLink2 = document.createElement('a');
-                    dlLink2.href = cvUrl2;
-                    dlLink2.download = cvName2;
-                    document.body.appendChild(dlLink2);
-                    dlLink2.click();
-                    document.body.removeChild(dlLink2);
-                    addLine('Done.', 'ok');
+            if (basename === 'top_secret.txt') {
+                if (!topSecretUnlocked) {
+                    addLine('bash: top_secret.txt: Permission denied', 'err');
+                    addLine('hint: try chmod 777 top_secret.txt');
                 } else {
-                    addLine('cat: ' + filename + ': No such file or directory', 'err');
+                    addLine('╔══════════════════════════════════════════════╗');
+                    addLine('║       TOP SECRET — AUTHORIZED EYES ONLY      ║');
+                    addLine('╠══════════════════════════════════════════════╣');
+                    addLine('║                                              ║');
+                    addLine('║  ██╗  ██╗██╗██████╗ ███████╗    ███╗   ███╗ ║');
+                    addLine('║  ██║  ██║██║██╔══██╗██╔════╝    ████╗ ████║ ║');
+                    addLine('║  ███████║██║██████╔╝█████╗      ██╔████╔██║ ║');
+                    addLine('║  ██╔══██║██║██╔══██╗██╔══╝      ██║╚██╔╝██║ ║');
+                    addLine('║  ██║  ██║██║██║  ██║███████╗    ██║ ╚═╝ ██║ ║');
+                    addLine('║  ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚══════╝   ╚═╝     ╚═╝ ║');
+                    addLine('║                                              ║');
+                    addLine('║  Clearance level: R00T                       ║');
+                    addLine('║  Subject: Furkan Sarıca                      ║');
+                    addLine('║  Status: HIGHLY RECOMMENDED FOR HIRE         ║');
+                    addLine('║                                              ║');
+                    addLine('║  Skills: Linux ████████████ 100%             ║');
+                    addLine('║  Docker: ███████████░░ 90%                   ║');
+                    addLine('║  Coffee intake: ████████████ CRITICAL        ║');
+                    addLine('║                                              ║');
+                    addLine('║  Secret passphrase: R00T_ACCESS_GRANTED      ║');
+                    addLine('║  Contact: furkan@fufuizm.com                 ║');
+                    addLine('╚══════════════════════════════════════════════╝', 'ok');
                 }
             } else {
-                fileContent.split('\n').forEach(function (line) { addLine(line); });
+                var fileContent = catContent[basename];
+                if (!fileContent) {
+                    // Try cv commands too
+                    if (basename === 'cv.pdf' || basename === 'cv') {
+                        var isLangTr = document.body.classList.contains('lang-tr');
+                        var cvUrl2 = isLangTr ? 'Furkan%20SARICA%20CV%20TR.pdf' : 'Furkan%20SARICA%20CV%20EN.pdf';
+                        var cvName2 = isLangTr ? 'Furkan SARICA CV TR.pdf' : 'Furkan SARICA CV EN.pdf';
+                        addLine('Downloading ' + cvName2 + '...', 'ok');
+                        var dlLink2 = document.createElement('a');
+                        dlLink2.href = cvUrl2;
+                        dlLink2.download = cvName2;
+                        document.body.appendChild(dlLink2);
+                        dlLink2.click();
+                        document.body.removeChild(dlLink2);
+                        addLine('Done.', 'ok');
+                    } else {
+                        addLine('cat: ' + filename + ': No such file or directory', 'err');
+                    }
+                } else {
+                    fileContent.split('\n').forEach(function (line) { addLine(line); });
+                }
             }
         } else if (c === 'uname -a') {
             addLine('Linux devops 6.5.0-fufuizm #1 SMP Thu Jan 01 00:00:00 UTC 2026 x86_64 GNU/Linux');
@@ -1226,10 +1486,59 @@ runBootSequence();
             hops.forEach(function (hop, i) {
                 setTimeout(function () { addLine(hop); }, (i + 1) * 350);
             });
+
+        // ===== Vim Trap =====
+        } else if (c === 'vim' || c === 'vi' || c.startsWith('vim ') || c.startsWith('vi ')) {
+            var vimArg = (c.startsWith('vim ') || c.startsWith('vi ')) ? cmd.slice(cmd.indexOf(' ') + 1).trim() : '[No Name]';
+            showVimOverlay(vimArg);
+
+        // ===== Fork Bomb =====
+        } else if (cmd === ':(){ :|:& };:') {
+            triggerForkBomb();
+
+        // ===== Coffee (HTTP 418) =====
+        } else if (c === 'coffee' || c === 'make coffee' || c === 'brew coffee') {
+            addLine('');
+            addLine('     )  (          ');
+            addLine('    (   ) )         ');
+            addLine('     ) ( (          ');
+            addLine('  __________)_      ');
+            addLine(" .-'------------|   ");
+            addLine("( C|/\\/\\/\\/\\/\\|   ");
+            addLine(" '-./\\/\\/\\/\\/\\|   ");
+            addLine("   '----------'    ");
+            addLine("    '-------'      ");
+            addLine('');
+            addLine('HTTP/1.1 418 I\'m a Teapot', 'err');
+            addLine('Error 418: I\'m a teapot. But here is your coffee anyway. ☕', 'ok');
+
+        // ===== chmod Permission Puzzle =====
+        } else if (c.startsWith('chmod ')) {
+            var chmodArgs = cmd.slice(6).trim().split(/\s+/);
+            var chmodPerm = chmodArgs[0] || '';
+            var chmodFile = chmodArgs[1] || '';
+            var chmodBase = chmodFile.split('/').pop();
+            var validChmodPerms = ['777', '+x', '755', '+r', '644', '700', '+rx'];
+            if (chmodBase === 'top_secret.txt' && validChmodPerms.indexOf(chmodPerm) !== -1) {
+                topSecretUnlocked = true;
+                addLine('Permissions updated.', 'ok');
+                addLine('hint: cat top_secret.txt');
+            } else if (chmodBase) {
+                addLine('chmod: changing permissions of \'' + chmodFile + '\': Operation not permitted', 'err');
+            } else {
+                addLine('Usage: chmod <mode> <file>', 'err');
+            }
+
         } else {
+            cmdHandled = false;
+            invalidCount++;
             addLine('Command not found: ' + cmd + " — type 'help'", 'err');
             if (window.playBeep) window.playBeep();
+            if (invalidCount >= 5 && !fail2banActive) {
+                triggerFail2Ban();
+            }
         }
+        if (cmdHandled) invalidCount = 0;
     });
 }());
 
@@ -1542,48 +1851,58 @@ runBootSequence();
     resetIdle();
 }());
 
-// ===== Feature: Background Scrolling Logs =====
+// ===== Feature: Interactive Mouse-Tracking Logs =====
 (function () {
     var logsEl = document.getElementById('bg-logs');
     if (!logsEl) return;
 
-    var logTemplates = [
-        '[INFO] sshd: Accepted publickey for furkan from 192.168.1.45 port 52341',
-        '[INFO] sshd: Accepted publickey for furkan from 10.8.0.5 port 41892',
-        '[WARN] ufw: BLOCK SRC=45.33.2.11 DST=fufuizm.com PORT=22 PROTO=TCP',
-        '[WARN] ufw: BLOCK SRC=185.220.101.55 DST=fufuizm.com PORT=3389',
-        '[INFO] docker: container portfolio-ui healthcheck passed',
-        '[INFO] docker: container portfolio-api healthcheck passed',
-        '[OK  ] nginx: upstream portfolio-ui 200 OK 12ms',
-        '[INFO] cron: backup job completed — /var/backups/portfolio.tar.gz',
-        '[WARN] ufw: BLOCK SRC=93.174.88.5 DST=fufuizm.com PORT=8080',
-        '[INFO] sshd: Disconnected from 192.168.1.45 port 52341',
-        '[OK  ] grafana: datasource prometheus connected',
-        '[INFO] rsyslog: log rotation completed — auth.log.1',
-        '[WARN] ufw: BLOCK SRC=5.188.62.44 DST=fufuizm.com PORT=22',
-        '[INFO] docker: pulling image fufuizm/api:v1.1 — layer 3/7',
-        '[OK  ] systemd: nginx.service active (running)',
-    ];
-
-    function addLog() {
-        var line = document.createElement('div');
+    function ts() {
         var now = new Date();
-        var ts = String(now.getHours()).padStart(2,'0') + ':' +
-                 String(now.getMinutes()).padStart(2,'0') + ':' +
-                 String(now.getSeconds()).padStart(2,'0');
-        var tpl = logTemplates[Math.floor(Math.random() * logTemplates.length)];
-        line.textContent = ts + ' ' + tpl;
+        return String(now.getHours()).padStart(2,'0') + ':' +
+               String(now.getMinutes()).padStart(2,'0') + ':' +
+               String(now.getSeconds()).padStart(2,'0');
+    }
+
+    function addLog(text) {
+        var line = document.createElement('div');
+        line.textContent = ts() + ' ' + text;
         logsEl.appendChild(line);
-        // Keep only last 12 lines
-        while (logsEl.children.length > 12) {
+        while (logsEl.children.length > 14) {
             logsEl.removeChild(logsEl.firstChild);
         }
     }
 
-    // Seed with a few initial lines
-    for (var seed = 0; seed < 6; seed++) { addLog(); }
+    // Debounced mousemove handler
+    var mouseMoveTimer = null;
+    document.addEventListener('mousemove', function (e) {
+        clearTimeout(mouseMoveTimer);
+        mouseMoveTimer = setTimeout(function () {
+            addLog('[IDS] Mouse tracking: X:' + e.clientX + ' Y:' + e.clientY);
+        }, 200);
+    }, { passive: true });
 
-    setInterval(addLog, 2500 + Math.random() * 1500);
+    // Click handler
+    document.addEventListener('click', function (e) {
+        var target = e.target;
+        var id = target.id ? '#' + target.id : '';
+        var cls = target.className && typeof target.className === 'string' && target.className.trim()
+            ? '.' + target.className.trim().split(/\s+/)[0]
+            : '';
+        var tag = target.tagName ? target.tagName.toLowerCase() : 'unknown';
+        addLog('[FW] Click event intercepted at target: <' + tag + (id || cls) + '>');
+    }, { passive: true });
+
+    // Scroll handler (debounced)
+    var scrollTimer = null;
+    document.addEventListener('scroll', function () {
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(function () {
+            addLog('[IDS] Scroll detected: Y=' + Math.round(window.scrollY) + 'px');
+        }, 300);
+    }, { passive: true });
+
+    // Seed with an initial log line
+    addLog('[IDS] Intrusion Detection System: active. Monitoring session...');
 }());
 
 // ===== Feature: CI/CD Pipeline Animation =====
