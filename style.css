@@ -723,16 +723,89 @@ body.root-mode {
     --glow-strong: 0 0 30px rgba(255, 51, 51, 0.5);
 }
 
-/* Glitch Effect on Section Titles */
-@keyframes glitch {
-    0%, 100% { text-shadow: none; transform: none; }
-    20% { text-shadow: -2px 0 #ff3333, 2px 0 var(--accent-cyan); transform: translateX(-1px); }
-    40% { text-shadow: 2px 0 #ff3333, -2px 0 var(--accent-cyan); transform: translateX(1px); }
-    60% { text-shadow: -1px 0 #ff3333, 1px 0 var(--accent-cyan); transform: skewX(-3deg); }
-    80% { text-shadow: 1px 0 #ff3333, -1px 0 var(--accent-cyan); transform: skewX(3deg); }
+/* Terminal Highlight & Blink Effect on Section Titles */
+@keyframes terminal-cursor-blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+
+.section-title {
+    display: inline-block;
 }
 
 .section-title:hover {
-    animation: glitch 0.4s steps(1) infinite;
+    background: var(--terminal-green);
+    color: var(--bg-primary);
     cursor: default;
+    padding: 0 0.3rem;
+}
+
+.section-title:hover::before {
+    color: var(--bg-primary);
+}
+
+.section-title:hover::after {
+    content: '█';
+    color: var(--bg-primary);
+    animation: terminal-cursor-blink 0.8s step-start infinite;
+    margin-left: 2px;
+}
+
+/* Copy badge for contact items */
+.contact-copy-badge {
+    display: inline-block;
+    margin-left: 0.6rem;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    padding: 0.1rem 0.35rem;
+    opacity: 0;
+    transition: opacity 0.2s;
+    vertical-align: middle;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.contact-item:hover .contact-copy-badge {
+    opacity: 1;
+}
+
+.contact-copy-badge.copied {
+    color: var(--terminal-green);
+    border-color: var(--terminal-green);
+}
+
+/* Terminal window wrapper for pre/code blocks */
+.terminal-window {
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    margin-bottom: 1rem;
+}
+
+.terminal-header {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #1f242c;
+    padding: 0.55rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.terminal-header .t-btn {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.terminal-header .t-btn-red    { background: #ff5f57; }
+.terminal-header .t-btn-yellow { background: #febc2e; }
+.terminal-header .t-btn-green  { background: #28c840; }
+
+.terminal-window pre {
+    border: none;
+    background: transparent;
+    padding: 1.2rem 1.5rem;
+    margin: 0;
 }

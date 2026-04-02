@@ -83,6 +83,12 @@
 <img src="Fufuizm.PNG" alt="Furkan Sarıca - DevOps ve Ağ Mühendisi Portfolyo Fotoğrafı" class="about-avatar">
 </div>
 <div class="about-text">
+<div class="terminal-window">
+<div class="terminal-header">
+<span class="t-btn t-btn-red"></span>
+<span class="t-btn t-btn-yellow"></span>
+<span class="t-btn t-btn-green"></span>
+</div>
 <pre><code class="comment"># DevOps & Network Engineer in training</code>
 <code class="keyword">class</code> <code class="function">SystemsAdmin</code>:
     <code class="keyword">def</code> <code class="function">__init__</code>(self):
@@ -99,6 +105,7 @@
     <code class="keyword">def</code> <code class="function">monitor</code>(self):
         <code class="comment"># Centralized logging & observability</code>
         <code class="keyword">return</code> [<span class="string">"Syslog"</span>, <span class="string">"Grafana"</span>, <span class="string">"Log aggregation"</span>]</pre>
+</div>
 
 <p style="color: var(--text-secondary); margin-top: 1.5rem; font-size: 0.9rem;">
 <span data-lang-tr>Linux tabanlı homelab ortamlarında container tabanlı servisler tasarlıyor ve işletiyorum. AI destekli sunucu otomasyonu, sanal ağ laboratuvarları, VPN altyapıları ve merkezi loglama/monitoring sistemleri üzerine çalışıyorum. İş süreçlerini, veri yönetimini ve altyapıyı bütünleşik olarak ele alan bir YBS perspektifine sahibim.</span>
@@ -403,14 +410,14 @@
 </div>
 
 <div class="contact-grid">
-<a href="mailto:sarica.furkan@icloud.com" class="contact-item">
+<a href="mailto:sarica.furkan@icloud.com" class="contact-item" data-copy="sarica.furkan@icloud.com">
 <div class="contact-label"><span data-lang-tr>E-POSTA</span><span data-lang-en>EMAIL</span></div>
-<div class="contact-value">sarica.furkan@icloud.com</div>
+<div class="contact-value">sarica.furkan@icloud.com<span class="contact-copy-badge"><span data-lang-tr>[ Kopyala ]</span><span data-lang-en>[ Copy ]</span></span></div>
 </a>
 
-<div class="contact-item" style="cursor: default;">
+<div class="contact-item" style="cursor: default;" data-copy="+90 541 168 27 14">
 <div class="contact-label"><span data-lang-tr>TELEFON</span><span data-lang-en>PHONE</span></div>
-<div class="contact-value">+90 541 168 27 14</div>
+<div class="contact-value">+90 541 168 27 14<span class="contact-copy-badge"><span data-lang-tr>[ Kopyala ]</span><span data-lang-en>[ Copy ]</span></span></div>
 </div>
 
 <a href="https://linkedin.com/in/furkan-sarica" target="_blank" rel="noopener noreferrer" class="contact-item">
@@ -556,6 +563,75 @@ console.log("%c[!] Merhaba geliştirici! / Hello developer! 🚀\nKodlarımı in
             document.body.classList.toggle('root-mode');
             typed = '';
         }
+    });
+}());
+
+// Feature: Hacker Text Scramble on hero nav links
+(function () {
+    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$!%&*<>?/';
+    var timers = new WeakMap();
+    document.querySelectorAll('.hero-nav a').forEach(function (link) {
+        link.dataset.value = link.textContent;
+        link.addEventListener('mouseover', function () {
+            var original = link.dataset.value;
+            var iterations = 0;
+            var maxIter = original.length * 3;
+            clearInterval(timers.get(link));
+            timers.set(link, setInterval(function () {
+                link.textContent = original.split('').map(function (ch, idx) {
+                    if (idx < Math.floor(iterations / 3)) return original[idx];
+                    return chars[Math.floor(Math.random() * chars.length)];
+                }).join('');
+                iterations++;
+                if (iterations > maxIter) {
+                    clearInterval(timers.get(link));
+                    link.textContent = original;
+                }
+            }, 30));
+        });
+        link.addEventListener('mouseleave', function () {
+            clearInterval(timers.get(link));
+            link.textContent = link.dataset.value;
+        });
+    });
+}());
+
+// Feature: Copy to Clipboard for contact items
+(function () {
+    function resetBadge(badge) {
+        badge.classList.remove('copied');
+        var trSpan = document.createElement('span');
+        trSpan.setAttribute('data-lang-tr', '');
+        trSpan.textContent = '[ Kopyala ]';
+        var enSpan = document.createElement('span');
+        enSpan.setAttribute('data-lang-en', '');
+        enSpan.textContent = '[ Copy ]';
+        badge.textContent = '';
+        badge.appendChild(trSpan);
+        badge.appendChild(enSpan);
+        var lang = document.body.classList.contains('lang-tr') ? 'tr' : 'en';
+        trSpan.style.display = lang === 'tr' ? 'inline' : 'none';
+        enSpan.style.display = lang === 'en' ? 'inline' : 'none';
+    }
+
+    document.querySelectorAll('.contact-item[data-copy]').forEach(function (item) {
+        var badge = item.querySelector('.contact-copy-badge');
+        if (!badge) return;
+        badge.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var text = item.dataset.copy;
+            if (!text) return;
+            var isLangTr = document.body.classList.contains('lang-tr');
+            navigator.clipboard.writeText(text).then(function () {
+                badge.classList.add('copied');
+                badge.textContent = isLangTr ? '[ Kopyalandı! ]' : '[ Copied! ]';
+                setTimeout(function () { resetBadge(badge); }, 2000);
+            }).catch(function () {
+                badge.textContent = isLangTr ? '[ Hata! ]' : '[ Error! ]';
+                setTimeout(function () { resetBadge(badge); }, 2000);
+            });
+        });
     });
 }());
 
