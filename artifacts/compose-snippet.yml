@@ -1,0 +1,61 @@
+# docker-compose snippet — AI Container Infrastructure
+# Secrets and credentials are placeholders only.
+
+version: "3.9"
+
+networks:
+  internal:
+    driver: bridge
+
+services:
+  nginx-proxy:
+    image: nginx:1.25-alpine
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./certs:/etc/ssl/certs:ro
+    networks:
+      - internal
+    restart: unless-stopped
+
+  portfolio-ui:
+    image: fufuizm/web:latest
+    expose:
+      - "3000"
+    networks:
+      - internal
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  monitoring:
+    image: grafana/grafana:latest
+    expose:
+      - "3001"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}   # set in .env
+    volumes:
+      - grafana-data:/var/lib/grafana
+    networks:
+      - internal
+    restart: unless-stopped
+
+  ai-pipeline:
+    image: fufuizm/ai-pipeline:latest
+    environment:
+      - AI_API_KEY=${AI_API_KEY}          # set in .env — no secrets in code
+      - APPROVAL_MODE=human               # require human confirmation
+      - METRIC_INTERVAL=60
+    volumes:
+      - ./pipeline/config.yml:/app/config.yml:ro
+    networks:
+      - internal
+    restart: unless-stopped
+
+volumes:
+  grafana-data:

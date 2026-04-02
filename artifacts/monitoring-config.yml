@@ -1,0 +1,49 @@
+# Monitoring Stack — Configuration Snippet
+
+# Prometheus scrape config (prometheus.yml)
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets:
+          - '192.168.20.10:9100'   # docker-host
+          - '192.168.20.5:9100'    # dns-server
+          - '192.168.10.5:9100'    # nginx-dmz
+
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['192.168.10.5:9113']
+
+  - job_name: 'docker'
+    static_configs:
+      - targets: ['192.168.20.10:9323']
+
+# Grafana alert rule example (YAML format)
+alerting:
+  rules:
+    - name: HighCPU
+      condition: avg(cpu_usage_percent) > 85
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "CPU usage above 85% for 5 minutes"
+
+    - name: DiskFull
+      condition: disk_free_percent < 10
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Disk space critical — less than 10% free"
+
+    - name: ServiceDown
+      condition: up == 0
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Service {{ $labels.job }} is down"
