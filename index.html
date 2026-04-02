@@ -425,10 +425,10 @@
 <div class="contact-value">sarica.furkan@icloud.com<span class="contact-copy-badge"><span data-lang-tr>[ Kopyala ]</span><span data-lang-en>[ Copy ]</span></span></div>
 </a>
 
-<div class="contact-item" style="cursor: default;" data-copy="+90 541 168 27 14">
+<a href="tel:+905411682714" class="contact-item" data-copy="+90 541 168 27 14">
 <div class="contact-label"><span data-lang-tr>TELEFON</span><span data-lang-en>PHONE</span></div>
 <div class="contact-value">+90 541 168 27 14<span class="contact-copy-badge"><span data-lang-tr>[ Kopyala ]</span><span data-lang-en>[ Copy ]</span></span></div>
-</div>
+</a>
 
 <a href="https://linkedin.com/in/furkan-sarica" target="_blank" rel="noopener noreferrer" class="contact-item">
 <div class="contact-label">LINKEDIN</div>
@@ -918,6 +918,35 @@ function stopMatrixRain() {
             }
         } else {
             konamiIndex = (e.key === konamiCode[0]) ? 1 : 0;
+        }
+    });
+}());
+
+// ===== Easter Egg: 5-Click on ASCII Header → Root Access =====
+(function () {
+    var clickCount = 0;
+    var clickTimer = null;
+    var header = document.querySelector('.ascii-header');
+    if (!header) return;
+    header.addEventListener('click', function () {
+        clickCount++;
+        clearTimeout(clickTimer);
+        clickTimer = setTimeout(function () { clickCount = 0; }, 2000);
+        if (clickCount >= 5) {
+            clickCount = 0;
+            clearTimeout(clickTimer);
+            var wasRoot = document.body.classList.contains('root-mode');
+            document.body.classList.toggle('root-mode');
+            if (!wasRoot) {
+                startMatrixRain();
+                var msg = document.createElement('div');
+                msg.textContent = '[ ROOT ACCESS GRANTED ]';
+                msg.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#0a0a0a;border:1px solid #ff3333;color:#ff3333;font-family:"JetBrains Mono",monospace;font-size:0.9rem;padding:10px 24px;z-index:9999;pointer-events:none;letter-spacing:2px;';
+                document.body.appendChild(msg);
+                setTimeout(function () { msg.parentNode && msg.parentNode.removeChild(msg); }, 2500);
+            } else {
+                stopMatrixRain();
+            }
         }
     });
 }());
