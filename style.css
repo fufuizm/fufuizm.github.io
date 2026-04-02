@@ -782,6 +782,83 @@ body.root-mode {
     margin-bottom: 1rem;
 }
 
+/* ===== Boot Screen ===== */
+#boot-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: #0a0a0a;
+    display: flex;
+    align-items: flex-start;
+    padding: 2rem;
+    overflow: hidden;
+    transition: opacity 0.5s ease;
+}
+
+#boot-log {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: #00ff88;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    width: 100%;
+}
+
+/* ===== Mini CLI Terminal ===== */
+#cli-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 1.2rem 1.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    min-height: 160px;
+    max-height: 360px;
+    overflow-y: auto;
+}
+
+#cli-output {
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    white-space: pre-wrap;
+}
+
+#cli-output .cli-line { display: block; margin-bottom: 0.15rem; }
+#cli-output .cli-line.err { color: #ff4444; }
+#cli-output .cli-line.ok  { color: var(--terminal-green); }
+#cli-output .cli-line.cmd { color: var(--accent-cyan); }
+
+#cli-input-line {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#cli-prompt {
+    color: var(--terminal-green);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+#cli-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    flex: 1;
+    caret-color: var(--terminal-green);
+}
+
+/* ===== Matrix Rain Canvas ===== */
+#matrix-rain {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.18;
+}
+
 .terminal-header {
     display: flex;
     align-items: center;
