@@ -692,8 +692,8 @@ console.log("%c[!] Merhaba geliştirici! / Hello developer! 🚀\nKodlarımı in
     if (!input || !output) return;
 
     function addLine(text, cls) {
-        var line = document.createElement('span');
-        line.className = 'cli-line' + (cls ? ' ' + cls : '');
+        var line = document.createElement('div');
+        line.className = 'cli-history-line cli-line' + (cls ? ' ' + cls : '');
         line.textContent = text;
         output.appendChild(line);
         output.parentElement.scrollTop = output.parentElement.scrollHeight;
@@ -723,7 +723,7 @@ console.log("%c[!] Merhaba geliştirici! / Hello developer! 🚀\nKodlarımı in
             if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         } else if (c === 'clear') {
             output.innerHTML = '';
-        } else if (c === 'sudo rm -rf /' || c === 'sudo rm -rf /*') {
+        } else if (c === 'sudo' || c.startsWith('sudo ')) {
             addLine('Access denied: I can\'t let you delete this server!', 'err');
         } else if (c === 'exit') {
             addLine('logout', 'ok');

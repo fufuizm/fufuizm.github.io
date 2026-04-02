@@ -785,9 +785,12 @@ body.root-mode {
 /* ===== Boot Screen ===== */
 #boot-screen {
     position: fixed;
-    inset: 0;
-    z-index: 99999;
-    background: #0a0a0a;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    background-color: var(--bg-primary);
     display: flex;
     align-items: flex-start;
     padding: 2rem;
@@ -848,6 +851,9 @@ body.root-mode {
     font-size: 0.85rem;
     flex: 1;
     caret-color: var(--terminal-green);
+    appearance: none;
+    -webkit-appearance: none;
+    border-radius: 0;
 }
 
 /* ===== Matrix Rain Canvas ===== */
