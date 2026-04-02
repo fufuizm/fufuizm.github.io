@@ -30,6 +30,7 @@
 
 <!-- Hero Section -->
 <header class="hero">
+<canvas id="network-canvas"></canvas>
 <div class="hero-prompt">whoami</div>
 
 <div class="ascii-header">
@@ -436,6 +437,7 @@
 <span data-lang-tr> echo "Ziyaretiniz için teşekkürler"</span>
 <span data-lang-en> echo "Thanks for visiting"</span>
 </p>
+<p id="system-status" style="color: var(--terminal-green); font-size: 0.8rem; margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace;"></p>
 <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 1rem;">
 © 2025 | Built with HTML + CSS | No frameworks
 </p>
@@ -523,6 +525,104 @@ backToTopBtn.classList.remove('visible');
 });
 console.log("%c  _____           _\n |  ___|   _ _ __| | ____ _ _ __\n | |_ | | | | '__| |/ / _` | '_ \\\n |  _|| |_| | |  |   < (_| | | | |\n |_|   \\__,_|_|  |_|\\_\\__,_|_| |_|", "color: #00ff88; font-weight: bold;");
 console.log("%c[!] Merhaba geliştirici! / Hello developer! 🚀\nKodlarımı incelediğini görüyorum. İletişime geçmek istersen: sarica.furkan@icloud.com", "color: #00d4ff; font-size: 14px;");
+
+// Feature 1: Live System Status
+(function () {
+    var statusEl = document.getElementById('system-status');
+    if (!statusEl) return;
+    statusEl.textContent = '[ OK ] System Status: ONLINE | Last commit: ...';
+    fetch('https://api.github.com/repos/fufuizm/fufuizm.github.io/commits/main')
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            var date = new Date(data.commit.author.date);
+            var now = new Date();
+            var diff = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+            var relative = diff === 0 ? 'today' : diff === 1 ? '1 day ago' : diff + ' days ago';
+            statusEl.textContent = '[ OK ] System Status: ONLINE | Last commit: ' + relative;
+        })
+        .catch(function () {
+            statusEl.textContent = '[ OK ] System Status: ONLINE';
+        });
+}());
+
+// Feature 2: Secret keyboard sequence root/sudo theme toggle
+(function () {
+    var typed = '';
+    document.addEventListener('keydown', function (e) {
+        var active = document.activeElement;
+        if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) return;
+        typed += e.key;
+        if (typed.length > 10) typed = typed.slice(-10);
+        if (typed.endsWith('root') || typed.endsWith('sudo')) {
+            document.body.classList.toggle('root-mode');
+            typed = '';
+        }
+    });
+}());
+
+// Feature 3: Network Topology Canvas
+(function () {
+    var canvas = document.getElementById('network-canvas');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var NODES = 40;
+    var MAX_DIST = 120;
+    var nodes = [];
+
+    function resize() {
+        canvas.width = canvas.offsetWidth || canvas.parentElement.offsetWidth;
+        canvas.height = canvas.offsetHeight || canvas.parentElement.offsetHeight;
+    }
+
+    function init() {
+        resize();
+        nodes = [];
+        for (var i = 0; i < NODES; i++) {
+            nodes.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                r: Math.random() * 2 + 1
+            });
+        }
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (var i = 0; i < nodes.length; i++) {
+            var n = nodes[i];
+            n.x += n.vx;
+            n.y += n.vy;
+            if (n.x < 0 || n.x > canvas.width) n.vx *= -1;
+            if (n.y < 0 || n.y > canvas.height) n.vy *= -1;
+            ctx.beginPath();
+            ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+            ctx.fillStyle = '#00ff88';
+            ctx.fill();
+        }
+        for (var i = 0; i < nodes.length; i++) {
+            for (var j = i + 1; j < nodes.length; j++) {
+                var dx = nodes[i].x - nodes[j].x;
+                var dy = nodes[i].y - nodes[j].y;
+                var dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < MAX_DIST) {
+                    ctx.beginPath();
+                    ctx.moveTo(nodes[i].x, nodes[i].y);
+                    ctx.lineTo(nodes[j].x, nodes[j].y);
+                    ctx.strokeStyle = 'rgba(0, 255, 136, ' + (1 - dist / MAX_DIST) * 0.6 + ')';
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
+            }
+        }
+        requestAnimationFrame(draw);
+    }
+
+    init();
+    window.addEventListener('resize', init);
+    draw();
+}());
 </script>
 
 </body>
