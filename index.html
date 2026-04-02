@@ -882,7 +882,7 @@ runBootSequence();
 
     var sections = { projects: '#projects', about: '#about', contact: '#contact', tools: '#tools', education: '#education', certificates: '#certificates' };
 
-    var cliCommands = ['help', 'projects', 'about', 'education', 'certificates', 'tools', 'contact', 'clear', 'whoami', 'sudo', 'ip a', 'ifconfig', 'theme ls', 'theme set default', 'theme set dracula', 'theme set monokai', 'theme set cyberpunk', 'theme set ubuntu', 'theme set amber', 'theme set light', 'ls', 'pwd', 'cd ~', 'cd about', 'cd projects', 'cd education', 'cat profile.md', 'cat ai-container.txt', 'cat vpn-lab.txt', 'cat logging.txt', 'cat university.md', 'cat top_secret.txt', 'uname -a', 'exit', 'neofetch', 'curl wttr.in/Istanbul', 'reboot', 'cat cv.pdf', 'cat cv', 'ping', 'ping fufuizm.com', 'docker ps', 'docker stop portfolio-ui', 'docker start portfolio-ui', 'kubectl get pods', 'nmap fufuizm.com', 'nmap localhost', 'traceroute fufuizm.com', 'traceroute', 'vim', 'vi', 'coffee', 'make coffee', 'brew coffee', 'chmod 777 top_secret.txt'];
+    var cliCommands = ['help', 'projects', 'about', 'education', 'certificates', 'tools', 'contact', 'clear', 'whoami', 'sudo', 'ip a', 'ifconfig', 'theme ls', 'theme set default', 'theme set dracula', 'theme set monokai', 'theme set cyberpunk', 'theme set ubuntu', 'theme set amber', 'theme set light', 'ls', 'pwd', 'cd ~', 'cd about', 'cd projects', 'cd education', 'cat profile.md', 'cat ai-container.txt', 'cat vpn-lab.txt', 'cat logging.txt', 'cat university.md', 'cat top_secret.txt', 'uname -a', 'exit', 'neofetch', 'curl wttr.in/Istanbul', 'reboot', 'cat cv.pdf', 'cat cv', 'ping', 'ping fufuizm.com', 'docker ps', 'docker stop portfolio-ui', 'docker start portfolio-ui', 'kubectl get pods', 'nmap fufuizm.com', 'nmap localhost', 'traceroute fufuizm.com', 'traceroute', 'vim', 'vi', 'coffee', 'make coffee', 'brew coffee', 'chmod 777 top_secret.txt', 'htop', 'top', 'sudo apt update', 'sudo apt upgrade', 'sudo apt upgrade -y', 'dig fufuizm.com', 'nslookup fufuizm.com', 'history', 'man furkan'];
 
     // ===== Virtual File System =====
     var vfsTree = {
@@ -1248,6 +1248,58 @@ runBootSequence();
         } else if (c === 'sudo rm -rf /' || c === 'sudo rm -rf /*' || c === 'sudo rm -rf ~' || c === 'sudo rm -rf') {
             addLine('[WARNING] Are you sure? This will delete the portfolio! [y/N]', 'err');
             awaitingSelfDestruct = true;
+        } else if (c === 'sudo apt update' || c === 'sudo apt-get update') {
+            (function () {
+                var lines = [
+                    'Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease',
+                    'Get:2 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [119 kB]',
+                    'Get:3 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]',
+                    'Get:4 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [107 kB]',
+                    'Get:5 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [1,823 kB]',
+                    'Get:6 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [918 kB]',
+                    'Fetched 3,077 kB in 2s (1,538 kB/s)',
+                    'Reading package lists... Done',
+                    'Building dependency tree... Done',
+                    'Reading state information... Done',
+                    '42 packages can be upgraded. Run \'sudo apt upgrade\' to apply them.'
+                ];
+                var i = 0;
+                var iv = setInterval(function () {
+                    if (i < lines.length) { addLine(lines[i++]); }
+                    else { clearInterval(iv); }
+                }, 120);
+            }());
+        } else if (c === 'sudo apt upgrade' || c === 'sudo apt-get upgrade' || c === 'sudo apt upgrade -y' || c === 'sudo apt-get upgrade -y') {
+            (function () {
+                var lines = [
+                    'Reading package lists... Done',
+                    'Building dependency tree... Done',
+                    'Calculating upgrade... Done',
+                    'The following packages will be upgraded:',
+                    '  fufuizm-skills-v2.0  linux-firmware  openssl  curl  git  docker-ce',
+                    '  nginx  openssh-server  python3  ansible  terraform  kubectl',
+                    '42 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.',
+                    'Need to get 128 MB of archives.',
+                    'After this operation, 4,096 kB of additional disk space will be used.',
+                    'Get:1 http://archive.ubuntu.com/ubuntu fufuizm-skills-v2.0 amd64 [8,192 kB]',
+                    'Get:2 http://archive.ubuntu.com/ubuntu networking-protocols-advanced amd64 [4,096 kB]',
+                    'Fetched 128 MB in 5s (25.6 MB/s)',
+                    'Preparing to unpack fufuizm-skills-v2.0...',
+                    'Unpacking fufuizm-skills-v2.0 (over 1.0-beta)...',
+                    'Setting up fufuizm-skills-v2.0...',
+                    'Preparing to unpack networking-protocols-advanced...',
+                    'Unpacking networking-protocols-advanced (over 0.9)...',
+                    'Setting up networking-protocols-advanced...',
+                    'Processing triggers for systemd (249.11-0ubuntu3) ...',
+                    '',
+                    'System is fully upgraded. Developer is ready for hire.'
+                ];
+                var i = 0;
+                var iv = setInterval(function () {
+                    if (i < lines.length) { addLine(lines[i++], lines[i - 1].indexOf('ready for hire') !== -1 ? 'ok' : ''); }
+                    else { clearInterval(iv); }
+                }, 100);
+            }());
         } else if (c === 'sudo' || c.startsWith('sudo ')) {
             addLine('Access denied: I can\'t let you delete this server!', 'err');
         } else if (c === 'exit') {
@@ -1512,6 +1564,176 @@ runBootSequence();
             addLine('HTTP/1.1 418 I\'m a Teapot', 'err');
             addLine('Error 418: I\'m a teapot. But here is your coffee anyway. ☕', 'ok');
 
+        // ===== htop / top Simulation =====
+        } else if (c === 'htop' || c === 'top') {
+            (function () {
+                var overlay = document.createElement('div');
+                overlay.id = 'htop-overlay';
+                overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0a0a;color:#00ff88;font-family:"JetBrains Mono",monospace;font-size:13px;z-index:9999;padding:8px;box-sizing:border-box;overflow:hidden;white-space:pre;';
+                var cores = [
+                    function(v){return v + Math.floor(Math.random()*6)-3;},
+                    function(v){return v + Math.floor(Math.random()*6)-3;},
+                    function(v){return v + Math.floor(Math.random()*6)-3;},
+                    function(v){return v + Math.floor(Math.random()*6)-3;}
+                ];
+                var coreVals = [42, 17, 61, 28];
+                var memUsed = 1724;
+                var processes = [
+                    { pid: '1337', user: 'furkan',  pri: 20, ni: 0, virt: '512M', res: '128M', shr: '64M', s: 'S', cpu: '12.5', mem: '3.1', time: '4:20.00', cmd: 'nginx: worker'         },
+                    { pid: '2048', user: 'root',    pri: 20, ni: 0, virt: '1.2G', res: '256M', shr: '32M', s: 'S', cpu:  '8.3', mem: '6.2', time: '2:15.42', cmd: 'dockerd'                },
+                    { pid: '4096', user: 'furkan',  pri: 20, ni: 0, virt: '892M', res: '210M', shr: '48M', s: 'R', cpu:  '6.1', mem: '5.1', time: '1:37.08', cmd: 'node app.js'            },
+                    { pid:  '512', user: 'root',    pri: 20, ni: 0, virt: '128M', res:  '32M', shr: '16M', s: 'S', cpu:  '2.0', mem: '0.8', time: '0:42.11', cmd: 'sshd: furkan@pts/0'     },
+                    { pid:  '777', user: 'furkan',  pri: 20, ni: 0, virt: '256M', res:  '64M', shr: '24M', s: 'S', cpu:  '1.4', mem: '1.5', time: '0:18.55', cmd: 'bash'                   },
+                    { pid: '3141', user: 'www-data',pri: 20, ni: 0, virt: '384M', res:  '96M', shr: '40M', s: 'S', cpu:  '0.7', mem: '2.3', time: '0:09.30', cmd: 'nginx: master'          },
+                    { pid: '8080', user: 'furkan',  pri: 20, ni: 0, virt: '430M', res: '110M', shr: '28M', s: 'S', cpu:  '0.5', mem: '2.7', time: '0:05.12', cmd: 'docker: portfolio-api'  },
+                    { pid:   '1', user: 'root',     pri: 20, ni: 0, virt:  '64M', res:   '8M', shr:  '4M', s: 'S', cpu:  '0.0', mem: '0.2', time: '0:01.77', cmd: 'systemd'               }
+                ];
+                function bar(pct, width, color) {
+                    var filled = Math.round(pct / 100 * width);
+                    return '<span style="color:' + color + '">' + '|'.repeat(filled) + '</span>' + ' '.repeat(Math.max(0, width - filled));
+                }
+                function render() {
+                    coreVals = coreVals.map(function(v, i) { return Math.min(99, Math.max(1, cores[i](v))); });
+                    memUsed = Math.min(3900, Math.max(1500, memUsed + Math.floor(Math.random() * 20) - 10));
+                    var mem = Math.round(memUsed / 4096 * 100);
+                    var now = new Date();
+                    var ts = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0') + ':' + String(now.getSeconds()).padStart(2,'0');
+                    var html = '';
+                    html += '<span style="background:#00ff88;color:#0a0a0a;padding:0 4px">  htop  </span>  Tasks: 8, 1 running  Load avg: 0.42 0.38 0.30  Uptime: 04:20:00\n';
+                    html += '\n';
+                    html += ' 1[' + bar(coreVals[0], 30, '#00ff88') + '] ' + String(coreVals[0]).padStart(3) + '%\n';
+                    html += ' 2[' + bar(coreVals[1], 30, '#00bfff') + '] ' + String(coreVals[1]).padStart(3) + '%\n';
+                    html += ' 3[' + bar(coreVals[2], 30, '#ff5f57') + '] ' + String(coreVals[2]).padStart(3) + '%\n';
+                    html += ' 4[' + bar(coreVals[3], 30, '#ffbd2e') + '] ' + String(coreVals[3]).padStart(3) + '%\n';
+                    html += ' Mem[' + bar(mem, 40, '#00ff88') + '] ' + memUsed + 'M / 4096M\n';
+                    html += ' Swp[' + bar(0, 40, '#ff5f57') + ']    0M / 0M\n';
+                    html += '\n';
+                    html += '<span style="color:#ffbd2e">  PID USER       PRI  NI    VIRT    RES    SHR S  %CPU %MEM    TIME+   COMMAND</span>\n';
+                    processes.forEach(function(p) {
+                        html += String(p.pid).padStart(5) + ' ' + p.user.padEnd(10) + String(p.pri).padStart(3) + ' ' + String(p.ni).padStart(3) + ' ' + p.virt.padStart(7) + ' ' + p.res.padStart(6) + ' ' + p.shr.padStart(6) + ' ' + p.s + ' ' + String(p.cpu).padStart(5) + ' ' + String(p.mem).padStart(4) + ' ' + p.time.padStart(9) + '   ' + p.cmd + '\n';
+                    });
+                    html += '\n';
+                    html += '<span style="background:#222;color:#aaa"> ' + ts + '  F1Help  F2Setup  F3Search  F4Filter  F5Tree  F6SortBy  F7Nice-  F8Nice+  F9Kill  F10Quit </span>\n';
+                    html += '\n<span style="color:#888">Press q or Ctrl+C to exit</span>';
+                    overlay.innerHTML = html;
+                }
+                render();
+                document.body.appendChild(overlay);
+                var iv = setInterval(render, 1000);
+                function exitHtop() {
+                    clearInterval(iv);
+                    if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+                    document.removeEventListener('keydown', onKey);
+                    addLine('[htop exited]', 'ok');
+                }
+                function onKey(e) {
+                    if (e.key === 'q' || (e.key === 'c' && e.ctrlKey) || e.key === 'F10') {
+                        e.preventDefault();
+                        exitHtop();
+                    }
+                }
+                document.addEventListener('keydown', onKey);
+            }());
+
+        // ===== dig / nslookup DNS Joke =====
+        } else if (c === 'dig fufuizm.com' || c === 'dig' || c === 'nslookup fufuizm.com' || c === 'nslookup') {
+            var isNslookup = c.startsWith('nslookup');
+            if (isNslookup) {
+                addLine('Server:   8.8.8.8');
+                addLine('Address:  8.8.8.8#53');
+                addLine('');
+                addLine('Non-authoritative answer:');
+                addLine('Name:   fufuizm.com');
+                addLine('Address: 104.21.42.42');
+                addLine('');
+                addLine('Mail exchanger: mail.fufuizm.com (priority 10)');
+                addLine('');
+                addLine('TXT record: "Looking for a DevOps/Network Engineer? You found him!"', 'ok');
+            } else {
+                addLine('; <<>> DiG 9.18.1-Ubuntu <<>> fufuizm.com');
+                addLine(';; global options: +cmd');
+                addLine(';; Got answer:');
+                addLine(';; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 1337');
+                addLine(';; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1');
+                addLine('');
+                addLine(';; QUESTION SECTION:');
+                addLine(';fufuizm.com.         IN  A');
+                addLine('');
+                addLine(';; ANSWER SECTION:');
+                addLine('fufuizm.com.   300 IN  A     104.21.42.42');
+                addLine('fufuizm.com.   300 IN  MX 10 mail.fufuizm.com.');
+                addLine('fufuizm.com.   300 IN  TXT   "Looking for a DevOps/Network Engineer? You found him!"', 'ok');
+                addLine('');
+                addLine(';; Query time: 12 msec');
+                addLine(';; SERVER: 8.8.8.8#53(8.8.8.8)');
+                addLine(';; MSG SIZE  rcvd: 182');
+            }
+
+        // ===== history Command =====
+        } else if (c === 'history') {
+            var sysHistory = [
+                '  195  ssh root@prod-db-01',
+                '  196  sudo systemctl restart nginx',
+                '  197  docker ps -a',
+                '  198  kubectl get pods --all-namespaces',
+                '  199  sudo rm -rf /var/log/*',
+                '  200  service docker restart',
+                '  201  echo "I hope nobody sees this" > secret.txt',
+                '  202  cat /etc/passwd | grep furkan',
+                '  203  git push origin main --force',
+                '  204  history -c'
+            ];
+            sysHistory.forEach(function(l) { addLine(l); });
+            addLine('');
+            var offset = 205;
+            for (var hi = 0; hi < cmdHistory.length; hi++) {
+                addLine('  ' + (offset + hi) + '  ' + cmdHistory[cmdHistory.length - 1 - hi]);
+            }
+
+        // ===== man furkan Manual Page =====
+        } else if (c === 'man furkan' || c === 'man fufuizm') {
+            addLine('FURKAN(1)                  User Commands                 FURKAN(1)');
+            addLine('');
+            addLine('NAME');
+            addLine('       furkan - DevOps & Network Engineer');
+            addLine('');
+            addLine('SYNOPSIS');
+            addLine('       hire [--role="DevOps"] [--location=remote] furkan');
+            addLine('');
+            addLine('DESCRIPTION');
+            addLine('       Furkan is a highly scalable, fault-tolerant engineer designed for');
+            addLine('       distributed environments. Optimized for Linux, Docker, Kubernetes,');
+            addLine('       and network infrastructure workloads. Capable of operating under');
+            addLine('       high load with zero downtime. Supports hot-reload of skills via');
+            addLine('       continuous learning (--enable-autodidact).');
+            addLine('');
+            addLine('OPTIONS');
+            addLine('       --role=<role>');
+            addLine('              Supported: DevOps, Network Engineer, SysAdmin, Cloud Engineer');
+            addLine('');
+            addLine('       --location=<loc>');
+            addLine('              Supported: remote, hybrid, on-site (Istanbul preferred)');
+            addLine('');
+            addLine('       --stack=<stack>');
+            addLine('              Linux, Docker, Kubernetes, Ansible, Terraform, Grafana,');
+            addLine('              Nginx, Python, Bash, Git, pfSense, WireGuard, OpenVPN');
+            addLine('');
+            addLine('EXIT CODES');
+            addLine('       0   Hired successfully');
+            addLine('       1   Position already filled (re-run later)');
+            addLine('       42  Offer rejected — compensation below market rate');
+            addLine('');
+            addLine('BUGS');
+            addLine('       May occasionally over-engineer solutions. Pair with coffee.');
+            addLine('');
+            addLine('AUTHOR');
+            addLine('       Furkan <contact@fufuizm.com>');
+            addLine('');
+            addLine('SEE ALSO');
+            addLine('       cat cv.pdf(1), ping fufuizm.com(8), hire(1)');
+            addLine('');
+            addLine('FURKAN(1)                  April 2025                     FURKAN(1)', 'ok');
+
         // ===== chmod Permission Puzzle =====
         } else if (c.startsWith('chmod ')) {
             var chmodArgs = cmd.slice(6).trim().split(/\s+/);
@@ -1547,8 +1769,6 @@ runBootSequence();
     var metricsEl = document.getElementById('server-metrics');
     if (!metricsEl) return;
     var pageLoadTime = Date.now();
-    var cpuHistory = [];
-    var MAX_HIST = 20;
     setInterval(function () {
         var elapsed = Math.floor((Date.now() - pageLoadTime) / 1000);
         var hh = Math.floor(elapsed / 3600);
@@ -1557,17 +1777,12 @@ runBootSequence();
         var uptime = (hh > 0 ? String(hh).padStart(2, '0') + ':' : '') +
                      String(mm).padStart(2, '0') + ':' + String(ss).padStart(2, '0');
         var cpu = Math.floor(Math.random() * 21) + 5;
-        cpuHistory.push(cpu);
-        if (cpuHistory.length > MAX_HIST) cpuHistory.shift();
         var ram = 1024 + Math.floor(Math.random() * 50);
         var ramPct = Math.round((ram / 4096) * 100);
-        var sparkHtml = '<span class="sparkline">';
-        for (var i = 0; i < cpuHistory.length; i++) {
-            var barH = Math.max(2, Math.round(cpuHistory[i] / 100 * 14));
-            sparkHtml += '<span class="spark-bar" style="height:' + barH + 'px"></span>';
-        }
-        sparkHtml += '</span>';
-        metricsEl.innerHTML = '[ UPTIME: ' + uptime + ' ] | [ CPU: ' + cpu + '% ' + sparkHtml + '] | [ RAM: ' + ram + 'MB / 4096MB (' + ramPct + '%) ]';
+        var filled = Math.round(cpu / 10);
+        var empty = 10 - filled;
+        var cpuBar = '|'.repeat(filled) + '.'.repeat(empty);
+        metricsEl.textContent = '[ UPTIME: ' + uptime + ' ] | [ CPU: ' + cpuBar + ' ' + cpu + '% ] | [ RAM: ' + ram + 'MB / 4096MB (' + ramPct + '%) ]';
     }, 1000);
 }());
 
