@@ -1,3 +1,6 @@
+TR
+/
+EN
 whoami
   _____           _
  |  ___|   _ _ __| | ____ _ _ __
@@ -5,81 +8,96 @@ whoami
  |  _|| |_| | |  |   < (_| | | | |
  |_|   \__,_|_|  |_|\_\__,_|_| |_|
 Furkan Sarıca
-DevOps & Network Engineer | Systems Administrator
-istanbul, tr | ybs student
+DevOps & Ağ Mühendisi | Sistem Yöneticisi
+İstanbul, TR | YBS Öğrencisi @ İstanbul Gelişim Üniversitesi
 ./about.sh
 ./education.sh
 ./certificates.sh
 ./projects.sh
 ./tools.sh
 ./contact.sh
-
+↓ aşağı kaydır
 about
 cat ~/profile.md
 ￼
 # DevOps & Network Engineer in training
 class SystemsAdmin:
     def __init__(self):
-        self.focus = ["DevOps", "Linux", "Networking"]
+        self.focus = ["DevOps", "Linux", "Networking", "Cloud"]
         self.environment = "Homelab"
         self.containers = "Docker"
+        self.automation = ["Bash", "Python", "AI-driven"]
+        self.networking = ["VPN", "Firewall", "DNS", "Monitoring"]
 
     def build_infrastructure(self):
         # AI-assisted container orchestration
         return "Low-resource, scalable systems"
-Linux tabanlı homelab ortamlarında container tabanlı servisler tasarlıyorum. AI destekli sunucu otomasyonu, sanal ağ laboratuvarları ve merkezi loglama sistemleri üzerine çalışıyorum.
-DevOps Linux Docker System Admin Networking Bash Python Git Homelab Cloud
+
+    def monitor(self):
+        # Centralized logging & observability
+        return ["Syslog", "Grafana", "Log aggregation"]
+Linux tabanlı homelab ortamlarında container tabanlı servisler tasarlıyor ve işletiyorum. AI destekli sunucu otomasyonu, sanal ağ laboratuvarları, VPN altyapıları ve merkezi loglama/monitoring sistemleri üzerine çalışıyorum. İş süreçlerini, veri yönetimini ve altyapıyı bütünleşik olarak ele alan bir YBS perspektifine sahibim.
+DevOps Linux Docker docker-compose Bash Python Git Networking VPN Monitoring Grafana SQL CI/CD Cloud Homelab
 education
 ls -la ~/academic/
-Yönetim Bilişim Sistemleri - Lisans
-2022 - 2026 (Expected)
+Yönetim Bilişim Sistemleri — Lisans
+2022 – 2026 (Expected)
 İstanbul Gelişim Üniversitesi
-GPA: 3.03/4.00
+GPA: 3.03 / 4.00
 İşletim Sistemleri
 Bilgisayar Ağları ve Ağ Tasarımı
-Bilgi Güvenliği ve Ağ Güvenliği
+Bilgi ve Ağ Güvenliği
 Veritabanı Yönetim Sistemleri
 Sistem Analizi ve Tasarımı
 Veri Madenciliği / ML
-Lise Diploması - Eşit Ağırlık
-2016 - 2020
+Büyük Veri Analitiği
+ERP Sistemleri
+Bulut Bilişim Teknolojileri
+Proje Yönetimi
+Lise Diploması — Eşit Ağırlık
+2016 – 2020
 Özel Vizyon Akademi Lisesi, Aksaray
 certificates
 cat ~/certs/*.json
-IBM DevOps and Software Engineering
+IBM DevOps and Software Engineering Professional Certificate
 IN_PROGRESS
 @ IBM
 DevOps prensipleri, Agile/Scrum, CI/CD, bulut bilişim mimarisi, Linux komutları, Git, konteyner tabanlı uygulama dağıtımı ve gözlemlenebilirlik (Grafana vb.)
-Network Engineering Professional
+Akamai Network Engineering Professional Certificate
 IN_PROGRESS
 @ Akamai Technologies
 Linux sistem yönetimi, ağ güvenliği, routing protokolleri, uzaktan erişim sistemleri, scripting, incident response ve güvenlik yönetimi
 projects
 tree ~/projects/
-AI-Powered Smart Container Orchestration
-PERSONAL_PROJECT | Homelab
-	•	Düşük kaynak tüketimli Linux tabanlı homelab altyapısı tasarlama
-	•	Docker/docker-compose ile konteyner tabanlı servisler, ters vekil mimarisi
-	•	OpenClaw ve Kimi K2.5 API ile AI destekli sunucu otomasyonu
-	•	Kritik işlemler için onay ve denetim adımları ile güvenli yarı otonom yönetim
-	•	Git ile versiyonlama, güncelleme ve yedekleme süreçleri
+AI-Powered Container Infrastructure Automation
+PERSONAL_PROJECT | Homelab | Docker | AI
+	•	Düşük kaynak tüketimli Linux sunucu üzerinde Docker ve docker-compose ile modüler konteyner altyapısı
+	•	Web UI, DNS filtreleme, monitoring bileşenleri ters vekil (reverse proxy) arkasında izole servisler olarak çalıştırma
+	•	OpenClaw ve Kimi K2.5 API ile sunucu metriklerini (CPU, RAM, disk, servis durumu) analiz eden AI otomasyon pipeline'ı
+	•	Model çıktılarını komut ve script'lere dönüştüren kontrollü yürütme mekanizması
+	•	Kritik operasyonlar için onay adımı — güvenli yarı otonom sunucu yönetimi
+	•	Git ile versiyon kontrollü konfigürasyon dosyaları, rollback ve yedekleme prosedürleri
+LinuxDockerdocker-composeGitOpenClawKimi K2.5 APIReverse ProxyBash
 Virtual Network Lab & VPN Infrastructure
-PERSONAL_PROJECT | Networking
-	•	VirtualBox üzerinde router, DNS ve istemci rolleri ile ağ topolojileri
-	•	TCP/IP, DNS ve HTTP/HTTPS analizi için tcpdump, ping, traceroute, nmap
-	•	SSH anahtar tabanlı kimlik doğrulama ve firewall kuralları
-	•	WireGuard/OpenVPN ile güvenli uzaktan erişim senaryoları
-Centralized Logging & Monitoring
-PERSONAL_PROJECT | Observability
-	•	Birden fazla Linux sunucudan merkezi log toplama altyapısı
-	•	Syslog yapılandırmaları ile servis ve güvenlik olayları filtreleme
-	•	CPU, bellek, disk ve ağ izleme için hafif monitoring dashboard'ları
-	•	Temel gözlemlenebilirlik (observability) implementasyonu
+PERSONAL_PROJECT | Networking | VPN | Security
+	•	VirtualBox üzerinde router, DNS sunucu ve istemci rollerinde çoklu Linux VM'ler ile ağ topolojisi
+	•	Internal network ve DMZ benzeri segmentler ile internet erişim senaryoları
+	•	ping, traceroute, netstat/ss, tcpdump, nmap ile TCP/IP, DNS, HTTP/HTTPS trafik analizi
+	•	SSH anahtar tabanlı kimlik doğrulama ve ufw firewall kuralları
+	•	WireGuard/OpenVPN ile iç ağa güvenli uzaktan erişim ve servis yönetimi
+VirtualBoxLinuxSSHufwWireGuardOpenVPNtcpdumpnmap
+Centralized Logging & Monitoring Infrastructure
+PERSONAL_PROJECT | Observability | Syslog | Grafana
+	•	Birden fazla Linux sunucudan merkezi log sunucuya sistem loglarının toplanması
+	•	rsyslog/syslog ile servis, güvenlik ve ağ olaylarının tek noktada birleştirilmesi ve filtrelenmesi
+	•	CPU, bellek, disk ve ağ kullanımı için hafif monitoring araçları ve dashboard'lar
+	•	Temel gözlemlenebilirlik (observability) altyapısı ile servis sağlığı izleme
+LinuxrsyslogGrafanaMonitoringLog Aggregation
 tools
 dpkg -l | grep -E "(docker|git|python)"
 OS
 	•	Linux (Ubuntu/Debian)
-CONTAINER
+CONTAINERS
 	•	Docker
 	•	docker-compose
 	•	Container Orchestration
@@ -91,16 +109,16 @@ AUTOMATION
 	•	Bash Scripting
 	•	Python
 	•	CI/CD Pipelines
-DATABASES
+DATA
 	•	SQL
 	•	R (Statistics)
 	•	Relational DB Design
 NETWORK
 	•	ping, traceroute
-	•	netstat, ss, tcpdump
-	•	nmap, WireGuard
+	•	netstat/ss, tcpdump
+	•	nmap, WireGuard/OpenVPN
 MONITORING
-	•	Syslog
+	•	Syslog / rsyslog
 	•	Grafana
 	•	Log Aggregation
 CONFIG
@@ -117,6 +135,6 @@ LINKEDIN
 /in/furkan-sarica
 GITHUB
 @fufuizm
-LANG: TR (Native) | EN (B1 - Technical Docs)
-furkan@devops:~$ echo "Thanks for visiting"
+LANG: TR (Native) | EN (B1 — Technical Documentation)
+furkan@devops:~$ echo "Ziyaretiniz için teşekkürler"
 © 2025 | Built with HTML + CSS | No frameworks
