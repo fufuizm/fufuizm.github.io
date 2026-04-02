@@ -637,6 +637,7 @@ body.lang-en [data-lang-en-grid] { display: grid; }
 @media (max-width: 768px) {
 .about-grid { grid-template-columns: 1fr; }
 .ascii-header { font-size: 0.55rem; }
+.hero { padding-bottom: 6rem; }
 .hero-nav { flex-direction: column; }
 .edu-header { flex-direction: column; }
 .tools-grid { grid-template-columns: 1fr; }
