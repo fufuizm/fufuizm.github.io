@@ -21,6 +21,11 @@
 </head>
 <body class="lang-tr">
 
+<!-- Boot Screen -->
+<div id="boot-screen">
+  <div id="boot-log"></div>
+</div>
+
 <!-- Language Toggle -->
 <button class="lang-toggle" onclick="toggleLang()" title="Switch language / Dil değiştir">
 <span class="lang-option active" id="lang-tr-btn">TR</span>
@@ -318,6 +323,11 @@
 </div>
 </section>
 
+<!-- GitHub Contribution Graph -->
+<div style="text-align:center; margin: 0 auto 4rem; max-width: 1000px; padding: 0 2rem;">
+  <img src="https://ghchart.rshah.org/00ff88/fufuizm" alt="GitHub Contributions Graph" style="width: 100%; max-width: 800px; border-radius: 4px; padding: 1rem; background: var(--bg-card); margin-top: 2rem;">
+</div>
+
 <!-- Tools Section -->
 <section id="tools">
 <div class="section-header">
@@ -436,6 +446,21 @@
 </p>
 </section>
 
+<!-- Mini CLI Terminal -->
+<section id="cli-terminal" style="padding: 3rem 2rem; max-width: 1000px; margin: 0 auto;">
+  <div class="section-header">
+    <h2 class="section-title"><span data-lang-tr>terminal</span><span data-lang-en>terminal</span></h2>
+    <p class="section-subtitle">furkan@devops:~$ _</p>
+  </div>
+  <div id="cli-box">
+    <div id="cli-output"></div>
+    <div id="cli-input-line">
+      <span id="cli-prompt">furkan@devops:~$</span>
+      <input type="text" id="cli-input" autocomplete="off" spellcheck="false" aria-label="Terminal input">
+    </div>
+  </div>
+</section>
+
 <!-- Footer -->
 <footer>
 <p class="footer-text">
@@ -551,20 +576,7 @@ console.log("%c[!] Merhaba geliştirici! / Hello developer! 🚀\nKodlarımı in
         });
 }());
 
-// Feature 2: Secret keyboard sequence root/sudo theme toggle
-(function () {
-    var typed = '';
-    document.addEventListener('keydown', function (e) {
-        var active = document.activeElement;
-        if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) return;
-        typed += e.key;
-        if (typed.length > 10) typed = typed.slice(-10);
-        if (typed.endsWith('root') || typed.endsWith('sudo')) {
-            document.body.classList.toggle('root-mode');
-            typed = '';
-        }
-    });
-}());
+// Feature 2: Secret keyboard sequence root/sudo theme toggle — handled below with matrix rain
 
 // Feature: Hacker Text Scramble on hero nav links
 (function () {
@@ -632,6 +644,171 @@ console.log("%c[!] Merhaba geliştirici! / Hello developer! 🚀\nKodlarımı in
                 setTimeout(function () { resetBadge(badge); }, 2000);
             });
         });
+    });
+}());
+
+// ===== Feature: Linux Boot Preloader =====
+(function () {
+    var bootLines = [
+        '[ OK ] Initializing kernel modules...',
+        '[ OK ] Mounting filesystems...',
+        '[ OK ] Starting network interfaces...',
+        '[ OK ] Starting Docker daemon...',
+        '[ OK ] Starting SSH server...',
+        '[ OK ] Starting Nginx reverse proxy...',
+        '[ OK ] Loading monitoring agents...',
+        '[ OK ] Loading fufuizm interface...',
+        '[ OK ] System ready. Welcome, furkan.'
+    ];
+    var screen = document.getElementById('boot-screen');
+    var log = document.getElementById('boot-log');
+    if (!screen || !log) return;
+
+    var idx = 0;
+    var delay = 160;
+
+    function printNext() {
+        if (idx < bootLines.length) {
+            log.textContent += bootLines[idx] + '\n';
+            idx++;
+            setTimeout(printNext, delay);
+        } else {
+            setTimeout(function () {
+                screen.style.opacity = '0';
+                setTimeout(function () {
+                    screen.style.display = 'none';
+                }, 500);
+            }, 400);
+        }
+    }
+
+    printNext();
+}());
+
+// ===== Feature: Interactive Mini CLI Terminal =====
+(function () {
+    var input = document.getElementById('cli-input');
+    var output = document.getElementById('cli-output');
+    if (!input || !output) return;
+
+    function addLine(text, cls) {
+        var line = document.createElement('span');
+        line.className = 'cli-line' + (cls ? ' ' + cls : '');
+        line.textContent = text;
+        output.appendChild(line);
+        output.parentElement.scrollTop = output.parentElement.scrollHeight;
+    }
+
+    function echoCmd(cmd) {
+        addLine('furkan@devops:~$ ' + cmd, 'cmd');
+    }
+
+    addLine('Type "help" to see available commands.', 'ok');
+
+    var sections = { projects: '#projects', about: '#about', contact: '#contact', tools: '#tools', education: '#education', certificates: '#certificates' };
+
+    input.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter') return;
+        var cmd = input.value.trim();
+        input.value = '';
+        if (!cmd) return;
+        echoCmd(cmd);
+        var c = cmd.toLowerCase();
+
+        if (c === 'help') {
+            addLine('Available commands: projects | about | education | certificates | tools | contact | whoami | ls | pwd | uname -a | clear | exit | sudo rm -rf /');
+        } else if (sections[c]) {
+            addLine('Scrolling to #' + c + '...', 'ok');
+            var target = document.querySelector(sections[c]);
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else if (c === 'clear') {
+            output.innerHTML = '';
+        } else if (c === 'sudo rm -rf /' || c === 'sudo rm -rf /*') {
+            addLine('Access denied: I can\'t let you delete this server!', 'err');
+        } else if (c === 'exit') {
+            addLine('logout', 'ok');
+            if (document.body.classList.contains('root-mode')) {
+                document.body.classList.remove('root-mode');
+                stopMatrixRain();
+            }
+        } else if (c === 'whoami') {
+            addLine('furkan');
+        } else if (c === 'pwd') {
+            addLine('/home/furkan');
+        } else if (c === 'ls') {
+            addLine('about.sh  certificates.sh  contact.sh  education.sh  projects.sh  tools.sh');
+        } else if (c === 'uname -a') {
+            addLine('Linux devops 6.5.0-fufuizm #1 SMP Thu Jan 01 00:00:00 UTC 2026 x86_64 GNU/Linux');
+        } else {
+            addLine('Command not found: ' + cmd + " — type 'help'", 'err');
+        }
+    });
+}());
+
+// ===== Feature: Matrix / Binary Rain in Root Mode =====
+function startMatrixRain() {
+    if (document.getElementById('matrix-rain')) return;
+    var canvas = document.createElement('canvas');
+    canvas.id = 'matrix-rain';
+    document.body.appendChild(canvas);
+    var ctx = canvas.getContext('2d');
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    var chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノ';
+    var fontSize = 14;
+    var cols = Math.floor(canvas.width / fontSize);
+    var drops = [];
+    for (var i = 0; i < cols; i++) drops[i] = Math.random() * -100;
+
+    var interval = setInterval(function () {
+        if (!document.getElementById('matrix-rain')) { clearInterval(interval); return; }
+        ctx.fillStyle = 'rgba(10, 10, 10, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = document.body.classList.contains('root-mode') ? '#ff3333' : '#00ff88';
+        ctx.font = fontSize + 'px JetBrains Mono, monospace';
+        for (var j = 0; j < drops.length; j++) {
+            var ch = chars[Math.floor(Math.random() * chars.length)];
+            ctx.fillText(ch, j * fontSize, drops[j] * fontSize);
+            if (drops[j] * fontSize > canvas.height && Math.random() > 0.975) drops[j] = 0;
+            drops[j]++;
+        }
+    }, 33);
+    canvas._matrixInterval = interval;
+    canvas._resizeHandler = resize;
+}
+
+function stopMatrixRain() {
+    var canvas = document.getElementById('matrix-rain');
+    if (!canvas) return;
+    clearInterval(canvas._matrixInterval);
+    window.removeEventListener('resize', canvas._resizeHandler);
+    canvas.parentNode.removeChild(canvas);
+}
+
+// Patch root mode toggle to start/stop matrix rain
+(function () {
+    var typed = '';
+    document.addEventListener('keydown', function (e) {
+        var active = document.activeElement;
+        if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) return;
+        typed += e.key;
+        if (typed.length > 10) typed = typed.slice(-10);
+        if (typed.endsWith('root') || typed.endsWith('sudo')) {
+            var wasRoot = document.body.classList.contains('root-mode');
+            document.body.classList.toggle('root-mode');
+            if (!wasRoot) {
+                startMatrixRain();
+            } else {
+                stopMatrixRain();
+            }
+            typed = '';
+        }
     });
 }());
 
