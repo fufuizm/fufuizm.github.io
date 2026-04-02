@@ -294,6 +294,13 @@
 <li>SSH key-based authentication and ufw firewall rules</li>
 <li>Secure remote access to internal network via WireGuard/OpenVPN for service management</li>
 </ul>
+<pre class="ascii-topology"><code>[Internet]
+    │
+[pfSense/Firewall] ──(VPN: 10.8.0.0/24)── [Remote User]
+    │
+    ├─ [VLAN 10 : DMZ] ── Nginx Reverse Proxy
+    │
+    └─ [VLAN 20 : LAN] ── Docker Host (192.168.20.10)</code></pre>
 </div>
 <div class="project-tech">
 <span>VirtualBox</span><span>Linux</span><span>SSH</span><span>ufw</span><span>WireGuard</span><span>OpenVPN</span><span>tcpdump</span><span>nmap</span>
@@ -413,6 +420,31 @@
 </div>
 </section>
 
+<!-- CI/CD Pipeline Animation -->
+<section id="cicd-pipeline" style="padding: 3rem 2rem; max-width: 1000px; margin: 0 auto;">
+  <div class="section-header">
+    <h2 class="section-title"><span data-lang-tr>ci/cd pipeline</span><span data-lang-en>ci/cd pipeline</span></h2>
+    <p class="section-subtitle">github-actions --live</p>
+  </div>
+  <div class="pipeline-container">
+    <div class="pipeline-stage" id="stage-build">
+      <div class="pipeline-label">[ Build ]</div>
+      <div class="pipeline-icon">⬜</div>
+    </div>
+    <div class="pipeline-arrow">➔</div>
+    <div class="pipeline-stage" id="stage-test">
+      <div class="pipeline-label">[ Test ]</div>
+      <div class="pipeline-icon">⬜</div>
+    </div>
+    <div class="pipeline-arrow">➔</div>
+    <div class="pipeline-stage" id="stage-deploy">
+      <div class="pipeline-label">[ Deploy ]</div>
+      <div class="pipeline-icon">⬜</div>
+    </div>
+  </div>
+  <div id="pipeline-log" class="pipeline-log"></div>
+</section>
+
 </main>
 
 <!-- Contact Section -->
@@ -495,6 +527,19 @@
 <div id="screensaver" role="presentation" aria-hidden="true">
   <div id="screensaver-text">&lt; fufuizm /&gt;</div>
 </div>
+
+<!-- 502 Bad Gateway Overlay -->
+<div id="nginx-502-overlay" aria-hidden="true">
+  <div id="nginx-502-content">
+    <h1>502 Bad Gateway</h1>
+    <hr>
+    <p>nginx/1.25.3</p>
+    <p class="nginx-hint">hint: <code>docker start portfolio-ui</code></p>
+  </div>
+</div>
+
+<!-- Background Scrolling Logs -->
+<div id="bg-logs" aria-hidden="true"></div>
 
 <script>
 // Language state
@@ -819,7 +864,7 @@ runBootSequence();
 
     var sections = { projects: '#projects', about: '#about', contact: '#contact', tools: '#tools', education: '#education', certificates: '#certificates' };
 
-    var cliCommands = ['help', 'projects', 'about', 'education', 'certificates', 'tools', 'contact', 'clear', 'whoami', 'sudo', 'ip a', 'ifconfig', 'theme ls', 'theme set default', 'theme set dracula', 'theme set monokai', 'theme set cyberpunk', 'theme set ubuntu', 'theme set amber', 'theme set light', 'ls', 'pwd', 'cd ~', 'cd about', 'cd projects', 'cd education', 'cat profile.md', 'cat ai-container.txt', 'cat vpn-lab.txt', 'cat logging.txt', 'cat university.md', 'uname -a', 'exit', 'neofetch', 'curl wttr.in/Istanbul', 'reboot', 'cat cv.pdf', 'cat cv', 'ping', 'ping fufuizm.com'];
+    var cliCommands = ['help', 'projects', 'about', 'education', 'certificates', 'tools', 'contact', 'clear', 'whoami', 'sudo', 'ip a', 'ifconfig', 'theme ls', 'theme set default', 'theme set dracula', 'theme set monokai', 'theme set cyberpunk', 'theme set ubuntu', 'theme set amber', 'theme set light', 'ls', 'pwd', 'cd ~', 'cd about', 'cd projects', 'cd education', 'cat profile.md', 'cat ai-container.txt', 'cat vpn-lab.txt', 'cat logging.txt', 'cat university.md', 'uname -a', 'exit', 'neofetch', 'curl wttr.in/Istanbul', 'reboot', 'cat cv.pdf', 'cat cv', 'ping', 'ping fufuizm.com', 'docker ps', 'docker stop portfolio-ui', 'docker start portfolio-ui', 'kubectl get pods', 'nmap fufuizm.com', 'nmap localhost', 'traceroute fufuizm.com', 'traceroute'];
 
     // ===== Virtual File System =====
     var vfsTree = {
@@ -960,6 +1005,9 @@ runBootSequence();
             addLine('  System     : whoami | ip a | uname -a | neofetch | reboot');
             addLine('  Extras     : curl wttr.in/Istanbul | cat cv.pdf | ping | clear | exit');
             addLine('  Themes     : theme ls | theme set <name>');
+            addLine('  Docker     : docker ps | docker stop <name> | docker start <name>');
+            addLine('  Kubernetes : kubectl get pods | kubectl delete pod <name>');
+            addLine('  Network    : nmap fufuizm.com | traceroute fufuizm.com');
             addLine('  Easter eggs: sudo rm -rf /');
         } else if (sections[c]) {
             addLine('Scrolling to #' + c + '...', 'ok');
@@ -1095,6 +1143,89 @@ runBootSequence();
             addLine('PING fufuizm.com (127.0.0.1): 56 data bytes', 'ok');
             addLine('Launching Ping-Pong...', 'ok');
             setTimeout(function () { if (window.startPingPong) window.startPingPong(); }, 400);
+
+        // ===== Docker Commands =====
+        } else if (c === 'docker ps') {
+            addBlock('<pre style="color:var(--text-secondary);font-size:0.78rem;overflow-x:auto">' +
+                'CONTAINER ID   IMAGE                    COMMAND         STATUS         PORTS                    NAMES\n' +
+                'a1b2c3d4e5f6   fufuizm/web:v2           "nginx -g..."   Up 4 days      0.0.0.0:443->443/tcp     portfolio-ui\n' +
+                'b9c8d7e6f5a4   fufuizm/api:v1           "node app.js"   Up 4 days      127.0.0.1:3000->3000/tcp portfolio-api\n' +
+                'c0d1e2f3a4b5   fufuizm/monitor:latest   "grafana..."    Up 2 hours     127.0.0.1:3001->3001/tcp portfolio-monitor' +
+                '</pre>');
+        } else if (c === 'docker stop portfolio-ui') {
+            addLine('portfolio-ui', 'ok');
+            setTimeout(function () {
+                var overlay = document.getElementById('nginx-502-overlay');
+                if (overlay) {
+                    overlay.classList.add('active');
+                    overlay.setAttribute('aria-hidden', 'false');
+                }
+            }, 600);
+        } else if (c === 'docker start portfolio-ui') {
+            var overlay502 = document.getElementById('nginx-502-overlay');
+            if (overlay502 && overlay502.classList.contains('active')) {
+                overlay502.classList.remove('active');
+                overlay502.setAttribute('aria-hidden', 'true');
+                addLine('portfolio-ui', 'ok');
+            } else {
+                addLine('portfolio-ui', 'ok');
+                addLine('[ OK ] container portfolio-ui already running', 'ok');
+            }
+
+        // ===== Kubernetes Commands =====
+        } else if (c === 'kubectl get pods' || c === 'kubectl get pods -n default') {
+            var uid1 = Math.random().toString(36).slice(2, 7);
+            var uid2 = Math.random().toString(36).slice(2, 7);
+            var uid3 = Math.random().toString(36).slice(2, 7);
+            addBlock('<pre style="color:var(--text-secondary);font-size:0.78rem">' +
+                'NAME                              READY   STATUS    RESTARTS   AGE\n' +
+                'portfolio-ui-7d9f8b6c5-' + uid1 + '    1/1     Running   0          4d2h\n' +
+                'portfolio-api-6b8d4f9a2-' + uid2 + '   1/1     Running   0          4d2h\n' +
+                'monitor-5c7e3a1b8-' + uid3 + '         1/1     Running   2          2h17m' +
+                '</pre>');
+        } else if (c.startsWith('kubectl delete pod ')) {
+            var podName = cmd.slice('kubectl delete pod '.length).trim() || 'portfolio-ui-xyz';
+            var newUid = Math.random().toString(36).slice(2, 7);
+            var baseName = podName.replace(/-[a-z0-9]+-[a-z0-9]+$/, '');
+            if (!baseName || baseName === podName) baseName = podName.split('-').slice(0, -1).join('-') || podName;
+            addLine('pod "' + podName + '" deleted', 'ok');
+            setTimeout(function () {
+                addLine('[ReplicaSet] Detected pod deficit — scheduling replacement...', 'ok');
+                setTimeout(function () {
+                    addLine('pod "' + baseName + '-' + Math.random().toString(36).slice(2, 12) + '" created', 'ok');
+                    addLine('[K8s] High availability maintained. Pods: 1/1 Running ✓', 'ok');
+                }, 1200);
+            }, 800);
+        } else if (c === 'kubectl' || c.startsWith('kubectl ')) {
+            addLine('error: unknown command "' + cmd.slice(8).trim() + '" — try: kubectl get pods', 'err');
+
+        // ===== Network Tools =====
+        } else if (c === 'nmap fufuizm.com' || c === 'nmap localhost' || c === 'nmap 127.0.0.1') {
+            var target = c.includes('localhost') || c.includes('127.0.0.1') ? '127.0.0.1' : '185.199.108.153';
+            addLine('Starting Nmap 7.94 ( https://nmap.org )', 'ok');
+            addLine('Nmap scan report for fufuizm.com (' + target + ')', 'ok');
+            addLine('Host is up (0.0' + (Math.floor(Math.random() * 89) + 10) + 's latency).');
+            setTimeout(function () {
+                addLine('PORT    STATE  SERVICE  VERSION');
+                addLine('22/tcp  open   ssh      OpenSSH 9.3p1 Ubuntu');
+                addLine('80/tcp  open   http     nginx 1.25.3');
+                addLine('443/tcp open   https    nginx 1.25.3');
+                addLine('');
+                addLine('Nmap done: 1 IP address (1 host up) scanned in ' + (Math.random() * 3 + 1).toFixed(2) + 's', 'ok');
+            }, 1200);
+        } else if (c === 'traceroute fufuizm.com' || c === 'traceroute' || c === 'tracert fufuizm.com') {
+            addLine('traceroute to fufuizm.com (185.199.108.153), 30 hops max, 60 byte packets', 'ok');
+            var hops = [
+                ' 1  homelab-gw (192.168.1.1)         0.' + (Math.floor(Math.random()*9)+1) + 'ms',
+                ' 2  isp-core.example.net (10.0.0.1)  ' + (Math.floor(Math.random()*9)+2) + '.' + Math.floor(Math.random()*9) + 'ms',
+                ' 3  backbone-tr-ist (195.175.0.1)    ' + (Math.floor(Math.random()*9)+8) + '.' + Math.floor(Math.random()*9) + 'ms',
+                ' 4  ix-frankfurt (80.81.192.1)        ' + (Math.floor(Math.random()*9)+22) + '.' + Math.floor(Math.random()*9) + 'ms',
+                ' 5  github-edge (185.199.108.1)       ' + (Math.floor(Math.random()*9)+28) + '.' + Math.floor(Math.random()*9) + 'ms',
+                ' 6  185.199.108.153                   ' + (Math.floor(Math.random()*9)+30) + '.' + Math.floor(Math.random()*9) + 'ms'
+            ];
+            hops.forEach(function (hop, i) {
+                setTimeout(function () { addLine(hop); }, (i + 1) * 350);
+            });
         } else {
             addLine('Command not found: ' + cmd + " — type 'help'", 'err');
             if (window.playBeep) window.playBeep();
@@ -1107,6 +1238,8 @@ runBootSequence();
     var metricsEl = document.getElementById('server-metrics');
     if (!metricsEl) return;
     var pageLoadTime = Date.now();
+    var cpuHistory = [];
+    var MAX_HIST = 20;
     setInterval(function () {
         var elapsed = Math.floor((Date.now() - pageLoadTime) / 1000);
         var hh = Math.floor(elapsed / 3600);
@@ -1115,10 +1248,17 @@ runBootSequence();
         var uptime = (hh > 0 ? String(hh).padStart(2, '0') + ':' : '') +
                      String(mm).padStart(2, '0') + ':' + String(ss).padStart(2, '0');
         var cpu = Math.floor(Math.random() * 21) + 5;
-        var bars = Math.round(cpu / 5);
-        var cpuStr = '|'.repeat(bars) + '.'.repeat(10 - bars);
+        cpuHistory.push(cpu);
+        if (cpuHistory.length > MAX_HIST) cpuHistory.shift();
         var ram = 1024 + Math.floor(Math.random() * 50);
-        metricsEl.textContent = '[ UPTIME: ' + uptime + ' ] | [ CPU: ' + cpuStr + ' ' + cpu + '% ] | [ RAM: ' + ram + 'MB / 4096MB ]';
+        var ramPct = Math.round((ram / 4096) * 100);
+        var sparkHtml = '<span class="sparkline">';
+        for (var i = 0; i < cpuHistory.length; i++) {
+            var barH = Math.max(2, Math.round(cpuHistory[i] / 100 * 14));
+            sparkHtml += '<span class="spark-bar" style="height:' + barH + 'px"></span>';
+        }
+        sparkHtml += '</span>';
+        metricsEl.innerHTML = '[ UPTIME: ' + uptime + ' ] | [ CPU: ' + cpu + '% ' + sparkHtml + '] | [ RAM: ' + ram + 'MB / 4096MB (' + ramPct + '%) ]';
     }, 1000);
 }());
 
@@ -1402,7 +1542,146 @@ runBootSequence();
     resetIdle();
 }());
 
-// ===== Feature: Matrix / Binary Rain in Root Mode =====
+// ===== Feature: Background Scrolling Logs =====
+(function () {
+    var logsEl = document.getElementById('bg-logs');
+    if (!logsEl) return;
+
+    var logTemplates = [
+        '[INFO] sshd: Accepted publickey for furkan from 192.168.1.45 port 52341',
+        '[INFO] sshd: Accepted publickey for furkan from 10.8.0.5 port 41892',
+        '[WARN] ufw: BLOCK SRC=45.33.2.11 DST=fufuizm.com PORT=22 PROTO=TCP',
+        '[WARN] ufw: BLOCK SRC=185.220.101.55 DST=fufuizm.com PORT=3389',
+        '[INFO] docker: container portfolio-ui healthcheck passed',
+        '[INFO] docker: container portfolio-api healthcheck passed',
+        '[OK  ] nginx: upstream portfolio-ui 200 OK 12ms',
+        '[INFO] cron: backup job completed — /var/backups/portfolio.tar.gz',
+        '[WARN] ufw: BLOCK SRC=93.174.88.5 DST=fufuizm.com PORT=8080',
+        '[INFO] sshd: Disconnected from 192.168.1.45 port 52341',
+        '[OK  ] grafana: datasource prometheus connected',
+        '[INFO] rsyslog: log rotation completed — auth.log.1',
+        '[WARN] ufw: BLOCK SRC=5.188.62.44 DST=fufuizm.com PORT=22',
+        '[INFO] docker: pulling image fufuizm/api:v1.1 — layer 3/7',
+        '[OK  ] systemd: nginx.service active (running)',
+    ];
+
+    function addLog() {
+        var line = document.createElement('div');
+        var now = new Date();
+        var ts = String(now.getHours()).padStart(2,'0') + ':' +
+                 String(now.getMinutes()).padStart(2,'0') + ':' +
+                 String(now.getSeconds()).padStart(2,'0');
+        var tpl = logTemplates[Math.floor(Math.random() * logTemplates.length)];
+        line.textContent = ts + ' ' + tpl;
+        logsEl.appendChild(line);
+        // Keep only last 12 lines
+        while (logsEl.children.length > 12) {
+            logsEl.removeChild(logsEl.firstChild);
+        }
+    }
+
+    // Seed with a few initial lines
+    for (var seed = 0; seed < 6; seed++) { addLog(); }
+
+    setInterval(addLog, 2500 + Math.random() * 1500);
+}());
+
+// ===== Feature: CI/CD Pipeline Animation =====
+(function () {
+    var stageEls = {
+        build:  document.getElementById('stage-build'),
+        test:   document.getElementById('stage-test'),
+        deploy: document.getElementById('stage-deploy')
+    };
+    var logEl = document.getElementById('pipeline-log');
+    if (!stageEls.build || !stageEls.test || !stageEls.deploy || !logEl) return;
+
+    var ICONS = { idle: '⬜', running: '🔄', ok: '✅', fail: '❌' };
+
+    function setStage(name, state, icon) {
+        var el = stageEls[name];
+        el.className = 'pipeline-stage' + (state ? ' ' + state : '');
+        el.querySelector('.pipeline-icon').textContent = icon || ICONS[state] || '⬜';
+    }
+
+    function setLog(msg, color) {
+        logEl.style.color = color || 'var(--text-muted)';
+        logEl.textContent = msg;
+    }
+
+    function resetAll() {
+        ['build', 'test', 'deploy'].forEach(function (s) { setStage(s, '', ICONS.idle); });
+        setLog('');
+    }
+
+    function runPipeline() {
+        var willFail = Math.random() < 0.3; // 30% chance of test failure
+        resetAll();
+
+        // --- Build stage ---
+        setTimeout(function () {
+            setStage('build', 'running', ICONS.running);
+            setLog('⚙ Building fufuizm/web:latest...');
+        }, 200);
+
+        setTimeout(function () {
+            setStage('build', 'done', ICONS.ok);
+            setLog('[ Build ] passed — image pushed to registry', 'var(--terminal-green)');
+        }, 2400);
+
+        // --- Test stage ---
+        setTimeout(function () {
+            setStage('test', 'running', ICONS.running);
+            setLog('🧪 Running test suite...');
+        }, 2800);
+
+        if (willFail) {
+            setTimeout(function () {
+                setStage('test', 'failed', ICONS.fail);
+                setLog('[ Test ] FAILED — 1 assertion error detected', '#ff4444');
+            }, 4800);
+            // Retry
+            setTimeout(function () {
+                setStage('test', 'retry', ICONS.running);
+                setLog('↩ Retrying test suite...');
+            }, 6200);
+            setTimeout(function () {
+                setStage('test', 'done', ICONS.ok);
+                setLog('[ Test ] passed on retry ✓', 'var(--terminal-green)');
+            }, 8200);
+            // Deploy stage (offset for retry)
+            setTimeout(function () {
+                setStage('deploy', 'running', ICONS.running);
+                setLog('🚀 Deploying to fufuizm.github.io...');
+            }, 8700);
+            setTimeout(function () {
+                setStage('deploy', 'done', ICONS.ok);
+                setLog('[ Deploy ] live — https://fufuizm.github.io ✓', 'var(--terminal-green)');
+            }, 10800);
+            setTimeout(runPipeline, 14000);
+        } else {
+            setTimeout(function () {
+                setStage('test', 'done', ICONS.ok);
+                setLog('[ Test ] passed — all 42 checks green', 'var(--terminal-green)');
+            }, 4800);
+            // Deploy stage
+            setTimeout(function () {
+                setStage('deploy', 'running', ICONS.running);
+                setLog('🚀 Deploying to fufuizm.github.io...');
+            }, 5300);
+            setTimeout(function () {
+                setStage('deploy', 'done', ICONS.ok);
+                setLog('[ Deploy ] live — https://fufuizm.github.io ✓', 'var(--terminal-green)');
+            }, 7400);
+            setTimeout(runPipeline, 11000);
+        }
+    }
+
+    // Start after a short delay so page loads first
+    setTimeout(runPipeline, 2000);
+}());
+
+
 function startMatrixRain() {
     if (document.getElementById('matrix-rain')) return;
     var canvas = document.createElement('canvas');
