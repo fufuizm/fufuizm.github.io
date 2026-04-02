@@ -847,14 +847,18 @@ runBootSequence();
         document.body.classList.add('glitch-mode');
         var targets = Array.from(document.querySelectorAll('header, section, footer, .project-card, .cert-card, .tool-box, #server-metrics'));
         targets.sort(function () { return Math.random() - 0.5; });
+        var GLITCH_MIN_MS = 80;
+        var GLITCH_MAX_MS = 350;
+        var MAX_SKEW_DEG  = 12;
+        var MAX_SHIFT_PX  = 60;
         var totalDelay = 0;
         targets.forEach(function (el) {
-            var delay = totalDelay + Math.floor(Math.random() * 350 + 80);
+            var delay = totalDelay + Math.floor(Math.random() * GLITCH_MAX_MS + GLITCH_MIN_MS);
             totalDelay = delay;
             setTimeout(function () {
                 el.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
                 el.style.opacity = '0';
-                el.style.transform = 'skewX(' + (Math.random() * 24 - 12) + 'deg) translateX(' + (Math.random() * 120 - 60) + 'px)';
+                el.style.transform = 'skewX(' + (Math.random() * MAX_SKEW_DEG * 2 - MAX_SKEW_DEG) + 'deg) translateX(' + (Math.random() * MAX_SHIFT_PX * 2 - MAX_SHIFT_PX) + 'px)';
             }, delay);
         });
         setTimeout(function () {
@@ -999,7 +1003,7 @@ runBootSequence();
             } else if (arg === '~' || arg === '/home/furkan') {
                 newDir = '~';
             } else if (arg.startsWith('~/') || arg.startsWith('/home/furkan/')) {
-                newDir = arg.startsWith('/home/furkan/') ? '~/' + arg.slice(13) : arg;
+                newDir = arg.startsWith('/home/furkan/') ? '~/' + arg.slice('/home/furkan/'.length) : arg;
             } else {
                 newDir = currentDir === '~' ? '~/' + arg : currentDir + '/' + arg;
             }
