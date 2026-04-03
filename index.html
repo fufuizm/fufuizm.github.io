@@ -36,6 +36,9 @@
 <!-- Sound Toggle -->
 <button class="mute-toggle" id="mute-btn" title="Enable sounds / Sesi aç" aria-label="Toggle sound">🔇</button>
 
+<!-- Hacker Mode Toggle -->
+<button class="hacker-toggle" id="hacker-toggle" title="Toggle Hacker Mode / Hacker Modu">🛡</button>
+
 <!-- Hero Section -->
 <header class="hero">
 <div class="hero-prompt">whoami</div>
@@ -67,6 +70,13 @@
 <div class="scroll-indicator">
 <span data-lang-tr>↓ aşağı kaydır</span>
 <span data-lang-en>↓ scroll down</span>
+</div>
+
+<!-- Real-time Health Check Indicators -->
+<div class="health-checks">
+  <span class="health-indicator" id="hc-api" data-service="api.fufuizm.internal">🟢 api.fufuizm.internal</span>
+  <span class="health-indicator" id="hc-db"  data-service="db.fufuizm.internal">🟢 db.fufuizm.internal</span>
+  <span class="health-indicator" id="hc-auth" data-service="auth.fufuizm.internal">🟢 auth.fufuizm.internal</span>
 </div>
 </header>
 
@@ -349,9 +359,44 @@
   <a href="artifacts/ai-container-topology.md" download class="artifact-btn">📐 <span data-lang-tr>Topoloji</span><span data-lang-en>Topology</span>.md</a>
   <a href="artifacts/compose-snippet.yml" download class="artifact-btn">🐳 compose-snippet.yml</a>
 </div>
-</div>
+<div class="iac-section">
+  <button class="iac-btn" data-target="iac-ai-container"><span data-lang-tr>[ Altyapıyı Dağıt (IaC) ]</span><span data-lang-en>[ Deploy this infra (IaC) ]</span></button>
+  <div class="iac-snippet" id="iac-ai-container" hidden>
+<pre class="iac-code"><span class="iac-comment"># docker-compose.yml — AI Container Infrastructure</span>
+version: "3.9"
+services:
+  web:
+    image: nginx:alpine
+    restart: always
+    ports:
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/ssl/certs:ro
 
-<!-- Project 2 -->
+  ai-pipeline:
+    build: ./ai-pipeline
+    restart: always
+    environment:
+      - OPENCLAW_API_KEY=${OPENCLAW_API_KEY}
+      - KIMI_API_KEY=${KIMI_API_KEY}
+      - APPROVAL_REQUIRED=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  grafana:
+    image: grafana/grafana:latest
+    restart: always
+    ports:
+      - "127.0.0.1:3001:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+
+volumes:
+  grafana-data:</pre>
+  </div>
+</div>
+</div>
 <div class="project-card">
 <div class="project-header">
 <div class="project-title"><span data-lang-tr>Sanal Ağ Laboratuvarı ve VPN Altyapısı</span><span data-lang-en>Virtual Network Lab &amp; VPN Infrastructure</span></div>
@@ -402,9 +447,51 @@
   <a href="artifacts/vpn-lab-topology.md" download class="artifact-btn">📐 <span data-lang-tr>Topoloji</span><span data-lang-en>Topology</span>.md</a>
   <a href="artifacts/vpn-lab-runbook.md" download class="artifact-btn">📋 runbook.md</a>
 </div>
-</div>
+<div class="iac-section">
+  <button class="iac-btn" data-target="iac-vpn-lab"><span data-lang-tr>[ Altyapıyı Dağıt (IaC) ]</span><span data-lang-en>[ Deploy this infra (IaC) ]</span></button>
+  <div class="iac-snippet" id="iac-vpn-lab" hidden>
+<pre class="iac-code"><span class="iac-comment"># wireguard-setup.yml — Ansible Playbook</span>
+---
+- name: Configure WireGuard VPN Server
+  hosts: vpn_host
+  become: yes
+  vars:
+    wg_interface: wg0
+    wg_port: 51820
+    wg_network: "10.8.0.0/24"
+    server_ip: "10.8.0.1"
 
-<!-- Project 3 -->
+  tasks:
+    - name: Install WireGuard
+      apt:
+        name: wireguard
+        state: present
+        update_cache: yes
+
+    - name: Generate server private key
+      shell: wg genkey
+      register: server_private_key
+
+    - name: Deploy wg0 config
+      template:
+        src: wg0.conf.j2
+        dest: /etc/wireguard/wg0.conf
+        mode: '0600'
+
+    - name: Enable and start WireGuard
+      systemd:
+        name: "wg-quick@{{ wg_interface }}"
+        enabled: yes
+        state: started
+
+    - name: Configure ufw rules
+      ufw:
+        rule: allow
+        port: "{{ wg_port }}"
+        proto: udp</pre>
+  </div>
+</div>
+</div>
 <div class="project-card">
 <div class="project-header">
 <div class="project-title"><span data-lang-tr>Merkezi Loglama ve İzleme Altyapısı</span><span data-lang-en>Centralized Logging &amp; Monitoring Infrastructure</span></div>
@@ -446,6 +533,50 @@
   <a href="artifacts/logging-setup.md" download class="artifact-btn">📋 runbook.md</a>
   <a href="artifacts/monitoring-config.yml" download class="artifact-btn">⚙ monitoring-config.yml</a>
 </div>
+<div class="iac-section">
+  <button class="iac-btn" data-target="iac-logging"><span data-lang-tr>[ Altyapıyı Dağıt (IaC) ]</span><span data-lang-en>[ Deploy this infra (IaC) ]</span></button>
+  <div class="iac-snippet" id="iac-logging" hidden>
+<pre class="iac-code"><span class="iac-comment"># terraform — Centralized Logging Host</span>
+terraform {
+  required_providers {
+    docker = {
+      source  = "kreuzwerker/docker"
+      version = "~> 3.0"
+    }
+  }
+}
+
+resource "docker_container" "rsyslog" {
+  image   = "rsyslog/syslog_appliance_alpine:latest"
+  name    = "rsyslog-central"
+  restart = "always"
+  ports {
+    internal = 514
+    external = 514
+    protocol = "udp"
+  }
+  volumes {
+    host_path      = "/var/log/central"
+    container_path = "/var/log"
+  }
+}
+
+resource "docker_container" "grafana" {
+  image   = "grafana/grafana:latest"
+  name    = "grafana"
+  restart = "always"
+  ports {
+    internal = 3000
+    external = 3001
+    ip       = "127.0.0.1"
+  }
+  env = [
+    "GF_SECURITY_ADMIN_PASSWORD=${var.grafana_password}",
+    "GF_USERS_ALLOW_SIGN_UP=false"
+  ]
+}</pre>
+  </div>
+</div>
 </div>
 </section>
 
@@ -454,6 +585,56 @@
   <img src="https://ghchart.rshah.org/00ff88/fufuizm" alt="GitHub Contributions Graph" style="width: 100%; max-width: 800px; border-radius: 4px; padding: 1rem; background: var(--bg-card); margin-top: 2rem;">
 </div>
 
+<!-- Changelog Section -->
+<section id="changelog" style="padding: 3rem 2rem; max-width: 1000px; margin: 0 auto;">
+<div class="section-header">
+<h2 class="section-title"><span data-lang-tr>geçmiş</span><span data-lang-en>changelog</span></h2>
+<p class="section-subtitle">git log --oneline --graph</p>
+</div>
+<div class="changelog-list">
+  <div class="changelog-entry">
+    <span class="cl-hash">[fc8a1b2]</span>
+    <span class="cl-date">2026-03-15</span>
+    <span class="cl-msg"><span data-lang-tr>Merged branch 'kubernetes-basics' into main</span><span data-lang-en>Merged branch 'kubernetes-basics' into main</span></span>
+  </div>
+  <div class="changelog-entry">
+    <span class="cl-hash">[3a7c9d4]</span>
+    <span class="cl-date">2026-01-10</span>
+    <span class="cl-msg"><span data-lang-tr>feat: AI pipeline onay adımı eklendi (insan-döngüde yetkilendirme)</span><span data-lang-en>feat: added human-in-the-loop approval gate to AI pipeline</span></span>
+  </div>
+  <div class="changelog-entry">
+    <span class="cl-hash">[8a2d9c1]</span>
+    <span class="cl-date">2025-11-20</span>
+    <span class="cl-msg"><span data-lang-tr>refactor: homelab ağ yapısı yeniden düzenlendi (VLAN segmentasyonu)</span><span data-lang-en>refactor: homelab networking reworked (VLAN segmentation)</span></span>
+  </div>
+  <div class="changelog-entry">
+    <span class="cl-hash">[d1e5f38]</span>
+    <span class="cl-date">2025-08-04</span>
+    <span class="cl-msg"><span data-lang-tr>fix: WireGuard tüneli systemd enable edilmedi hatası düzeltildi</span><span data-lang-en>fix: WireGuard tunnel not persisting across reboots (missing systemctl enable)</span></span>
+  </div>
+  <div class="changelog-entry">
+    <span class="cl-hash">[c0f4b22]</span>
+    <span class="cl-date">2025-04-17</span>
+    <span class="cl-msg"><span data-lang-tr>feat: rsyslog merkezi log sunucusu + Grafana dashboard eklendi</span><span data-lang-en>feat: deployed rsyslog central log server + Grafana dashboards</span></span>
+  </div>
+  <div class="changelog-entry">
+    <span class="cl-hash">[9b3e1a7]</span>
+    <span class="cl-date">2024-11-03</span>
+    <span class="cl-msg"><span data-lang-tr>feat: WireGuard VPN ile iç ağa uzaktan erişim kuruldu</span><span data-lang-en>feat: set up WireGuard VPN for secure remote access to homelab</span></span>
+  </div>
+  <div class="changelog-entry">
+    <span class="cl-hash">[7a1d5c9]</span>
+    <span class="cl-date">2024-03-22</span>
+    <span class="cl-msg"><span data-lang-tr>feat: Docker + Nginx reverse proxy ile homelab altyapısı kuruldu</span><span data-lang-en>feat: bootstrapped homelab with Docker and Nginx reverse proxy</span></span>
+  </div>
+  <div class="changelog-entry">
+    <span class="cl-hash">[3d9f1e4]</span>
+    <span class="cl-date">2022-09-10</span>
+    <span class="cl-msg"><span data-lang-tr>initial commit: İGÜ'de YBS bölümüne başlandı</span><span data-lang-en>initial commit: started MIS degree at IGU</span></span>
+  </div>
+</div>
+</section>
+
 <!-- Tools Section -->
 <section id="tools">
 <div class="section-header">
@@ -461,98 +642,91 @@
 <p class="section-subtitle">dpkg -l | grep -E "(docker|git|python)"</p>
 </div>
 
-<div class="stack-layers">
+<div class="tools-grid">
 
-  <div class="stack-layer">
-    <div class="stack-layer-label">
-      <span class="stack-layer-num">L1</span>
-      <span data-lang-tr>Compute / İşletim Sistemi</span><span data-lang-en>Compute / OS</span>
-    </div>
-    <ul class="tool-list stack-tool-list">
-      <li><i class="devicon-linux-plain"></i> Linux</li>
-      <li><i class="devicon-ubuntu-plain"></i> Ubuntu</li>
-      <li><i class="devicon-debian-plain"></i> Debian</li>
-      <li>systemd</li>
-    </ul>
+<div class="tool-box">
+  <div class="tool-header">
+    <div class="tool-title"><span data-lang-tr>Compute / İşletim Sistemi</span><span data-lang-en>Compute / OS</span></div>
   </div>
+  <ul class="tool-list">
+    <li><i class="devicon-linux-plain"></i> Linux</li>
+    <li><i class="devicon-ubuntu-plain"></i> Ubuntu</li>
+    <li><i class="devicon-debian-plain"></i> Debian</li>
+    <li>systemd</li>
+  </ul>
+</div>
 
-  <div class="stack-layer">
-    <div class="stack-layer-label">
-      <span class="stack-layer-num">L2</span>
-      <span data-lang-tr>Ağ</span><span data-lang-en>Network</span>
-    </div>
-    <ul class="tool-list stack-tool-list">
-      <li>ping, traceroute</li>
-      <li>netstat/ss, tcpdump</li>
-      <li>nmap, WireGuard/OpenVPN</li>
-      <li>pfSense, ufw, DNS</li>
-    </ul>
+<div class="tool-box">
+  <div class="tool-header">
+    <div class="tool-title"><span data-lang-tr>Ağ</span><span data-lang-en>Network</span></div>
   </div>
+  <ul class="tool-list">
+    <li>ping, traceroute</li>
+    <li>netstat/ss, tcpdump</li>
+    <li>nmap, WireGuard/OpenVPN</li>
+    <li>pfSense, ufw, DNS</li>
+  </ul>
+</div>
 
-  <div class="stack-layer">
-    <div class="stack-layer-label">
-      <span class="stack-layer-num">L3</span>
-      <span data-lang-tr>Konteynerler</span><span data-lang-en>Containers</span>
-    </div>
-    <ul class="tool-list stack-tool-list">
-      <li><i class="devicon-docker-plain"></i> Docker</li>
-      <li>docker-compose</li>
-      <li>Container Orchestration</li>
-      <li>Nginx Reverse Proxy</li>
-    </ul>
+<div class="tool-box">
+  <div class="tool-header">
+    <div class="tool-title"><span data-lang-tr>Konteynerler</span><span data-lang-en>Containers</span></div>
   </div>
+  <ul class="tool-list">
+    <li><i class="devicon-docker-plain"></i> Docker</li>
+    <li>docker-compose</li>
+    <li>Container Orchestration</li>
+    <li>Nginx Reverse Proxy</li>
+  </ul>
+</div>
 
-  <div class="stack-layer">
-    <div class="stack-layer-label">
-      <span class="stack-layer-num">L4</span>
-      <span data-lang-tr>CI/CD &amp; Sürüm Kontrolü</span><span data-lang-en>CI/CD &amp; Version Control</span>
-    </div>
-    <ul class="tool-list stack-tool-list">
-      <li><i class="devicon-git-plain"></i> Git</li>
-      <li><i class="devicon-github-original"></i> GitHub</li>
-      <li>GitHub Actions</li>
-      <li>Git Workflows</li>
-    </ul>
+<div class="tool-box">
+  <div class="tool-header">
+    <div class="tool-title"><span data-lang-tr>CI/CD &amp; Sürüm Kontrolü</span><span data-lang-en>CI/CD &amp; Version Control</span></div>
   </div>
+  <ul class="tool-list">
+    <li><i class="devicon-git-plain"></i> Git</li>
+    <li><i class="devicon-github-original"></i> GitHub</li>
+    <li>GitHub Actions</li>
+    <li>Git Workflows</li>
+  </ul>
+</div>
 
-  <div class="stack-layer">
-    <div class="stack-layer-label">
-      <span class="stack-layer-num">L5</span>
-      <span data-lang-tr>Gözlemlenebilirlik</span><span data-lang-en>Observability</span>
-    </div>
-    <ul class="tool-list stack-tool-list">
-      <li><i class="devicon-grafana-plain"></i> Grafana</li>
-      <li>Syslog / rsyslog</li>
-      <li>Log Aggregation</li>
-      <li>Prometheus (node_exporter)</li>
-    </ul>
+<div class="tool-box">
+  <div class="tool-header">
+    <div class="tool-title"><span data-lang-tr>Gözlemlenebilirlik</span><span data-lang-en>Observability</span></div>
   </div>
+  <ul class="tool-list">
+    <li><i class="devicon-grafana-plain"></i> Grafana</li>
+    <li>Syslog / rsyslog</li>
+    <li>Log Aggregation</li>
+    <li>Prometheus (node_exporter)</li>
+  </ul>
+</div>
 
-  <div class="stack-layer">
-    <div class="stack-layer-label">
-      <span class="stack-layer-num">L6</span>
-      <span data-lang-tr>IaC / Yapılandırma</span><span data-lang-en>IaC / Config</span>
-    </div>
-    <ul class="tool-list stack-tool-list">
-      <li>YAML</li>
-      <li>JSON</li>
-      <li><i class="devicon-terraform-plain"></i> Infrastructure as Code</li>
-      <li><i class="devicon-bash-plain"></i> Bash Scripting</li>
-    </ul>
+<div class="tool-box">
+  <div class="tool-header">
+    <div class="tool-title"><span data-lang-tr>IaC / Yapılandırma</span><span data-lang-en>IaC / Config</span></div>
   </div>
+  <ul class="tool-list">
+    <li>YAML</li>
+    <li>JSON</li>
+    <li><i class="devicon-terraform-plain"></i> Infrastructure as Code</li>
+    <li><i class="devicon-bash-plain"></i> Bash Scripting</li>
+  </ul>
+</div>
 
-  <div class="stack-layer">
-    <div class="stack-layer-label">
-      <span class="stack-layer-num">L7</span>
-      <span data-lang-tr>Otomasyon / Veri</span><span data-lang-en>Automation / Data</span>
-    </div>
-    <ul class="tool-list stack-tool-list">
-      <li><i class="devicon-python-plain"></i> Python</li>
-      <li>SQL</li>
-      <li><i class="devicon-r-plain"></i> R (Statistics)</li>
-      <li><i class="devicon-postgresql-plain"></i> Relational DB Design</li>
-    </ul>
+<div class="tool-box">
+  <div class="tool-header">
+    <div class="tool-title"><span data-lang-tr>Otomasyon / Veri</span><span data-lang-en>Automation / Data</span></div>
   </div>
+  <ul class="tool-list">
+    <li><i class="devicon-python-plain"></i> Python</li>
+    <li>SQL</li>
+    <li><i class="devicon-r-plain"></i> R (Statistics)</li>
+    <li><i class="devicon-postgresql-plain"></i> Relational DB Design</li>
+  </ul>
+</div>
 
 </div>
 </section>
@@ -672,6 +846,10 @@
 <span data-lang-tr> echo "Ziyaretiniz için teşekkürler"</span>
 <span data-lang-en> echo "Thanks for visiting"</span>
 </p>
+<div class="uptime-row">
+  <span class="uptime-counter" id="sla-uptime">System Uptime: 99.998% | 0d 0h 0m 0s</span>
+  <button class="status-page-btn" id="status-page-btn"><span data-lang-tr>[ Durum Sayfası ]</span><span data-lang-en>[ View Status Page ]</span></button>
+</div>
 <p id="system-status" style="color: var(--terminal-green); font-size: 0.8rem; margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace;"></p>
 <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 1rem;">
 © 2025 | Built with HTML + CSS | No frameworks
@@ -703,6 +881,81 @@
     <hr>
     <p>nginx/1.25.3</p>
     <p class="nginx-hint">hint: <code>docker start portfolio-ui</code></p>
+  </div>
+</div>
+
+<!-- Status Page Modal -->
+<div id="status-modal" role="dialog" aria-modal="true" aria-label="System Status Page" aria-hidden="true">
+  <div id="status-modal-content">
+    <div class="status-modal-header">
+      <span class="status-modal-title">🟢 <span data-lang-tr>Sistem Durumu</span><span data-lang-en>System Status</span> — fufuizm.internal</span>
+      <button class="status-modal-close" id="status-modal-close" aria-label="Close">✕</button>
+    </div>
+    <div class="status-modal-body">
+      <div class="status-overall">
+        <span class="status-overall-dot">●</span>
+        <span class="status-overall-text"><span data-lang-tr>Tüm sistemler çalışıyor</span><span data-lang-en>All systems operational</span></span>
+      </div>
+      <div class="status-services">
+        <div class="status-service-row">
+          <span class="ss-name">api.fufuizm.internal</span>
+          <span class="ss-bars">
+            <span class="ss-bar ok"></span><span class="ss-bar ok"></span><span class="ss-bar ok"></span>
+            <span class="ss-bar ok"></span><span class="ss-bar ok"></span><span class="ss-bar ok"></span>
+            <span class="ss-bar ok"></span><span class="ss-bar ok"></span><span class="ss-bar ok"></span>
+            <span class="ss-bar ok"></span>
+          </span>
+          <span class="ss-status ok"><span data-lang-tr>Çalışıyor</span><span data-lang-en>Operational</span></span>
+          <span class="ss-uptime">99.98%</span>
+        </div>
+        <div class="status-service-row">
+          <span class="ss-name">db.fufuizm.internal</span>
+          <span class="ss-bars">
+            <span class="ss-bar ok"></span><span class="ss-bar ok"></span><span class="ss-bar ok"></span>
+            <span class="ss-bar ok"></span><span class="ss-bar ok"></span><span class="ss-bar ok"></span>
+            <span class="ss-bar ok"></span><span class="ss-bar ok"></span><span class="ss-bar warn"></span>
+            <span class="ss-bar ok"></span>
+          </span>
+          <span class="ss-status ok"><span data-lang-tr>Çalışıyor</span><span data-lang-en>Operational</span></span>
+          <span class="ss-uptime">99.95%</span>
+        </div>
+        <div class="status-service-row">
+          <span class="ss-name">auth.fufuizm.internal</span>
+          <span class="ss-bars">
+            <span class="ss-bar ok"></span><span class="ss-bar ok"></span><span class="ss-bar ok"></span>
+            <span class="ss-bar ok"></span><span class="ss-bar ok"></span><span class="ss-bar ok"></span>
+            <span class="ss-bar ok"></span><span class="ss-bar ok"></span><span class="ss-bar ok"></span>
+            <span class="ss-bar ok"></span>
+          </span>
+          <span class="ss-status ok"><span data-lang-tr>Çalışıyor</span><span data-lang-en>Operational</span></span>
+          <span class="ss-uptime">99.99%</span>
+        </div>
+        <div class="status-service-row">
+          <span class="ss-name">vpn.fufuizm.internal</span>
+          <span class="ss-bars">
+            <span class="ss-bar ok"></span><span class="ss-bar ok"></span><span class="ss-bar ok"></span>
+            <span class="ss-bar ok"></span><span class="ss-bar ok"></span><span class="ss-bar ok"></span>
+            <span class="ss-bar ok"></span><span class="ss-bar ok"></span><span class="ss-bar ok"></span>
+            <span class="ss-bar ok"></span>
+          </span>
+          <span class="ss-status ok"><span data-lang-tr>Çalışıyor</span><span data-lang-en>Operational</span></span>
+          <span class="ss-uptime">99.97%</span>
+        </div>
+      </div>
+      <div class="status-incident">
+        <div class="si-title"><span data-lang-tr>Son Olay</span><span data-lang-en>Last Incident</span></div>
+        <div class="si-entry">
+          <span class="si-date">2025-11-20</span>
+          <span class="si-desc"><span data-lang-tr>WireGuard tüneli reboot sonrası kalkmadı — 4 dk kesinti. systemctl enable ile çözüldü.</span><span data-lang-en>WireGuard tunnel failed to start after VM reboot — 4 min outage. Fixed with systemctl enable.</span></span>
+        </div>
+      </div>
+      <div class="status-sla-row">
+        <span><span data-lang-tr>Aylık SLA Hedefi:</span><span data-lang-en>Monthly SLA Target:</span></span>
+        <span class="ss-uptime">99.998%</span>
+        <span><span data-lang-tr>Son 90 gün:</span><span data-lang-en>Last 90 days:</span></span>
+        <span class="ss-uptime">99.97%</span>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -786,7 +1039,7 @@ entry.target.style.transform = 'translateY(0)';
 });
 }, observerOptions);
 
-document.querySelectorAll('.terminal-card, .cert-card, .project-card, .tool-box, .edu-item, .homelab-card, .verification-card, .stack-layer').forEach(el => {
+document.querySelectorAll('.terminal-card, .cert-card, .project-card, .tool-box, .edu-item, .homelab-card, .verification-card').forEach(el => {
 el.style.opacity = '0';
 el.style.transform = 'translateY(20px)';
 el.style.transition = 'opacity 0.5s, transform 0.5s';
@@ -1049,7 +1302,7 @@ runBootSequence();
 
     var sections = { projects: '#projects', about: '#about', contact: '#contact', tools: '#tools', education: '#education', certificates: '#certificates' };
 
-    var cliCommands = ['help', 'projects', 'about', 'education', 'certificates', 'tools', 'contact', 'clear', 'whoami', 'sudo', 'ip a', 'ifconfig', 'theme ls', 'theme set default', 'theme set dracula', 'theme set monokai', 'theme set cyberpunk', 'theme set ubuntu', 'theme set amber', 'theme set light', 'ls', 'pwd', 'cd ~', 'cd about', 'cd projects', 'cd education', 'cat profile.md', 'cat ai-container.txt', 'cat vpn-lab.txt', 'cat logging.txt', 'cat university.md', 'cat top_secret.txt', 'uname -a', 'exit', 'neofetch', 'curl wttr.in/Istanbul', 'reboot', 'cat cv.pdf', 'cat cv', 'ping', 'ping fufuizm.com', 'docker ps', 'docker stop portfolio-ui', 'docker start portfolio-ui', 'kubectl get pods', 'nmap fufuizm.com', 'nmap localhost', 'traceroute fufuizm.com', 'traceroute', 'vim', 'vi', 'coffee', 'make coffee', 'brew coffee', 'chmod 777 top_secret.txt', 'htop', 'top', 'sudo apt update', 'sudo apt upgrade', 'sudo apt upgrade -y', 'dig fufuizm.com', 'nslookup fufuizm.com', 'history', 'man furkan'];
+    var cliCommands = ['help', 'projects', 'about', 'education', 'certificates', 'tools', 'contact', 'clear', 'whoami', 'sudo', 'ip a', 'ifconfig', 'theme ls', 'theme set default', 'theme set dracula', 'theme set monokai', 'theme set cyberpunk', 'theme set ubuntu', 'theme set amber', 'theme set light', 'ls', 'pwd', 'cd ~', 'cd about', 'cd projects', 'cd education', 'cat profile.md', 'cat ai-container.txt', 'cat vpn-lab.txt', 'cat logging.txt', 'cat university.md', 'cat top_secret.txt', 'uname -a', 'exit', 'neofetch', 'curl wttr.in/Istanbul', 'curl https://api.fufuizm.com/v1/hire-me', 'reboot', 'cat cv.pdf', 'cat cv', 'ping', 'ping fufuizm.com', 'docker ps', 'docker stop portfolio-ui', 'docker start portfolio-ui', 'kubectl get pods', 'nmap fufuizm.com', 'nmap localhost', 'traceroute fufuizm.com', 'traceroute', 'vim', 'vi', 'coffee', 'make coffee', 'brew coffee', 'chmod 777 top_secret.txt', 'htop', 'top', 'sudo apt update', 'sudo apt upgrade', 'sudo apt upgrade -y', 'dig fufuizm.com', 'nslookup fufuizm.com', 'history', 'man furkan'];
 
     // ===== Virtual File System =====
     var vfsTree = {
@@ -1923,6 +2176,31 @@ runBootSequence();
             } else {
                 addLine('Usage: chmod <mode> <file>', 'err');
             }
+
+        // ===== Hidden API Endpoint: curl hire-me =====
+        } else if (c === 'curl https://api.fufuizm.com/v1/hire-me' || c === 'curl api.fufuizm.com/v1/hire-me' || c === 'curl http://api.fufuizm.com/v1/hire-me') {
+            addLine('  % Total    % Received  % Xferd  Average Speed   Time    Total');
+            addLine('                                 Dload  Upload   Total   Spent    Left  Speed');
+            addLine('100   512  100   512    0     0   2048      0 --:--:-- --:--:-- --:--:-- 2050');
+            addLine('');
+            addBlock(
+                '<pre style="color:var(--terminal-green);font-family:JetBrains Mono,monospace;font-size:0.82rem;line-height:1.6">' +
+                '<span style="color:var(--accent-cyan)">HTTP/2 200 OK</span>\n' +
+                '<span style="color:var(--text-muted)">content-type: application/json\n' +
+                'x-powered-by: furkan-devops-v1\n' +
+                'x-clearance-level: root\n</span>\n' +
+                '<span style="color:#ffb000">{</span>\n' +
+                '  <span style="color:var(--accent-cyan)">"candidate"</span>: <span style="color:#a8ff78">"Furkan Sar\u0131ca"</span>,\n' +
+                '  <span style="color:var(--accent-cyan)">"status"</span>: <span style="color:#a8ff78">"available_for_hire"</span>,\n' +
+                '  <span style="color:var(--accent-cyan)">"role"</span>: <span style="color:#a8ff78">"DevOps / Network Engineer / SysAdmin"</span>,\n' +
+                '  <span style="color:var(--accent-cyan)">"skills"</span>: [<span style="color:#a8ff78">"Linux"</span>, <span style="color:#a8ff78">"Docker"</span>, <span style="color:#a8ff78">"Networking"</span>, <span style="color:#a8ff78">"WireGuard"</span>, <span style="color:#a8ff78">"Grafana"</span>, <span style="color:#a8ff78">"Bash"</span>, <span style="color:#a8ff78">"Python"</span>, <span style="color:#a8ff78">"Git"</span>],\n' +
+                '  <span style="color:var(--accent-cyan)">"timezone"</span>: <span style="color:#a8ff78">"Europe/Istanbul (UTC+3)"</span>,\n' +
+                '  <span style="color:var(--accent-cyan)">"contact"</span>: <span style="color:#a8ff78">"sarica.furkan@icloud.com"</span>,\n' +
+                '  <span style="color:var(--accent-cyan)">"expected_salary"</span>: <span style="color:#a8ff78">"Priceless"</span>,\n' +
+                '  <span style="color:var(--accent-cyan)">"action"</span>: <span style="color:#a8ff78">"curl -X POST /v1/hire --data candidate=furkan"</span>\n' +
+                '<span style="color:#ffb000">}</span>' +
+                '</pre>'
+            );
 
         } else {
             cmdHandled = false;
@@ -2815,6 +3093,130 @@ function stopMatrixRain() {
             };
             document.addEventListener('keydown', onceKeydown, true);
             return;
+        }
+    });
+}());
+
+// ===== Feature 1: Real-time Health Check Indicators =====
+(function () {
+    var indicators = [
+        { id: 'hc-api',  label: 'api.fufuizm.internal'  },
+        { id: 'hc-db',   label: 'db.fufuizm.internal'   },
+        { id: 'hc-auth', label: 'auth.fufuizm.internal'  }
+    ];
+
+    function setHealthy(ind) {
+        var el = document.getElementById(ind.id);
+        if (!el) return;
+        el.textContent = '🟢 ' + ind.label;
+        el.classList.remove('hc-down');
+    }
+
+    function setDown(ind) {
+        var el = document.getElementById(ind.id);
+        if (!el) return;
+        el.textContent = '🔴 ' + ind.label + ' (Timeout)';
+        el.classList.add('hc-down');
+    }
+
+    function scheduleNext() {
+        var delay = 30000 + Math.floor(Math.random() * 15000); // 30-45s
+        setTimeout(function () {
+            var ind = indicators[Math.floor(Math.random() * indicators.length)];
+            setDown(ind);
+            setTimeout(function () {
+                setHealthy(ind);
+                scheduleNext();
+            }, 3000);
+        }, delay);
+    }
+
+    scheduleNext();
+}());
+
+// ===== Feature 2: Live Uptime & SLA Counter =====
+(function () {
+    var el = document.getElementById('sla-uptime');
+    if (!el) return;
+    // Fixed system start time: simulate 142 days of uptime from page open
+    var SYS_START = new Date('2025-11-21T00:00:00Z').getTime();
+
+    function tick() {
+        var now = Date.now();
+        var elapsed = Math.floor((now - SYS_START) / 1000);
+        var d = Math.floor(elapsed / 86400);
+        var h = Math.floor((elapsed % 86400) / 3600);
+        var m = Math.floor((elapsed % 3600) / 60);
+        var s = elapsed % 60;
+        el.textContent = 'System Uptime: 99.998% | ' + d + 'd ' + h + 'h ' + m + 'm ' + s + 's';
+    }
+
+    tick();
+    setInterval(tick, 1000);
+
+    // Status page modal
+    var btn = document.getElementById('status-page-btn');
+    var modal = document.getElementById('status-modal');
+    var closeBtn = document.getElementById('status-modal-close');
+
+    if (btn && modal) {
+        btn.addEventListener('click', function () {
+            modal.classList.add('active');
+            modal.setAttribute('aria-hidden', 'false');
+        });
+    }
+    if (closeBtn && modal) {
+        closeBtn.addEventListener('click', function () {
+            modal.classList.remove('active');
+            modal.setAttribute('aria-hidden', 'true');
+        });
+    }
+    if (modal) {
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+                modal.setAttribute('aria-hidden', 'true');
+            }
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                modal.classList.remove('active');
+                modal.setAttribute('aria-hidden', 'true');
+            }
+        });
+    }
+}());
+
+// ===== Feature 3: IaC Snippet Toggle =====
+(function () {
+    document.querySelectorAll('.iac-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var targetId = btn.getAttribute('data-target');
+            var snippet = document.getElementById(targetId);
+            if (!snippet) return;
+            var hidden = snippet.hasAttribute('hidden');
+            snippet.toggleAttribute('hidden', !hidden);
+        });
+    });
+}());
+
+// ===== Feature 5: Hacker Mode Toggle =====
+(function () {
+    var btn = document.getElementById('hacker-toggle');
+    if (!btn) return;
+
+    btn.addEventListener('click', function () {
+        var isOn = document.body.classList.toggle('hacker-mode');
+        btn.textContent = isOn ? '🔓' : '🛡';
+        if (isOn) {
+            var msg = document.createElement('div');
+            msg.className = 'hacker-alert';
+            msg.textContent = '[!] Hacker Mode Activated: IDS bypassed.';
+            document.body.appendChild(msg);
+            setTimeout(function () {
+                msg.style.opacity = '0';
+                setTimeout(function () { if (msg.parentNode) msg.parentNode.removeChild(msg); }, 500);
+            }, 2500);
         }
     });
 }());
