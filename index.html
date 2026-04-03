@@ -36,9 +36,6 @@
 <!-- Sound Toggle -->
 <button class="mute-toggle" id="mute-btn" title="Enable sounds / Sesi aç" aria-label="Toggle sound">🔇</button>
 
-<!-- Hacker Mode Toggle -->
-<button class="hacker-toggle" id="hacker-toggle" title="Toggle Hacker Mode / Hacker Modu">🛡</button>
-
 <!-- Hero Section -->
 <header class="hero">
 <div class="hero-prompt">whoami</div>
@@ -2972,27 +2969,6 @@ function stopMatrixRain() {
             var hidden = snippet.hasAttribute('hidden');
             snippet.toggleAttribute('hidden', !hidden);
         });
-    });
-}());
-
-// ===== Feature 5: Hacker Mode Toggle =====
-(function () {
-    var btn = document.getElementById('hacker-toggle');
-    if (!btn) return;
-
-    btn.addEventListener('click', function () {
-        var isOn = document.body.classList.toggle('hacker-mode');
-        btn.textContent = isOn ? '🔓' : '🛡';
-        if (isOn) {
-            var msg = document.createElement('div');
-            msg.className = 'hacker-alert';
-            msg.textContent = '[!] Hacker Mode Activated: IDS bypassed.';
-            document.body.appendChild(msg);
-            setTimeout(function () {
-                msg.style.opacity = '0';
-                setTimeout(function () { if (msg.parentNode) msg.parentNode.removeChild(msg); }, 500);
-            }, 2500);
-        }
     });
 }());
 
