@@ -72,12 +72,6 @@
 <span data-lang-en>↓ scroll down</span>
 </div>
 
-<!-- Real-time Health Check Indicators -->
-<div class="health-checks">
-  <span class="health-indicator" id="hc-api" data-service="api.fufuizm.internal">🟢 api.fufuizm.internal</span>
-  <span class="health-indicator" id="hc-db"  data-service="db.fufuizm.internal">🟢 db.fufuizm.internal</span>
-  <span class="health-indicator" id="hc-auth" data-service="auth.fufuizm.internal">🟢 auth.fufuizm.internal</span>
-</div>
 </header>
 
 <main>
@@ -585,56 +579,6 @@ resource "docker_container" "grafana" {
   <img src="https://ghchart.rshah.org/00ff88/fufuizm" alt="GitHub Contributions Graph" style="width: 100%; max-width: 800px; border-radius: 4px; padding: 1rem; background: var(--bg-card); margin-top: 2rem;">
 </div>
 
-<!-- Changelog Section -->
-<section id="changelog" style="padding: 3rem 2rem; max-width: 1000px; margin: 0 auto;">
-<div class="section-header">
-<h2 class="section-title"><span data-lang-tr>geçmiş</span><span data-lang-en>changelog</span></h2>
-<p class="section-subtitle">git log --oneline --graph</p>
-</div>
-<div class="changelog-list">
-  <div class="changelog-entry">
-    <span class="cl-hash">[fc8a1b2]</span>
-    <span class="cl-date">2026-03-15</span>
-    <span class="cl-msg"><span data-lang-tr>Merged branch 'kubernetes-basics' into main</span><span data-lang-en>Merged branch 'kubernetes-basics' into main</span></span>
-  </div>
-  <div class="changelog-entry">
-    <span class="cl-hash">[3a7c9d4]</span>
-    <span class="cl-date">2026-01-10</span>
-    <span class="cl-msg"><span data-lang-tr>feat: AI pipeline onay adımı eklendi (insan-döngüde yetkilendirme)</span><span data-lang-en>feat: added human-in-the-loop approval gate to AI pipeline</span></span>
-  </div>
-  <div class="changelog-entry">
-    <span class="cl-hash">[8a2d9c1]</span>
-    <span class="cl-date">2025-11-20</span>
-    <span class="cl-msg"><span data-lang-tr>refactor: homelab ağ yapısı yeniden düzenlendi (VLAN segmentasyonu)</span><span data-lang-en>refactor: homelab networking reworked (VLAN segmentation)</span></span>
-  </div>
-  <div class="changelog-entry">
-    <span class="cl-hash">[d1e5f38]</span>
-    <span class="cl-date">2025-08-04</span>
-    <span class="cl-msg"><span data-lang-tr>fix: WireGuard tüneli systemd enable edilmedi hatası düzeltildi</span><span data-lang-en>fix: WireGuard tunnel not persisting across reboots (missing systemctl enable)</span></span>
-  </div>
-  <div class="changelog-entry">
-    <span class="cl-hash">[c0f4b22]</span>
-    <span class="cl-date">2025-04-17</span>
-    <span class="cl-msg"><span data-lang-tr>feat: rsyslog merkezi log sunucusu + Grafana dashboard eklendi</span><span data-lang-en>feat: deployed rsyslog central log server + Grafana dashboards</span></span>
-  </div>
-  <div class="changelog-entry">
-    <span class="cl-hash">[9b3e1a7]</span>
-    <span class="cl-date">2024-11-03</span>
-    <span class="cl-msg"><span data-lang-tr>feat: WireGuard VPN ile iç ağa uzaktan erişim kuruldu</span><span data-lang-en>feat: set up WireGuard VPN for secure remote access to homelab</span></span>
-  </div>
-  <div class="changelog-entry">
-    <span class="cl-hash">[7a1d5c9]</span>
-    <span class="cl-date">2024-03-22</span>
-    <span class="cl-msg"><span data-lang-tr>feat: Docker + Nginx reverse proxy ile homelab altyapısı kuruldu</span><span data-lang-en>feat: bootstrapped homelab with Docker and Nginx reverse proxy</span></span>
-  </div>
-  <div class="changelog-entry">
-    <span class="cl-hash">[3d9f1e4]</span>
-    <span class="cl-date">2022-09-10</span>
-    <span class="cl-msg"><span data-lang-tr>initial commit: İGÜ'de YBS bölümüne başlandı</span><span data-lang-en>initial commit: started MIS degree at IGU</span></span>
-  </div>
-</div>
-</section>
-
 <!-- Tools Section -->
 <section id="tools">
 <div class="section-header">
@@ -846,10 +790,6 @@ resource "docker_container" "grafana" {
 <span data-lang-tr> echo "Ziyaretiniz için teşekkürler"</span>
 <span data-lang-en> echo "Thanks for visiting"</span>
 </p>
-<div class="uptime-row">
-  <span class="uptime-counter" id="sla-uptime">System Uptime: 99.998% | 0d 0h 0m 0s</span>
-  <button class="status-page-btn" id="status-page-btn"><span data-lang-tr>[ Durum Sayfası ]</span><span data-lang-en>[ View Status Page ]</span></button>
-</div>
 <p id="system-status" style="color: var(--terminal-green); font-size: 0.8rem; margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace;"></p>
 <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 1rem;">
 © 2025 | Built with HTML + CSS | No frameworks
@@ -881,81 +821,6 @@ resource "docker_container" "grafana" {
     <hr>
     <p>nginx/1.25.3</p>
     <p class="nginx-hint">hint: <code>docker start portfolio-ui</code></p>
-  </div>
-</div>
-
-<!-- Status Page Modal -->
-<div id="status-modal" role="dialog" aria-modal="true" aria-label="System Status Page" aria-hidden="true">
-  <div id="status-modal-content">
-    <div class="status-modal-header">
-      <span class="status-modal-title">🟢 <span data-lang-tr>Sistem Durumu</span><span data-lang-en>System Status</span> — fufuizm.internal</span>
-      <button class="status-modal-close" id="status-modal-close" aria-label="Close">✕</button>
-    </div>
-    <div class="status-modal-body">
-      <div class="status-overall">
-        <span class="status-overall-dot">●</span>
-        <span class="status-overall-text"><span data-lang-tr>Tüm sistemler çalışıyor</span><span data-lang-en>All systems operational</span></span>
-      </div>
-      <div class="status-services">
-        <div class="status-service-row">
-          <span class="ss-name">api.fufuizm.internal</span>
-          <span class="ss-bars">
-            <span class="ss-bar ok"></span><span class="ss-bar ok"></span><span class="ss-bar ok"></span>
-            <span class="ss-bar ok"></span><span class="ss-bar ok"></span><span class="ss-bar ok"></span>
-            <span class="ss-bar ok"></span><span class="ss-bar ok"></span><span class="ss-bar ok"></span>
-            <span class="ss-bar ok"></span>
-          </span>
-          <span class="ss-status ok"><span data-lang-tr>Çalışıyor</span><span data-lang-en>Operational</span></span>
-          <span class="ss-uptime">99.98%</span>
-        </div>
-        <div class="status-service-row">
-          <span class="ss-name">db.fufuizm.internal</span>
-          <span class="ss-bars">
-            <span class="ss-bar ok"></span><span class="ss-bar ok"></span><span class="ss-bar ok"></span>
-            <span class="ss-bar ok"></span><span class="ss-bar ok"></span><span class="ss-bar ok"></span>
-            <span class="ss-bar ok"></span><span class="ss-bar ok"></span><span class="ss-bar warn"></span>
-            <span class="ss-bar ok"></span>
-          </span>
-          <span class="ss-status ok"><span data-lang-tr>Çalışıyor</span><span data-lang-en>Operational</span></span>
-          <span class="ss-uptime">99.95%</span>
-        </div>
-        <div class="status-service-row">
-          <span class="ss-name">auth.fufuizm.internal</span>
-          <span class="ss-bars">
-            <span class="ss-bar ok"></span><span class="ss-bar ok"></span><span class="ss-bar ok"></span>
-            <span class="ss-bar ok"></span><span class="ss-bar ok"></span><span class="ss-bar ok"></span>
-            <span class="ss-bar ok"></span><span class="ss-bar ok"></span><span class="ss-bar ok"></span>
-            <span class="ss-bar ok"></span>
-          </span>
-          <span class="ss-status ok"><span data-lang-tr>Çalışıyor</span><span data-lang-en>Operational</span></span>
-          <span class="ss-uptime">99.99%</span>
-        </div>
-        <div class="status-service-row">
-          <span class="ss-name">vpn.fufuizm.internal</span>
-          <span class="ss-bars">
-            <span class="ss-bar ok"></span><span class="ss-bar ok"></span><span class="ss-bar ok"></span>
-            <span class="ss-bar ok"></span><span class="ss-bar ok"></span><span class="ss-bar ok"></span>
-            <span class="ss-bar ok"></span><span class="ss-bar ok"></span><span class="ss-bar ok"></span>
-            <span class="ss-bar ok"></span>
-          </span>
-          <span class="ss-status ok"><span data-lang-tr>Çalışıyor</span><span data-lang-en>Operational</span></span>
-          <span class="ss-uptime">99.97%</span>
-        </div>
-      </div>
-      <div class="status-incident">
-        <div class="si-title"><span data-lang-tr>Son Olay</span><span data-lang-en>Last Incident</span></div>
-        <div class="si-entry">
-          <span class="si-date">2025-11-20</span>
-          <span class="si-desc"><span data-lang-tr>WireGuard tüneli reboot sonrası kalkmadı — 4 dk kesinti. systemctl enable ile çözüldü.</span><span data-lang-en>WireGuard tunnel failed to start after VM reboot — 4 min outage. Fixed with systemctl enable.</span></span>
-        </div>
-      </div>
-      <div class="status-sla-row">
-        <span><span data-lang-tr>Aylık SLA Hedefi:</span><span data-lang-en>Monthly SLA Target:</span></span>
-        <span class="ss-uptime">99.998%</span>
-        <span><span data-lang-tr>Son 90 gün:</span><span data-lang-en>Last 90 days:</span></span>
-        <span class="ss-uptime">99.97%</span>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -3095,96 +2960,6 @@ function stopMatrixRain() {
             return;
         }
     });
-}());
-
-// ===== Feature 1: Real-time Health Check Indicators =====
-(function () {
-    var indicators = [
-        { id: 'hc-api',  label: 'api.fufuizm.internal'  },
-        { id: 'hc-db',   label: 'db.fufuizm.internal'   },
-        { id: 'hc-auth', label: 'auth.fufuizm.internal'  }
-    ];
-
-    function setHealthy(ind) {
-        var el = document.getElementById(ind.id);
-        if (!el) return;
-        el.textContent = '🟢 ' + ind.label;
-        el.classList.remove('hc-down');
-    }
-
-    function setDown(ind) {
-        var el = document.getElementById(ind.id);
-        if (!el) return;
-        el.textContent = '🔴 ' + ind.label + ' (Timeout)';
-        el.classList.add('hc-down');
-    }
-
-    function scheduleNext() {
-        var delay = 30000 + Math.floor(Math.random() * 15000); // 30-45s
-        setTimeout(function () {
-            var ind = indicators[Math.floor(Math.random() * indicators.length)];
-            setDown(ind);
-            setTimeout(function () {
-                setHealthy(ind);
-                scheduleNext();
-            }, 3000);
-        }, delay);
-    }
-
-    scheduleNext();
-}());
-
-// ===== Feature 2: Live Uptime & SLA Counter =====
-(function () {
-    var el = document.getElementById('sla-uptime');
-    if (!el) return;
-    // System start: fixed date — uptime counts up from 2025-11-21 UTC
-    var SYS_START = new Date('2025-11-21T00:00:00Z').getTime();
-
-    function tick() {
-        var now = Date.now();
-        var elapsed = Math.floor((now - SYS_START) / 1000);
-        var d = Math.floor(elapsed / 86400);
-        var h = Math.floor((elapsed % 86400) / 3600);
-        var m = Math.floor((elapsed % 3600) / 60);
-        var s = elapsed % 60;
-        el.textContent = 'System Uptime: 99.998% | ' + d + 'd ' + h + 'h ' + m + 'm ' + s + 's';
-    }
-
-    tick();
-    setInterval(tick, 1000);
-
-    // Status page modal
-    var btn = document.getElementById('status-page-btn');
-    var modal = document.getElementById('status-modal');
-    var closeBtn = document.getElementById('status-modal-close');
-
-    if (btn && modal) {
-        btn.addEventListener('click', function () {
-            modal.classList.add('active');
-            modal.setAttribute('aria-hidden', 'false');
-        });
-    }
-    if (closeBtn && modal) {
-        closeBtn.addEventListener('click', function () {
-            modal.classList.remove('active');
-            modal.setAttribute('aria-hidden', 'true');
-        });
-    }
-    if (modal) {
-        modal.addEventListener('click', function (e) {
-            if (e.target === modal) {
-                modal.classList.remove('active');
-                modal.setAttribute('aria-hidden', 'true');
-            }
-        });
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' && modal.classList.contains('active')) {
-                modal.classList.remove('active');
-                modal.setAttribute('aria-hidden', 'true');
-            }
-        });
-    }
 }());
 
 // ===== Feature 3: IaC Snippet Toggle =====
