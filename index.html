@@ -3138,7 +3138,7 @@ function stopMatrixRain() {
 (function () {
     var el = document.getElementById('sla-uptime');
     if (!el) return;
-    // Fixed system start time: simulate 142 days of uptime from page open
+    // System start: fixed date — uptime counts up from 2025-11-21 UTC
     var SYS_START = new Date('2025-11-21T00:00:00Z').getTime();
 
     function tick() {
