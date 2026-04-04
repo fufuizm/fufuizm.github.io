@@ -2801,6 +2801,7 @@ runBootSequence();
             appendLog('✅ [Deploy] live — https://fufuizm.github.io ✓', 'var(--terminal-green)');
             addLine('[CI] ✅ Deploy successful — https://fufuizm.github.io is live!', 'ok');
             if (!isManual) {
+                // Auto-loop: restart pipeline after 11 s cool-down (3.2 s pipeline + 7.8 s = ~11 s total idle)
                 autoLoopTimer = setTimeout(function () { runPipeline(null, false); }, 11000);
             }
         }, 7800);
