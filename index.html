@@ -1109,9 +1109,9 @@ runBootSequence();
             '<span style="color:var(--terminal-green)">furkan</span>@<span style="color:var(--terminal-green)">devops</span>',
             '<span style="color:var(--text-muted)">─────────────────────────</span>',
             '<span style="color:var(--accent-cyan)">OS</span>: Ubuntu 22.04 LTS x86_64',
-            '<span style="color:var(--accent-cyan)">Host</span>: Proxmox VE / Mini PC',
+            '<span style="color:var(--accent-cyan)">Host</span>: Proxmox VE (Mini PC)',
             '<span style="color:var(--accent-cyan)">Kernel</span>: 5.15.0-generic',
-            '<span style="color:var(--accent-cyan)">Uptime</span>: 99.9% (session: ' + uptimeStr + ')',
+            '<span style="color:var(--accent-cyan)">Uptime</span>: ' + uptimeStr + '  (SLO: 99.9%)',
             '<span style="color:var(--accent-cyan)">Shell</span>: bash 5.1.16',
             '<span style="color:var(--accent-cyan)">Resolution</span>: ' + res,
             '<span style="color:var(--accent-cyan)">Role</span>: DevOps &amp; Network Engineer',
@@ -3073,7 +3073,16 @@ function stopMatrixRain() {
                 document.body.appendChild(ta);
                 ta.focus();
                 ta.select();
-                try { document.execCommand('copy'); } catch (e) {}
+                try { document.execCommand('copy'); } catch (e) {
+                    if (trSpan) trSpan.textContent = 'Hata!';
+                    if (enSpan) enSpan.textContent = 'Error!';
+                    setTimeout(function () {
+                        if (trSpan) trSpan.textContent = 'Kopyala';
+                        if (enSpan) enSpan.textContent = 'Copy';
+                    }, 2000);
+                    document.body.removeChild(ta);
+                    return;
+                }
                 document.body.removeChild(ta);
                 if (trSpan) trSpan.textContent = 'Kopyalandı!';
                 if (enSpan) enSpan.textContent = 'Copied!';
