@@ -1856,4 +1856,56 @@ body.glitch-mode {
     font-style: italic;
 }
 
+/* ===== IaC Copy Button ===== */
+.iac-copy-wrap {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.35rem 0.6rem 0;
+    background: var(--bg-secondary);
+}
+
+.iac-copy-btn {
+    background: transparent;
+    border: 1px solid rgba(0,255,136,0.4);
+    color: var(--terminal-green);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    padding: 0.15rem 0.55rem;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    letter-spacing: 0.3px;
+}
+
+.iac-copy-btn:hover {
+    background: rgba(0,255,136,0.08);
+    box-shadow: 0 0 6px rgba(0,255,136,0.2);
+}
+
+/* ===== Solarized Light Theme ===== */
+body.light-theme {
+    --bg-primary: #fdf6e3;
+    --bg-secondary: #eee8d5;
+    --bg-card: #eee8d5;
+    --terminal-green: #859900;
+    --terminal-green-dim: rgba(133,153,0,0.25);
+    --accent-cyan: #2aa198;
+    --accent-amber: #b58900;
+    --accent-purple: #6c71c4;
+    --text-primary: #657b83;
+    --text-secondary: #586e75;
+    --text-muted: #839496;
+    --border-color: #ccc;
+    --border-accent: #859900;
+    --glow: 0 0 12px rgba(133,153,0,0.2);
+    --glow-strong: 0 0 20px rgba(133,153,0,0.35);
+}
+
+body.light-theme ::selection {
+    background: #859900;
+    color: #fdf6e3;
+}
+
+body.light-theme ::-webkit-scrollbar-track { background: #eee8d5; }
+body.light-theme ::-webkit-scrollbar-thumb { background: #b0b8c1; }
+
 
