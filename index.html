@@ -16,6 +16,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://fufuizm.github.io/Fufuizm.webp">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💻</text></svg>">
+<meta name="theme-color" content="#1f242c">
+<link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
 </head>
@@ -353,6 +355,7 @@
 <div class="iac-section">
   <button class="iac-btn" data-target="iac-ai-container"><span data-lang-tr>[ Altyapıyı Dağıt (IaC) ]</span><span data-lang-en>[ Deploy this infra (IaC) ]</span></button>
   <div class="iac-snippet" id="iac-ai-container" hidden>
+<div class="iac-copy-wrap"><button class="iac-copy-btn" data-iac="iac-ai-container"><span data-lang-tr>Kopyala</span><span data-lang-en>Copy</span></button></div>
 <pre class="iac-code"><span class="iac-comment"># docker-compose.yml — AI Container Infrastructure</span>
 version: "3.9"
 services:
@@ -441,6 +444,7 @@ volumes:
 <div class="iac-section">
   <button class="iac-btn" data-target="iac-vpn-lab"><span data-lang-tr>[ Altyapıyı Dağıt (IaC) ]</span><span data-lang-en>[ Deploy this infra (IaC) ]</span></button>
   <div class="iac-snippet" id="iac-vpn-lab" hidden>
+<div class="iac-copy-wrap"><button class="iac-copy-btn" data-iac="iac-vpn-lab"><span data-lang-tr>Kopyala</span><span data-lang-en>Copy</span></button></div>
 <pre class="iac-code"><span class="iac-comment"># wireguard-setup.yml — Ansible Playbook</span>
 ---
 - name: Configure WireGuard VPN Server
@@ -527,6 +531,7 @@ volumes:
 <div class="iac-section">
   <button class="iac-btn" data-target="iac-logging"><span data-lang-tr>[ Altyapıyı Dağıt (IaC) ]</span><span data-lang-en>[ Deploy this infra (IaC) ]</span></button>
   <div class="iac-snippet" id="iac-logging" hidden>
+<div class="iac-copy-wrap"><button class="iac-copy-btn" data-iac="iac-logging"><span data-lang-tr>Kopyala</span><span data-lang-en>Copy</span></button></div>
 <pre class="iac-code"><span class="iac-comment"># terraform — Centralized Logging Host</span>
 terraform {
   required_providers {
@@ -727,7 +732,7 @@ resource "docker_container" "grafana" {
 </div>
 
 <div class="contact-grid">
-<a href="mailto:sarica.furkan@icloud.com" class="contact-item" data-copy="sarica.furkan@icloud.com">
+<a href="mailto:sarica.furkan@icloud.com?subject=Portfolio%20%C4%B0leti%C5%9Fim" class="contact-item" data-copy="sarica.furkan@icloud.com">
 <div class="contact-label"><span data-lang-tr>E-POSTA</span><span data-lang-en>EMAIL</span></div>
 <div class="contact-value">sarica.furkan@icloud.com<span class="contact-copy-badge"><span data-lang-tr>[ Kopyala ]</span><span data-lang-en>[ Copy ]</span></span></div>
 </a>
@@ -1103,13 +1108,13 @@ runBootSequence();
         var stats = [
             '<span style="color:var(--terminal-green)">furkan</span>@<span style="color:var(--terminal-green)">devops</span>',
             '<span style="color:var(--text-muted)">─────────────────────────</span>',
-            '<span style="color:var(--accent-cyan)">OS</span>: fufuizm-linux x86_64',
-            '<span style="color:var(--accent-cyan)">Kernel</span>: 6.5.0-fufuizm',
-            '<span style="color:var(--accent-cyan)">Uptime</span>: ' + uptimeStr,
-            '<span style="color:var(--accent-cyan)">Shell</span>: bash 5.2.0',
+            '<span style="color:var(--accent-cyan)">OS</span>: Ubuntu 22.04 LTS x86_64',
+            '<span style="color:var(--accent-cyan)">Host</span>: Proxmox VE (Mini PC)',
+            '<span style="color:var(--accent-cyan)">Kernel</span>: 5.15.0-generic',
+            '<span style="color:var(--accent-cyan)">Uptime</span>: ' + uptimeStr + '  (SLO: 99.9%)',
+            '<span style="color:var(--accent-cyan)">Shell</span>: bash 5.1.16',
             '<span style="color:var(--accent-cyan)">Resolution</span>: ' + res,
-            '<span style="color:var(--accent-cyan)">CPU</span>: Intel Core i7',
-            '<span style="color:var(--accent-cyan)">RAM</span>: 1024MiB / 4096MiB',
+            '<span style="color:var(--accent-cyan)">Role</span>: DevOps &amp; Network Engineer',
             '<span style="color:var(--accent-cyan)">Terminal</span>: fufuizm-terminal',
         ];
         var maxLen = Math.max(logo.length, stats.length);
@@ -1164,7 +1169,7 @@ runBootSequence();
 
     var sections = { projects: '#projects', about: '#about', contact: '#contact', tools: '#tools', education: '#education', certificates: '#certificates' };
 
-    var cliCommands = ['help', 'projects', 'about', 'education', 'certificates', 'tools', 'contact', 'clear', 'whoami', 'sudo', 'ip a', 'ifconfig', 'theme ls', 'theme set default', 'theme set dracula', 'theme set monokai', 'theme set cyberpunk', 'theme set ubuntu', 'theme set amber', 'theme set light', 'ls', 'pwd', 'cd ~', 'cd about', 'cd projects', 'cd education', 'cat profile.md', 'cat ai-container.txt', 'cat vpn-lab.txt', 'cat logging.txt', 'cat university.md', 'cat top_secret.txt', 'uname -a', 'exit', 'neofetch', 'curl wttr.in/Istanbul', 'curl https://api.fufuizm.com/v1/hire-me', 'reboot', 'cat cv.pdf', 'cat cv', 'ping', 'ping fufuizm.com', 'docker ps', 'docker stop portfolio-ui', 'docker start portfolio-ui', 'kubectl get pods', 'nmap fufuizm.com', 'nmap localhost', 'traceroute fufuizm.com', 'traceroute', 'vim', 'vi', 'coffee', 'make coffee', 'brew coffee', 'chmod 777 top_secret.txt', 'htop', 'top', 'sudo apt update', 'sudo apt upgrade', 'sudo apt upgrade -y', 'dig fufuizm.com', 'nslookup fufuizm.com', 'history', 'man furkan'];
+    var cliCommands = ['help', 'projects', 'about', 'education', 'certificates', 'tools', 'contact', 'clear', 'whoami', 'sudo', 'ip a', 'ifconfig', 'theme ls', 'theme set default', 'theme set dracula', 'theme set monokai', 'theme set cyberpunk', 'theme set ubuntu', 'theme set amber', 'theme set light', 'theme light', 'theme dark', 'ls', 'pwd', 'cd ~', 'cd about', 'cd projects', 'cd education', 'cat profile.md', 'cat ai-container.txt', 'cat vpn-lab.txt', 'cat logging.txt', 'cat university.md', 'cat top_secret.txt', 'uname -a', 'exit', 'neofetch', 'fastfetch', 'gh repo list', 'ls ~/repos', 'curl wttr.in/Istanbul', 'curl https://api.fufuizm.com/v1/hire-me', 'reboot', 'cat cv.pdf', 'cat cv', 'ping', 'ping fufuizm.com', 'ping 8.8.8.8', 'ping google.com', 'docker ps', 'docker stop portfolio-ui', 'docker start portfolio-ui', 'kubectl get pods', 'nmap fufuizm.com', 'nmap localhost', 'traceroute fufuizm.com', 'traceroute', 'vim', 'vi', 'coffee', 'make coffee', 'brew coffee', 'chmod 777 top_secret.txt', 'htop', 'top', 'sudo apt update', 'sudo apt upgrade', 'sudo apt upgrade -y', 'dig fufuizm.com', 'nslookup fufuizm.com', 'history', 'man furkan'];
 
     // ===== Virtual File System =====
     var vfsTree = {
@@ -1192,13 +1197,16 @@ runBootSequence();
 
     // ===== man Page Definitions =====
     var manuals = {
-        'theme': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;theme - terminal temasını değiştirir<br><br><b>SYNOPSIS</b><br>&nbsp;&nbsp;&nbsp;&nbsp;theme [light|dark]<br><br><b>DESCRIPTION</b><br>&nbsp;&nbsp;&nbsp;&nbsp;Sitenin renk paletini değiştirir.<br>&nbsp;&nbsp;&nbsp;&nbsp;Şu anda \'light\' komutu test aşamasındadır. Dikkatli kullanın!',
+        'theme': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;theme - terminal temasını değiştirir<br><br><b>SYNOPSIS</b><br>&nbsp;&nbsp;&nbsp;&nbsp;theme [light|dark|ls|set &lt;name&gt;]<br><br><b>DESCRIPTION</b><br>&nbsp;&nbsp;&nbsp;&nbsp;Sitenin renk paletini değiştirir.<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>theme light</b> — Solarized Light temasını etkinleştirir.<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>theme dark</b> — Varsayılan koyu temaya döner.<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>theme ls</b> — Kullanılabilir temaları listeler.<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>theme set &lt;name&gt;</b> — Belirtilen temayı uygular.',
         'whoami': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;whoami - geçerli kullanıcı bilgilerini yazdırır<br><br><b>DESCRIPTION</b><br>&nbsp;&nbsp;&nbsp;&nbsp;Furkan Sarıca hakkında temel sistem yetkinliklerini ve iletişim bilgilerini döndürür.',
         'help': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;help - kullanılabilir komutları listeler<br><br><b>DESCRIPTION</b><br>&nbsp;&nbsp;&nbsp;&nbsp;Bu web terminalinde desteklenen tüm interaktif komutların listesini verir.',
         'clear': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;clear - terminal ekranını temizler',
         'sudo': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;sudo - başka bir kullanıcı olarak komut çalıştırır<br><br><b>DESCRIPTION</b><br>&nbsp;&nbsp;&nbsp;&nbsp;İyi deneme. Bu olay raporlanacaktır. (This incident will be reported.)',
-        'ping': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;ping - ağdaki cihazlara ICMP ECHO_REQUEST paketleri gönderir<br><br><b>DESCRIPTION</b><br>&nbsp;&nbsp;&nbsp;&nbsp;Sunucu ile aranızdaki gecikmeyi (latency) ölçmek için kullanılır.',
-        'ls': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;ls - dizin içeriklerini listeler<br><br><b>DESCRIPTION</b><br>&nbsp;&nbsp;&nbsp;&nbsp;Projeler, sertifikalar ve yeteneklerin bulunduğu sanal dizinleri görüntüler.'
+        'ping': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;ping - ağdaki cihazlara ICMP ECHO_REQUEST paketleri gönderir<br><br><b>SYNOPSIS</b><br>&nbsp;&nbsp;&nbsp;&nbsp;ping &lt;host&gt;<br><br><b>DESCRIPTION</b><br>&nbsp;&nbsp;&nbsp;&nbsp;Sunucu ile aranızdaki gecikmeyi (latency) ölçmek için kullanılır.<br>&nbsp;&nbsp;&nbsp;&nbsp;4 paket gönderir ve istatistikleri raporlar.<br>&nbsp;&nbsp;&nbsp;&nbsp;Örnek: ping 8.8.8.8 | ping google.com',
+        'ls': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;ls - dizin içeriklerini listeler<br><br><b>DESCRIPTION</b><br>&nbsp;&nbsp;&nbsp;&nbsp;Projeler, sertifikalar ve yeteneklerin bulunduğu sanal dizinleri görüntüler.',
+        'neofetch': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;neofetch - sistem bilgilerini ASCII logo ile gösterir<br><br><b>SYNOPSIS</b><br>&nbsp;&nbsp;&nbsp;&nbsp;neofetch | fastfetch<br><br><b>DESCRIPTION</b><br>&nbsp;&nbsp;&nbsp;&nbsp;OS, Kernel, Uptime, Shell ve Rol bilgilerini ASCII logo ile birlikte terminal çıktısı olarak gösterir.',
+        'fastfetch': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;fastfetch - neofetch\'in hızlı alternatifi (alias)<br><br><b>DESCRIPTION</b><br>&nbsp;&nbsp;&nbsp;&nbsp;neofetch komutuyla aynı çıktıyı üretir. man neofetch ile daha fazla bilgi alın.',
+        'gh': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;gh - GitHub CLI<br><br><b>SYNOPSIS</b><br>&nbsp;&nbsp;&nbsp;&nbsp;gh repo list<br><br><b>DESCRIPTION</b><br>&nbsp;&nbsp;&nbsp;&nbsp;GitHub API üzerinden fufuizm kullanıcısının son 5 public reposunu çeker ve listeler.<br>&nbsp;&nbsp;&nbsp;&nbsp;ls ~/repos komutu ile de aynı sonuca ulaşabilirsiniz.'
     };
 
     // ===== Fail2Ban State =====
@@ -1701,14 +1709,14 @@ runBootSequence();
             }
         } else if (c === 'uname -a') {
             addLine('Linux devops 6.5.0-fufuizm #1 SMP Thu Jan 01 00:00:00 UTC 2026 x86_64 GNU/Linux');
-        } else if (c === 'theme light' || c === 'theme set light' || c === 'light') {
-            document.body.classList.add('light-troll', 'shake');
-            addLine('FATAL ERROR: SysAdmins don\'t use light theme!', 'err');
-            setTimeout(function () { document.body.classList.remove('shake'); }, 600);
-            setTimeout(function () {
-                document.body.classList.remove('light-troll');
-                addLine('Reverted to safe dark mode.', 'ok');
-            }, 2500);
+        } else if (c === 'theme light' || c === 'theme set light') {
+            document.body.classList.remove('theme-dracula', 'theme-monokai', 'theme-cyberpunk', 'theme-ubuntu', 'theme-amber');
+            document.body.classList.add('light-theme');
+            addLine('Theme set to: Solarized Light', 'ok');
+            addLine('Type "theme dark" to return to dark mode.');
+        } else if (c === 'theme dark' || c === 'theme set dark' || c === 'dark') {
+            document.body.classList.remove('light-theme');
+            addLine('Theme set to: default (dark)', 'ok');
         } else if (c === 'theme ls' || c === 'theme list') {
             addLine('Available themes:');
             addLine('  default   — dark hacker green  [ active ]');
@@ -1717,29 +1725,25 @@ runBootSequence();
             addLine('  cyberpunk — neon green on deep purple');
             addLine('  ubuntu    — Ubuntu orange');
             addLine('  amber     — retro terminal amber');
-            addLine('  light     — [ERROR: Not supported by SysAdmins]');
+            addLine('  light     — Solarized Light');
             addLine('Usage: theme set <name>');
         } else if (c.startsWith('theme set ')) {
             var themeName = c.slice(10).trim();
             var validThemes = ['default', 'dracula', 'monokai', 'cyberpunk', 'ubuntu', 'amber'];
-            document.body.classList.remove('theme-dracula', 'theme-monokai', 'theme-cyberpunk', 'theme-ubuntu', 'theme-amber');
-            if (themeName === 'default') {
+            document.body.classList.remove('theme-dracula', 'theme-monokai', 'theme-cyberpunk', 'theme-ubuntu', 'theme-amber', 'light-theme');
+            if (themeName === 'default' || themeName === 'dark') {
                 addLine('Theme set to: default', 'ok');
             } else if (themeName === 'light') {
-                document.body.classList.add('light-troll', 'shake');
-                addLine('FATAL ERROR: SysAdmins don\'t use light theme!', 'err');
-                setTimeout(function () { document.body.classList.remove('shake'); }, 600);
-                setTimeout(function () {
-                    document.body.classList.remove('light-troll');
-                    addLine('Reverted to safe dark mode.', 'ok');
-                }, 2500);
+                document.body.classList.add('light-theme');
+                addLine('Theme set to: Solarized Light', 'ok');
+                addLine('Type "theme dark" to return to dark mode.');
             } else if (validThemes.indexOf(themeName) !== -1) {
                 document.body.classList.add('theme-' + themeName);
                 addLine('Theme set to: ' + themeName, 'ok');
             } else {
                 addLine('Unknown theme: ' + themeName + '. Run "theme ls" to see options.', 'err');
             }
-        } else if (c === 'neofetch') {
+        } else if (c === 'neofetch' || c === 'fastfetch') {
             addNeofetch();
         } else if (c === 'curl wttr.in/istanbul' || c === 'curl wttr.in/istanbul?0atq' || c === 'curl wttr.in/istanbul?format=3') {
             addLine('Fetching weather for Istanbul...', 'ok');
@@ -1754,6 +1758,27 @@ runBootSequence();
             addLine('PING fufuizm.com (127.0.0.1): 56 data bytes', 'ok');
             addLine('Launching Ping-Pong...', 'ok');
             setTimeout(function () { if (window.startPingPong) window.startPingPong(); }, 400);
+        } else if (c.startsWith('ping ')) {
+            var pingTarget = c.slice(5).trim();
+            if (!pingTarget) {
+                addLine('Usage: ping <host>', 'err');
+            } else {
+                addLine('PING ' + pingTarget + ': 64 data bytes');
+                var pingSeq = 0;
+                var pingInterval = setInterval(function () {
+                    pingSeq++;
+                    var pingTime = (Math.random() * 20 + 8).toFixed(1);
+                    addLine('64 bytes from ' + pingTarget + ': icmp_seq=' + pingSeq + ' ttl=117 time=' + pingTime + ' ms');
+                    if (pingSeq >= 4) {
+                        clearInterval(pingInterval);
+                        setTimeout(function () {
+                            addLine('');
+                            addLine('--- ' + pingTarget + ' ping statistics ---');
+                            addLine('4 packets transmitted, 4 received, 0% packet loss');
+                        }, 200);
+                    }
+                }, 1000);
+            }
 
         // ===== Docker Commands =====
         } else if (c === 'docker ps') {
@@ -2089,6 +2114,29 @@ runBootSequence();
                 '<span style="color:#ffb000">}</span>' +
                 '</pre>'
             );
+
+        } else if (c === 'gh repo list' || c === 'ls ~/repos' || c === 'ls ~/repos/') {
+            addLine('Fetching repositories from GitHub...', 'ok');
+            fetch('https://api.github.com/users/fufuizm/repos?sort=updated&per_page=5')
+                .then(function (r) {
+                    if (!r.ok) throw new Error('HTTP ' + r.status);
+                    return r.json();
+                })
+                .then(function (repos) {
+                    addLine('NAME                          STARS   DESCRIPTION');
+                    addLine('─'.repeat(60));
+                    repos.forEach(function (repo) {
+                        var name = (repo.name || '').padEnd(30, ' ').slice(0, 30);
+                        var stars = String(repo.stargazers_count || 0).padStart(3, ' ');
+                        var desc = (repo.description || '—').slice(0, 40);
+                        addLine(name + '  ★ ' + stars + '  ' + desc);
+                    });
+                    addLine('');
+                    addLine('Run "gh repo list" to refresh.');
+                })
+                .catch(function () {
+                    addLine('Error: could not reach api.github.com. Check your network.', 'err');
+                });
 
         } else {
             cmdHandled = false;
@@ -2994,6 +3042,55 @@ function stopMatrixRain() {
             if (!snippet) return;
             var hidden = snippet.hasAttribute('hidden');
             snippet.toggleAttribute('hidden', !hidden);
+        });
+    });
+}());
+
+// ===== Feature: IaC Copy Buttons =====
+(function () {
+    document.querySelectorAll('.iac-copy-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var iacId = btn.getAttribute('data-iac');
+            var snippet = document.getElementById(iacId);
+            if (!snippet) return;
+            var pre = snippet.querySelector('.iac-code');
+            if (!pre) return;
+            var text = pre.innerText || pre.textContent || '';
+            var trSpan = btn.querySelector('[data-lang-tr]');
+            var enSpan = btn.querySelector('[data-lang-en]');
+            navigator.clipboard.writeText(text).then(function () {
+                if (trSpan) trSpan.textContent = 'Kopyalandı!';
+                if (enSpan) enSpan.textContent = 'Copied!';
+                setTimeout(function () {
+                    if (trSpan) trSpan.textContent = 'Kopyala';
+                    if (enSpan) enSpan.textContent = 'Copy';
+                }, 2000);
+            }).catch(function () {
+                var ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.focus();
+                ta.select();
+                try { document.execCommand('copy'); } catch (e) {
+                    if (trSpan) trSpan.textContent = 'Hata!';
+                    if (enSpan) enSpan.textContent = 'Error!';
+                    setTimeout(function () {
+                        if (trSpan) trSpan.textContent = 'Kopyala';
+                        if (enSpan) enSpan.textContent = 'Copy';
+                    }, 2000);
+                    document.body.removeChild(ta);
+                    return;
+                }
+                document.body.removeChild(ta);
+                if (trSpan) trSpan.textContent = 'Kopyalandı!';
+                if (enSpan) enSpan.textContent = 'Copied!';
+                setTimeout(function () {
+                    if (trSpan) trSpan.textContent = 'Kopyala';
+                    if (enSpan) enSpan.textContent = 'Copy';
+                }, 2000);
+            });
         });
     });
 }());

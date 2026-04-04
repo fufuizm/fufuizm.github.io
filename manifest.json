@@ -1,0 +1,16 @@
+{
+  "name": "Furkan Sarıca Portfolio",
+  "short_name": "Fufuizm",
+  "description": "DevOps & Network Engineer | Linux, Docker, Networking, CI/CD",
+  "display": "standalone",
+  "start_url": "/",
+  "background_color": "#1f242c",
+  "theme_color": "#1f242c",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💻</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
