@@ -1190,6 +1190,17 @@ runBootSequence();
     // ===== Permission Puzzle State =====
     var topSecretUnlocked = false;
 
+    // ===== man Page Definitions =====
+    var manuals = {
+        'theme': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;theme - terminal temasını değiştirir<br><br><b>SYNOPSIS</b><br>&nbsp;&nbsp;&nbsp;&nbsp;theme [light|dark]<br><br><b>DESCRIPTION</b><br>&nbsp;&nbsp;&nbsp;&nbsp;Sitenin renk paletini değiştirir.<br>&nbsp;&nbsp;&nbsp;&nbsp;Şu anda \'light\' komutu test aşamasındadır. Dikkatli kullanın!',
+        'whoami': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;whoami - geçerli kullanıcı bilgilerini yazdırır<br><br><b>DESCRIPTION</b><br>&nbsp;&nbsp;&nbsp;&nbsp;Furkan Sarıca hakkında temel sistem yetkinliklerini ve iletişim bilgilerini döndürür.',
+        'help': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;help - kullanılabilir komutları listeler<br><br><b>DESCRIPTION</b><br>&nbsp;&nbsp;&nbsp;&nbsp;Bu web terminalinde desteklenen tüm interaktif komutların listesini verir.',
+        'clear': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;clear - terminal ekranını temizler',
+        'sudo': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;sudo - başka bir kullanıcı olarak komut çalıştırır<br><br><b>DESCRIPTION</b><br>&nbsp;&nbsp;&nbsp;&nbsp;İyi deneme. Bu olay raporlanacaktır. (This incident will be reported.)',
+        'ping': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;ping - ağdaki cihazlara ICMP ECHO_REQUEST paketleri gönderir<br><br><b>DESCRIPTION</b><br>&nbsp;&nbsp;&nbsp;&nbsp;Sunucu ile aranızdaki gecikmeyi (latency) ölçmek için kullanılır.',
+        'ls': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;ls - dizin içeriklerini listeler<br><br><b>DESCRIPTION</b><br>&nbsp;&nbsp;&nbsp;&nbsp;Projeler, sertifikalar ve yeteneklerin bulunduğu sanal dizinleri görüntüler.'
+    };
+
     // ===== Fail2Ban State =====
     var invalidCount = 0;
     var fail2banActive = false;
@@ -2030,15 +2041,6 @@ runBootSequence();
                 addLine('Usage: man [command]');
             } else {
                 var manPage = manArgs[0];
-                var manuals = {
-                    'theme': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;theme - terminal temasını değiştirir<br><br><b>SYNOPSIS</b><br>&nbsp;&nbsp;&nbsp;&nbsp;theme [light|dark]<br><br><b>DESCRIPTION</b><br>&nbsp;&nbsp;&nbsp;&nbsp;Sitenin renk paletini değiştirir.<br>&nbsp;&nbsp;&nbsp;&nbsp;Şu anda \'light\' komutu test aşamasındadır. Dikkatli kullanın!',
-                    'whoami': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;whoami - geçerli kullanıcı bilgilerini yazdırır<br><br><b>DESCRIPTION</b><br>&nbsp;&nbsp;&nbsp;&nbsp;Furkan Sarıca hakkında temel sistem yetkinliklerini ve iletişim bilgilerini döndürür.',
-                    'help': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;help - kullanılabilir komutları listeler<br><br><b>DESCRIPTION</b><br>&nbsp;&nbsp;&nbsp;&nbsp;Bu web terminalinde desteklenen tüm interaktif komutların listesini verir.',
-                    'clear': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;clear - terminal ekranını temizler',
-                    'sudo': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;sudo - başka bir kullanıcı olarak komut çalıştırır<br><br><b>DESCRIPTION</b><br>&nbsp;&nbsp;&nbsp;&nbsp;İyi deneme. Bu olay raporlanacaktır. (This incident will be reported.)',
-                    'ping': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;ping - ağdaki cihazlara ICMP ECHO_REQUEST paketleri gönderir<br><br><b>DESCRIPTION</b><br>&nbsp;&nbsp;&nbsp;&nbsp;Sunucu ile aranızdaki gecikmeyi (latency) ölçmek için kullanılır.',
-                    'ls': '<b>NAME</b><br>&nbsp;&nbsp;&nbsp;&nbsp;ls - dizin içeriklerini listeler<br><br><b>DESCRIPTION</b><br>&nbsp;&nbsp;&nbsp;&nbsp;Projeler, sertifikalar ve yeteneklerin bulunduğu sanal dizinleri görüntüler.'
-                };
                 if (manuals[manPage]) {
                     addBlock(manuals[manPage]);
                 } else {
