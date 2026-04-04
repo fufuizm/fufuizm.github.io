@@ -932,6 +932,43 @@ body.theme-amber {
     --glow-strong: 0 0 30px rgba(255, 176, 0, 0.5);
 }
 
+/* ===== Hacker Mode (Konami Code Easter Egg) ===== */
+body.hacker-mode {
+    --terminal-green: #39ff14;
+    --terminal-green-dim: rgba(57, 255, 20, 0.3);
+    --accent-cyan: #00ff41;
+    --border-accent: #39ff14;
+    --glow: 0 0 20px rgba(57, 255, 20, 0.5);
+    --glow-strong: 0 0 40px rgba(57, 255, 20, 0.8);
+}
+
+body.hacker-mode #cli-prompt {
+    color: #39ff14;
+    text-shadow: 0 0 8px #39ff14;
+    animation: hacker-prompt-flicker 3s infinite;
+}
+
+body.hacker-mode #cli-box,
+body.hacker-mode .terminal-window {
+    border-color: #39ff14;
+    box-shadow: 0 0 20px rgba(57, 255, 20, 0.4);
+    animation: hacker-glitch 8s infinite;
+}
+
+@keyframes hacker-glitch {
+    0%, 88%, 100% { transform: none; filter: none; }
+    90% { transform: translateX(-2px) skewX(1deg); filter: hue-rotate(90deg); }
+    92% { transform: translateX(2px) skewX(-1deg); filter: hue-rotate(-90deg); }
+    94% { transform: translateX(-1px); filter: none; }
+}
+
+@keyframes hacker-prompt-flicker {
+    0%, 95%, 100% { opacity: 1; }
+    96% { opacity: 0.4; }
+    97% { opacity: 1; }
+    98% { opacity: 0.6; }
+}
+
 /* ===== Draggable Terminal Header ===== */
 .terminal-header {
     cursor: grab;
