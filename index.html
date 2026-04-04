@@ -1085,13 +1085,24 @@ runBootSequence();
     }
 
     function echoCmd(cmd) {
-        addLine('furkan@devops:' + currentDir + '$ ' + cmd, 'cmd');
+        var prefix = document.body.classList.contains('hacker-mode')
+            ? 'root@devops:~# '
+            : 'furkan@devops:' + currentDir + '$ ';
+        addLine(prefix + cmd, 'cmd');
     }
 
     function updatePrompt() {
         var promptEl = document.getElementById('cli-prompt');
-        if (promptEl) promptEl.textContent = 'furkan@devops:' + currentDir + '$';
+        if (!promptEl) return;
+        if (document.body.classList.contains('hacker-mode')) {
+            promptEl.textContent = 'root@devops:~#';
+        } else {
+            promptEl.textContent = 'furkan@devops:' + currentDir + '$';
+        }
     }
+
+    // Expose addLine globally so external handlers (e.g. Konami Code) can write to the terminal
+    window.cliAddLine = addLine;
 
     function addNeofetch() {
         var uptime = Math.floor((Date.now() - _pageLoadTime) / 1000);
@@ -1136,31 +1147,26 @@ runBootSequence();
     }
 
     function fetchWeather() {
-        var staticLines = [
-            'Weather report: Istanbul',
-            '',
-            '       .--.       Partly Cloudy',
-            '    .-(    ).    +18 °C (feels like 15 °C)',
-            '   (___.__)__)   ↙ 12 km/h',
-            '                 Humidity: 65%',
-            '                 Visibility: 10 km',
-            '',
-            '[ Note: Install curl for live data ]'
-        ];
-        fetch('https://wttr.in/Istanbul?format=j1')
-            .then(function (r) { return r.json(); })
-            .then(function (data) {
-                var conditions = data && data.current_condition;
-                if (!conditions || !conditions[0]) throw new Error('unexpected response');
-                var cur = conditions[0];
-                addLine('Weather report: Istanbul', 'ok');
-                addLine('');
-                addLine('Condition:   ' + (cur.weatherDesc && cur.weatherDesc[0] ? cur.weatherDesc[0].value : 'N/A'));
-                addLine('Temperature: ' + cur.temp_C + ' °C (feels like ' + cur.FeelsLikeC + ' °C)');
-                addLine('Wind:        ' + cur.winddir16Point + ' ' + cur.windspeedKmph + ' km/h');
-                addLine('Humidity:    ' + cur.humidity + '%');
+        fetch('https://wttr.in/Istanbul?0ATq')
+            .then(function (r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.text();
+            })
+            .then(function (text) {
+                text.split('\n').forEach(function (line) { addLine(line); });
             })
             .catch(function () {
+                var staticLines = [
+                    'Weather report: Istanbul',
+                    '',
+                    '       .--.       Partly Cloudy',
+                    '    .-(    ).    +18 \u00b0C (feels like 15 \u00b0C)',
+                    '   (___.__)__)   \u2199 12 km/h',
+                    '                 Humidity: 65%',
+                    '                 Visibility: 10 km',
+                    '',
+                    '[ Note: Live weather unavailable - showing cached data ]'
+                ];
                 staticLines.forEach(function (line) { addLine(line); });
             });
     }
@@ -1169,7 +1175,7 @@ runBootSequence();
 
     var sections = { projects: '#projects', about: '#about', contact: '#contact', tools: '#tools', education: '#education', certificates: '#certificates' };
 
-    var cliCommands = ['help', 'projects', 'about', 'education', 'certificates', 'tools', 'contact', 'clear', 'whoami', 'sudo', 'ip a', 'ifconfig', 'theme ls', 'theme set default', 'theme set dracula', 'theme set monokai', 'theme set cyberpunk', 'theme set ubuntu', 'theme set amber', 'theme set light', 'theme light', 'theme dark', 'ls', 'pwd', 'cd ~', 'cd about', 'cd projects', 'cd education', 'cat profile.md', 'cat ai-container.txt', 'cat vpn-lab.txt', 'cat logging.txt', 'cat university.md', 'cat top_secret.txt', 'uname -a', 'exit', 'neofetch', 'fastfetch', 'gh repo list', 'ls ~/repos', 'curl wttr.in/Istanbul', 'curl https://api.fufuizm.com/v1/hire-me', 'reboot', 'cat cv.pdf', 'cat cv', 'ping', 'ping fufuizm.com', 'ping 8.8.8.8', 'ping google.com', 'docker ps', 'docker stop portfolio-ui', 'docker start portfolio-ui', 'kubectl get pods', 'nmap fufuizm.com', 'nmap localhost', 'traceroute fufuizm.com', 'traceroute', 'vim', 'vi', 'coffee', 'make coffee', 'brew coffee', 'chmod 777 top_secret.txt', 'htop', 'top', 'sudo apt update', 'sudo apt upgrade', 'sudo apt upgrade -y', 'dig fufuizm.com', 'nslookup fufuizm.com', 'history', 'man furkan'];
+    var cliCommands = ['help', 'projects', 'about', 'education', 'certificates', 'tools', 'contact', 'clear', 'whoami', 'sudo', 'ip a', 'ifconfig', 'theme ls', 'theme set default', 'theme set dracula', 'theme set monokai', 'theme set cyberpunk', 'theme set ubuntu', 'theme set amber', 'theme set light', 'theme light', 'theme dark', 'ls', 'pwd', 'cd ~', 'cd about', 'cd projects', 'cd education', 'cat profile.md', 'cat ai-container.txt', 'cat vpn-lab.txt', 'cat logging.txt', 'cat university.md', 'cat top_secret.txt', 'uname -a', 'exit', 'neofetch', 'fastfetch', 'gh repo list', 'ls ~/repos', 'curl wttr.in', 'curl wttr.in/Istanbul', 'curl https://api.fufuizm.com/v1/hire-me', 'reboot', 'cat cv.pdf', 'cat cv', 'ping', 'ping fufuizm.com', 'ping 8.8.8.8', 'ping google.com', 'docker ps', 'docker stop portfolio-ui', 'docker start portfolio-ui', 'kubectl get pods', 'nmap', 'nmap fufuizm.com', 'nmap localhost', 'traceroute fufuizm.com', 'traceroute', 'vim', 'vi', 'coffee', 'make coffee', 'brew coffee', 'chmod 777 top_secret.txt', 'htop', 'top', 'cmatrix', 'sudo apt update', 'sudo apt upgrade', 'sudo apt upgrade -y', 'dig fufuizm.com', 'nslookup fufuizm.com', 'history', 'man furkan'];
 
     // ===== Virtual File System =====
     var vfsTree = {
@@ -1215,40 +1221,30 @@ runBootSequence();
 
     function startSelfDestruct() {
         addLine('[CRITICAL] Initiating system destruction sequence...', 'err');
-        document.body.classList.add('glitch-mode');
-        var targets = Array.from(document.querySelectorAll('header, section, footer, .project-card, .cert-card, .tool-box, #server-metrics'));
-        targets.sort(function () { return Math.random() - 0.5; });
-        var GLITCH_MIN_MS = 80;
-        var GLITCH_MAX_MS = 350;
-        var MAX_SKEW_DEG  = 12;
-        var MAX_SHIFT_PX  = 60;
-        var totalDelay = 0;
-        targets.forEach(function (el) {
-            var delay = totalDelay + Math.floor(Math.random() * GLITCH_MAX_MS + GLITCH_MIN_MS);
-            totalDelay = delay;
-            setTimeout(function () {
-                el.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
-                el.style.opacity = '0';
-                el.style.transform = 'skewX(' + (Math.random() * MAX_SKEW_DEG * 2 - MAX_SKEW_DEG) + 'deg) translateX(' + (Math.random() * MAX_SHIFT_PX * 2 - MAX_SHIFT_PX) + 'px)';
-            }, delay);
-        });
+        var allEls = Array.from(document.querySelectorAll('div, section, p, h1, h2, a, span, button'));
+        var destroyInterval = setInterval(function () {
+            var batch = Math.floor(Math.random() * 8) + 3;
+            for (var b = 0; b < batch; b++) {
+                var idx = Math.floor(Math.random() * allEls.length);
+                var el = allEls[idx];
+                if (el && el.parentNode) {
+                    if (Math.random() < 0.5) {
+                        el.style.display = 'none';
+                    } else {
+                        el.style.visibility = 'hidden';
+                    }
+                }
+            }
+        }, 100);
         setTimeout(function () {
-            document.body.classList.remove('glitch-mode');
-            var blackScreen = document.createElement('div');
-            blackScreen.style.cssText = 'position:fixed;inset:0;background:#000;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:"JetBrains Mono",monospace;';
+            clearInterval(destroyInterval);
+            document.body.innerHTML = '';
+            document.body.style.cssText = 'margin:0;padding:0;background:#000;';
             var msg = document.createElement('div');
-            msg.style.cssText = 'color:#ff3333;font-size:1.5rem;letter-spacing:3px;margin-bottom:0.8rem;';
-            msg.textContent = 'System Destroyed.';
-            var sub = document.createElement('div');
-            sub.style.cssText = 'color:#888;font-size:0.95rem;letter-spacing:1px;';
-            sub.textContent = 'Rebooting...';
-            blackScreen.appendChild(msg);
-            blackScreen.appendChild(sub);
-            document.body.appendChild(blackScreen);
-            setTimeout(function () {
-                location.reload();
-            }, 3000);
-        }, totalDelay + 600);
+            msg.style.cssText = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;font-family:"JetBrains Mono",monospace;color:#fff;font-size:1.5rem;letter-spacing:3px;';
+            msg.textContent = 'System Halted.';
+            document.body.appendChild(msg);
+        }, 4000);
     }
 
     // Command history
@@ -1745,7 +1741,7 @@ runBootSequence();
             }
         } else if (c === 'neofetch' || c === 'fastfetch') {
             addNeofetch();
-        } else if (c === 'curl wttr.in/istanbul' || c === 'curl wttr.in/istanbul?0atq' || c === 'curl wttr.in/istanbul?format=3') {
+        } else if (c === 'curl wttr.in/istanbul' || c === 'curl wttr.in/istanbul?0atq' || c === 'curl wttr.in/istanbul?format=3' || c === 'curl wttr.in') {
             addLine('Fetching weather for Istanbul...', 'ok');
             fetchWeather();
         } else if (c === 'reboot') {
@@ -1836,28 +1832,34 @@ runBootSequence();
             addLine('error: unknown command "' + cmd.slice(8).trim() + '" — try: kubectl get pods', 'err');
 
         // ===== Network Tools =====
-        } else if (c === 'nmap fufuizm.com' || c === 'nmap localhost' || c === 'nmap 127.0.0.1') {
-            var target = c.includes('localhost') || c.includes('127.0.0.1') ? '127.0.0.1' : '185.199.108.153';
-            addLine('Starting Nmap 7.94 ( https://nmap.org )', 'ok');
-            addLine('Nmap scan report for fufuizm.com (' + target + ')', 'ok');
+        } else if (c === 'nmap' || c === 'nmap fufuizm.com' || c === 'nmap localhost' || c === 'nmap 127.0.0.1') {
+            var nmapIsLocal = c.includes('localhost') || c.includes('127.0.0.1');
+            var nmapTarget = nmapIsLocal ? '127.0.0.1' : '192.168.1.100';
+            var nmapHost   = nmapIsLocal ? 'localhost'  : 'fufuizm.com';
+            addLine('Starting Nmap 7.92 ( https://nmap.org )', 'ok');
+            addLine('Nmap scan report for ' + nmapHost + ' (' + nmapTarget + ')', 'ok');
             addLine('Host is up (0.0' + (Math.floor(Math.random() * 89) + 10) + 's latency).');
             setTimeout(function () {
-                addLine('PORT    STATE  SERVICE  VERSION');
-                addLine('22/tcp  open   ssh      OpenSSH 9.3p1 Ubuntu');
-                addLine('80/tcp  open   http     nginx 1.25.3');
-                addLine('443/tcp open   https    nginx 1.25.3');
+                addLine('Not shown: 994 closed tcp ports (conn-refused)');
+                addLine('PORT      STATE SERVICE   VERSION');
+                addLine('22/tcp    open  ssh        OpenSSH 8.9p1');
+                addLine('80/tcp    open  http       Nginx Reverse Proxy');
+                addLine('443/tcp   open  https      SSL/TLS Active');
+                addLine('3000/tcp  open  grafana    Observability');
+                addLine('2375/tcp  open  docker     Container Engine');
+                addLine('51820/udp open  wireguard  VPN Lab');
                 addLine('');
                 addLine('Nmap done: 1 IP address (1 host up) scanned in ' + (Math.random() * 3 + 1).toFixed(2) + 's', 'ok');
             }, 1200);
         } else if (c === 'traceroute fufuizm.com' || c === 'traceroute' || c === 'tracert fufuizm.com') {
-            addLine('traceroute to fufuizm.com (185.199.108.153), 30 hops max, 60 byte packets', 'ok');
+            addLine('traceroute to fufuizm.com (192.168.20.10), 30 hops max, 60 byte packets', 'ok');
             var hops = [
-                ' 1  homelab-gw (192.168.1.1)         0.' + (Math.floor(Math.random()*9)+1) + 'ms',
-                ' 2  isp-core.example.net (10.0.0.1)  ' + (Math.floor(Math.random()*9)+2) + '.' + Math.floor(Math.random()*9) + 'ms',
-                ' 3  backbone-tr-ist (195.175.0.1)    ' + (Math.floor(Math.random()*9)+8) + '.' + Math.floor(Math.random()*9) + 'ms',
-                ' 4  ix-frankfurt (80.81.192.1)        ' + (Math.floor(Math.random()*9)+22) + '.' + Math.floor(Math.random()*9) + 'ms',
-                ' 5  github-edge (185.199.108.1)       ' + (Math.floor(Math.random()*9)+28) + '.' + Math.floor(Math.random()*9) + 'ms',
-                ' 6  185.199.108.153                   ' + (Math.floor(Math.random()*9)+30) + '.' + Math.floor(Math.random()*9) + 'ms'
+                ' 1  router.local (192.168.1.1)         1.' + (Math.floor(Math.random() * 900) + 100) + ' ms',
+                ' 2  isp-gateway (10.0.0.1)            14.' + (Math.floor(Math.random() * 900) + 100) + ' ms',
+                ' 3  cloudflare-edge (1.1.1.1)          22.' + (Math.floor(Math.random() * 900) + 100) + ' ms',
+                ' 4  pfsense-firewall (10.8.0.1)        35.' + (Math.floor(Math.random() * 900) + 100) + ' ms  [VPN Tunnel]',
+                ' 5  dmz-nginx-proxy (192.168.10.5)     36.' + (Math.floor(Math.random() * 900) + 100) + ' ms',
+                ' 6  docker-host.lan (192.168.20.10)    36.' + (Math.floor(Math.random() * 900) + 100) + ' ms'
             ];
             hops.forEach(function (hop, i) {
                 setTimeout(function () { addLine(hop); }, (i + 1) * 350);
@@ -2012,6 +2014,16 @@ runBootSequence();
             var offset = 205;
             for (var hi = 0; hi < cmdHistory.length; hi++) {
                 addLine('  ' + (offset + hi) + '  ' + cmdHistory[cmdHistory.length - 1 - hi]);
+            }
+
+        // ===== cmatrix: Toggle Matrix Rain =====
+        } else if (c === 'cmatrix') {
+            if (document.getElementById('matrix-rain')) {
+                stopMatrixRain();
+                addLine('Matrix rain stopped.', 'ok');
+            } else {
+                startMatrixRain();
+                addLine('Matrix rain started. Type "cmatrix" again to stop.', 'ok');
             }
 
         // ===== man furkan Manual Page =====
@@ -2677,7 +2689,7 @@ function stopMatrixRain() {
     });
 }());
 
-// ===== Easter Egg: Konami Code → Retro Amber Theme =====
+// ===== Easter Egg: Konami Code → Hacker Mode =====
 (function () {
     var konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
     var konamiIndex = 0;
@@ -2688,7 +2700,18 @@ function stopMatrixRain() {
             konamiIndex++;
             if (konamiIndex === konamiCode.length) {
                 konamiIndex = 0;
-                document.body.classList.toggle('theme-amber');
+                var wasHacker = document.body.classList.contains('hacker-mode');
+                document.body.classList.toggle('hacker-mode');
+                var promptEl = document.getElementById('cli-prompt');
+                if (!wasHacker) {
+                    startMatrixRain();
+                    if (promptEl) promptEl.textContent = 'root@devops:~#';
+                    if (window.cliAddLine) window.cliAddLine('[ ROOT ACCESS GRANTED ]', 'ok');
+                } else {
+                    stopMatrixRain();
+                    if (promptEl) promptEl.textContent = 'furkan@devops:~$';
+                    if (window.cliAddLine) window.cliAddLine('[ Hacker mode deactivated ]', 'err');
+                }
             }
         } else {
             konamiIndex = (e.key === konamiCode[0]) ? 1 : 0;
