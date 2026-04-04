@@ -1175,7 +1175,7 @@ runBootSequence();
 
     var sections = { projects: '#projects', about: '#about', contact: '#contact', tools: '#tools', education: '#education', certificates: '#certificates' };
 
-    var cliCommands = ['help', 'projects', 'about', 'education', 'certificates', 'tools', 'contact', 'clear', 'whoami', 'sudo', 'ip a', 'ifconfig', 'theme ls', 'theme set default', 'theme set dracula', 'theme set monokai', 'theme set cyberpunk', 'theme set ubuntu', 'theme set amber', 'theme set light', 'theme light', 'theme dark', 'ls', 'ls -la', 'pwd', 'cd ~', 'cd /', 'cd /etc', 'cd /var/log', 'cd /home/furkan', 'cd about', 'cd projects', 'cd education', 'cat profile.md', 'cat ai-container.txt', 'cat vpn-lab.txt', 'cat logging.txt', 'cat university.md', 'cat top_secret.txt', 'cat /etc/passwd', 'cat /etc/hosts', 'cat /var/log/auth.log', 'cat /var/log/syslog', 'uname -a', 'exit', 'neofetch', 'fastfetch', 'gh repo list', 'ls ~/repos', 'curl wttr.in', 'curl wttr.in/Istanbul', 'curl https://api.fufuizm.com/v1/hire-me', 'reboot', 'cat cv.pdf', 'cat cv', 'ping', 'ping fufuizm.com', 'ping 8.8.8.8', 'ping google.com', 'docker ps', 'docker stats', 'docker logs fufuizm-web', 'docker logs ai-pipeline', 'docker logs grafana', 'docker stop fufuizm-web', 'docker start fufuizm-web', 'kubectl get pods', 'nmap', 'nmap fufuizm.com', 'nmap localhost', 'traceroute fufuizm.com', 'traceroute', 'vim', 'vi', 'coffee', 'make coffee', 'brew coffee', 'chmod 777 top_secret.txt', 'htop', 'top', 'cmatrix', 'sudo apt update', 'sudo apt upgrade', 'sudo apt upgrade -y', 'dig fufuizm.com', 'nslookup fufuizm.com', 'history', 'man furkan'];
+    var cliCommands = ['help', 'projects', 'about', 'education', 'certificates', 'tools', 'contact', 'clear', 'whoami', 'sudo', 'ip a', 'ifconfig', 'theme ls', 'theme set default', 'theme set dracula', 'theme set monokai', 'theme set cyberpunk', 'theme set ubuntu', 'theme set amber', 'theme set light', 'theme light', 'theme dark', 'ls', 'ls -la', 'pwd', 'cd ~', 'cd /', 'cd /etc', 'cd /var/log', 'cd /home/furkan', 'cd about', 'cd projects', 'cd education', 'cat profile.md', 'cat ai-container.txt', 'cat vpn-lab.txt', 'cat logging.txt', 'cat university.md', 'cat top_secret.txt', 'cat /etc/passwd', 'cat /etc/hosts', 'cat /var/log/auth.log', 'cat /var/log/syslog', 'uname -a', 'exit', 'neofetch', 'fastfetch', 'gh repo list', 'ls ~/repos', 'curl wttr.in', 'curl wttr.in/Istanbul', 'curl https://api.fufuizm.com/v1/hire-me', 'reboot', 'cat cv.pdf', 'cat cv', 'ping', 'ping fufuizm.com', 'ping 8.8.8.8', 'ping google.com', 'docker ps', 'docker stats', 'docker logs fufuizm-web', 'docker logs ai-pipeline', 'docker logs grafana', 'docker stop fufuizm-web', 'docker start fufuizm-web', 'kubectl get pods', 'nmap', 'nmap fufuizm.com', 'nmap localhost', 'traceroute fufuizm.com', 'traceroute', 'vim', 'vi', 'coffee', 'make coffee', 'brew coffee', 'chmod 777 top_secret.txt', 'htop', 'top', 'cmatrix', 'sudo apt update', 'sudo apt upgrade', 'sudo apt upgrade -y', 'dig fufuizm.com', 'nslookup fufuizm.com', 'history', 'man furkan', 'git push', 'git push origin main', 'make deploy'];
 
     // ===== Virtual File System =====
     var vfsTree = {
@@ -1513,8 +1513,75 @@ runBootSequence();
             e.preventDefault();
             var val = input.value;
             if (!val) return;
-            var match = cliCommands.find(function (cmd) { return cmd.startsWith(val); });
-            if (match) input.value = match;
+
+            // --- VFS path auto-complete ---
+            // Detect if the current token ends with a path-like segment (contains '/')
+            var tokens = val.split(' ');
+            var lastToken = tokens[tokens.length - 1];
+            if (lastToken.indexOf('/') !== -1 || lastToken.charAt(0) === '~') {
+                // Normalise tilde
+                var expandedToken = lastToken.charAt(0) === '~'
+                    ? lastToken.replace(/^~/, '/home/furkan')
+                    : lastToken;
+                // Split into dir part and partial filename
+                var lastSlash = expandedToken.lastIndexOf('/');
+                var dirPart   = lastSlash === -1 ? '/' : expandedToken.slice(0, lastSlash) || '/';
+                var filePart  = expandedToken.slice(lastSlash + 1);
+                // Look up children in vfsTree
+                var children = vfsTree[dirPart] || [];
+                var matches  = children.filter(function (c) { return c.startsWith(filePart); });
+                if (matches.length === 1) {
+                    // Unique match — complete it
+                    var completed = dirPart.replace(/\/$/, '') + '/' + matches[0];
+                    // Restore tilde if original started with ~
+                    if (lastToken.charAt(0) === '~') {
+                        completed = completed.replace('/home/furkan', '~');
+                    }
+                    tokens[tokens.length - 1] = completed;
+                    input.value = tokens.join(' ');
+                } else if (matches.length > 1) {
+                    // Multiple matches — complete to common prefix and list options
+                    var prefix = matches[0];
+                    for (var mi = 1; mi < matches.length; mi++) {
+                        var m = matches[mi];
+                        var pi = 0;
+                        while (pi < prefix.length && pi < m.length && prefix[pi] === m[pi]) pi++;
+                        prefix = prefix.slice(0, pi);
+                    }
+                    if (prefix.length > filePart.length) {
+                        var completedPfx = dirPart.replace(/\/$/, '') + '/' + prefix;
+                        if (lastToken.charAt(0) === '~') {
+                            completedPfx = completedPfx.replace('/home/furkan', '~');
+                        }
+                        tokens[tokens.length - 1] = completedPfx;
+                        input.value = tokens.join(' ');
+                    } else {
+                        // Already at common prefix — show options
+                        echoCmd(val);
+                        addLine(matches.join('   '));
+                    }
+                }
+                return;
+            }
+
+            // --- Fallback: command-level completion ---
+            var cmdMatches = cliCommands.filter(function (cmd) { return cmd.startsWith(val); });
+            if (cmdMatches.length === 1) {
+                input.value = cmdMatches[0];
+            } else if (cmdMatches.length > 1) {
+                var cmdPrefix = cmdMatches[0];
+                for (var ci = 1; ci < cmdMatches.length; ci++) {
+                    var cp = 0;
+                    while (cp < cmdPrefix.length && cp < cmdMatches[ci].length && cmdPrefix[cp] === cmdMatches[ci][cp]) cp++;
+                    cmdPrefix = cmdPrefix.slice(0, cp);
+                }
+                if (cmdPrefix.length > val.length) {
+                    input.value = cmdPrefix;
+                } else {
+                    echoCmd(val);
+                    addLine(cmdMatches.join('   '));
+                }
+            }
             return;
         }
         if (e.key !== 'Enter') return;
@@ -1555,7 +1622,7 @@ runBootSequence();
             addLine('  whoami, uname -a, htop, chmod, sudo apt update, sudo rm -rf / (DANGER)');
             addLine('');
             addLine('[ DevOps & Containers ]');
-            addLine('  docker, kubectl, git log');
+            addLine('  docker, kubectl, git log, git push origin main, make deploy');
             addLine('');
             addLine('[ Advanced Tools & Config ]');
             addLine('  vim (Vi IMproved), theme (Display Config), make coffee (JIT Coffee Engine)');
@@ -2230,6 +2297,26 @@ runBootSequence();
                     addLine('Error: could not reach api.github.com. Check your network.', 'err');
                 });
 
+        // ===== git push / make deploy — CI/CD Pipeline Trigger =====
+        } else if (c === 'git push' || c === 'git push origin main' || c === 'git push origin main --force' || c === 'make deploy') {
+            addLine('[INFO] Pushing changes to remote... Triggering CI/CD pipeline.', 'ok');
+            addLine('Enumerating objects: 5, done.');
+            addLine('Counting objects: 100% (5/5), done.');
+            addLine('Delta compression using up to 4 threads');
+            addLine('Compressing objects: 100% (3/3), done.');
+            addLine('Writing objects: 100% (3/3), 1.23 KiB | 1.23 MiB/s, done.');
+            addLine('Total 3 (delta 2), reused 0 (delta 0), pack-reused 0');
+            addLine('remote: Resolving deltas: 100% (2/2), completed with 2 local objects.');
+            addLine('To https://github.com/fufuizm/fufuizm.github.io.git');
+            addLine('   a1b2c3d..e4f5g6h  main -> main');
+            addLine('');
+            addLine('🚀 Pipeline triggered. Scrolling to CI/CD dashboard...', 'ok');
+            setTimeout(function () {
+                var pipelineSection = document.getElementById('cicd-pipeline');
+                if (pipelineSection) pipelineSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (typeof window.triggerCICDPipeline === 'function') window.triggerCICDPipeline(addLine);
+            }, 600);
+
         } else {
             cmdHandled = false;
             invalidCount++;
@@ -2609,7 +2696,23 @@ runBootSequence();
     var logEl = document.getElementById('pipeline-log');
     if (!stageEls.build || !stageEls.test || !stageEls.deploy || !logEl) return;
 
-    var ICONS = { idle: '⬜', running: '🔄', ok: '✅', fail: '❌' };
+    var ICONS = { idle: '⬜', running: '⏳', ok: '✅', fail: '❌' };
+
+    // Track all pending timeouts so we can cancel a running pipeline
+    var pendingTimers = [];
+    var autoLoopTimer = null;
+
+    function schedule(fn, delay) {
+        var id = setTimeout(fn, delay);
+        pendingTimers.push(id);
+        return id;
+    }
+
+    function cancelAll() {
+        pendingTimers.forEach(clearTimeout);
+        pendingTimers = [];
+        if (autoLoopTimer) { clearTimeout(autoLoopTimer); autoLoopTimer = null; }
+    }
 
     function setStage(name, state, icon) {
         var el = stageEls[name];
@@ -2617,81 +2720,99 @@ runBootSequence();
         el.querySelector('.pipeline-icon').textContent = icon || ICONS[state] || '⬜';
     }
 
-    function setLog(msg, color) {
-        logEl.style.color = color || 'var(--text-muted)';
-        logEl.textContent = msg;
+    function appendLog(msg, color) {
+        var line = document.createElement('div');
+        line.textContent = msg;
+        if (color) line.style.color = color;
+        logEl.appendChild(line);
+        logEl.scrollTop = logEl.scrollHeight;
     }
 
     function resetAll() {
         ['build', 'test', 'deploy'].forEach(function (s) { setStage(s, '', ICONS.idle); });
-        setLog('');
+        logEl.innerHTML = '';
     }
 
-    function runPipeline() {
-        var willFail = Math.random() < 0.3; // 30% chance of test failure
+    function runPipeline(termAddLine, isManual) {
+        cancelAll();
         resetAll();
+        var addLine = (typeof termAddLine === 'function') ? termAddLine : function () {};
 
         // --- Build stage ---
-        setTimeout(function () {
+        schedule(function () {
             setStage('build', 'running', ICONS.running);
-            setLog('⚙ Building fufuizm/web:latest...');
+            appendLog('⚙  [Build] Cloning repository...');
+            addLine('[CI] ⚙  Cloning repository fufuizm/fufuizm.github.io...');
         }, 200);
-
-        setTimeout(function () {
+        schedule(function () {
+            appendLog('⚙  [Build] Running: npm install');
+            addLine('[CI] Running: npm install');
+        }, 800);
+        schedule(function () {
+            appendLog('⚙  [Build] Running: docker build -t fufuizm/web:latest .');
+            addLine('[CI] Running: docker build -t fufuizm/web:latest .');
+        }, 1400);
+        schedule(function () {
+            appendLog('⚙  [Build] Pushing image to ghcr.io...');
+            addLine('[CI] Pushing image to ghcr.io/fufuizm/web:latest');
+        }, 2000);
+        schedule(function () {
             setStage('build', 'done', ICONS.ok);
-            setLog('[ Build ] passed — image pushed to registry', 'var(--terminal-green)');
-        }, 2400);
+            appendLog('✅ [Build] passed — image digest: sha256:a1b2c3d4e5f6', 'var(--terminal-green)');
+            addLine('[CI] ✅ Build passed — image pushed to registry.', 'ok');
+        }, 2600);
 
         // --- Test stage ---
-        setTimeout(function () {
+        schedule(function () {
             setStage('test', 'running', ICONS.running);
-            setLog('🧪 Running test suite...');
-        }, 2800);
+            appendLog('🧪 [Test]  Starting test runner...');
+            addLine('[CI] 🧪 Running test suite...');
+        }, 3000);
+        schedule(function () {
+            appendLog('🧪 [Test]  Running: pytest tests/ -v');
+            addLine('[CI] Running: pytest tests/ -v');
+        }, 3600);
+        schedule(function () {
+            appendLog('🧪 [Test]  Running: npm run lint');
+            addLine('[CI] Running: npm run lint');
+        }, 4200);
+        schedule(function () {
+            setStage('test', 'done', ICONS.ok);
+            appendLog('✅ [Test]  42 passed, 0 failed, 0 skipped', 'var(--terminal-green)');
+            addLine('[CI] ✅ Tests passed — 42 passed, 0 failed.', 'ok');
+        }, 5000);
 
-        if (willFail) {
-            setTimeout(function () {
-                setStage('test', 'failed', ICONS.fail);
-                setLog('[ Test ] FAILED — 1 assertion error detected', '#ff4444');
-            }, 4800);
-            // Retry
-            setTimeout(function () {
-                setStage('test', 'retry', ICONS.running);
-                setLog('↩ Retrying test suite...');
-            }, 6200);
-            setTimeout(function () {
-                setStage('test', 'done', ICONS.ok);
-                setLog('[ Test ] passed on retry ✓', 'var(--terminal-green)');
-            }, 8200);
-            // Deploy stage (offset for retry)
-            setTimeout(function () {
-                setStage('deploy', 'running', ICONS.running);
-                setLog('🚀 Deploying to fufuizm.github.io...');
-            }, 8700);
-            setTimeout(function () {
-                setStage('deploy', 'done', ICONS.ok);
-                setLog('[ Deploy ] live — https://fufuizm.github.io ✓', 'var(--terminal-green)');
-            }, 10800);
-            setTimeout(runPipeline, 14000);
-        } else {
-            setTimeout(function () {
-                setStage('test', 'done', ICONS.ok);
-                setLog('[ Test ] passed — all 42 checks green', 'var(--terminal-green)');
-            }, 4800);
-            // Deploy stage
-            setTimeout(function () {
-                setStage('deploy', 'running', ICONS.running);
-                setLog('🚀 Deploying to fufuizm.github.io...');
-            }, 5300);
-            setTimeout(function () {
-                setStage('deploy', 'done', ICONS.ok);
-                setLog('[ Deploy ] live — https://fufuizm.github.io ✓', 'var(--terminal-green)');
-            }, 7400);
-            setTimeout(runPipeline, 11000);
-        }
+        // --- Deploy stage ---
+        schedule(function () {
+            setStage('deploy', 'running', ICONS.running);
+            appendLog('🚀 [Deploy] Deploying to production Swarm cluster...');
+            addLine('[CI] 🚀 Deploying to production Swarm cluster...');
+        }, 5500);
+        schedule(function () {
+            appendLog('🚀 [Deploy] Updating Nginx reverse proxy config...');
+            addLine('[CI] Updating Nginx reverse proxy config...');
+        }, 6200);
+        schedule(function () {
+            appendLog('🚀 [Deploy] Running health check on https://fufuizm.github.io...');
+            addLine('[CI] Running health check...');
+        }, 7000);
+        schedule(function () {
+            setStage('deploy', 'done', ICONS.ok);
+            appendLog('✅ [Deploy] live — https://fufuizm.github.io ✓', 'var(--terminal-green)');
+            addLine('[CI] ✅ Deploy successful — https://fufuizm.github.io is live!', 'ok');
+            if (!isManual) {
+                autoLoopTimer = setTimeout(function () { runPipeline(null, false); }, 11000);
+            }
+        }, 7800);
     }
 
-    // Start after a short delay so page loads first
-    setTimeout(runPipeline, 2000);
+    // Expose global trigger for CLI
+    window.triggerCICDPipeline = function (termAddLine) {
+        runPipeline(termAddLine, true);
+    };
+
+    // Auto-start on page load
+    autoLoopTimer = setTimeout(function () { runPipeline(null, false); }, 2000);
 }());
 
 
