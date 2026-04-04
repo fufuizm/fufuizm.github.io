@@ -1087,7 +1087,7 @@ runBootSequence();
     function echoCmd(cmd) {
         var prefix = document.body.classList.contains('hacker-mode')
             ? 'root@devops:~# '
-            : 'furkan@devops:' + currentDir + '$ ';
+            : 'furkan@devops:' + dirDisplay(currentDir) + '$ ';
         addLine(prefix + cmd, 'cmd');
     }
 
@@ -1097,7 +1097,7 @@ runBootSequence();
         if (document.body.classList.contains('hacker-mode')) {
             promptEl.textContent = 'root@devops:~#';
         } else {
-            promptEl.textContent = 'furkan@devops:' + currentDir + '$';
+            promptEl.textContent = 'furkan@devops:' + dirDisplay(currentDir) + '$';
         }
     }
 
@@ -1175,14 +1175,20 @@ runBootSequence();
 
     var sections = { projects: '#projects', about: '#about', contact: '#contact', tools: '#tools', education: '#education', certificates: '#certificates' };
 
-    var cliCommands = ['help', 'projects', 'about', 'education', 'certificates', 'tools', 'contact', 'clear', 'whoami', 'sudo', 'ip a', 'ifconfig', 'theme ls', 'theme set default', 'theme set dracula', 'theme set monokai', 'theme set cyberpunk', 'theme set ubuntu', 'theme set amber', 'theme set light', 'theme light', 'theme dark', 'ls', 'pwd', 'cd ~', 'cd about', 'cd projects', 'cd education', 'cat profile.md', 'cat ai-container.txt', 'cat vpn-lab.txt', 'cat logging.txt', 'cat university.md', 'cat top_secret.txt', 'uname -a', 'exit', 'neofetch', 'fastfetch', 'gh repo list', 'ls ~/repos', 'curl wttr.in', 'curl wttr.in/Istanbul', 'curl https://api.fufuizm.com/v1/hire-me', 'reboot', 'cat cv.pdf', 'cat cv', 'ping', 'ping fufuizm.com', 'ping 8.8.8.8', 'ping google.com', 'docker ps', 'docker stop portfolio-ui', 'docker start portfolio-ui', 'kubectl get pods', 'nmap', 'nmap fufuizm.com', 'nmap localhost', 'traceroute fufuizm.com', 'traceroute', 'vim', 'vi', 'coffee', 'make coffee', 'brew coffee', 'chmod 777 top_secret.txt', 'htop', 'top', 'cmatrix', 'sudo apt update', 'sudo apt upgrade', 'sudo apt upgrade -y', 'dig fufuizm.com', 'nslookup fufuizm.com', 'history', 'man furkan'];
+    var cliCommands = ['help', 'projects', 'about', 'education', 'certificates', 'tools', 'contact', 'clear', 'whoami', 'sudo', 'ip a', 'ifconfig', 'theme ls', 'theme set default', 'theme set dracula', 'theme set monokai', 'theme set cyberpunk', 'theme set ubuntu', 'theme set amber', 'theme set light', 'theme light', 'theme dark', 'ls', 'ls -la', 'pwd', 'cd ~', 'cd /', 'cd /etc', 'cd /var/log', 'cd /home/furkan', 'cd about', 'cd projects', 'cd education', 'cat profile.md', 'cat ai-container.txt', 'cat vpn-lab.txt', 'cat logging.txt', 'cat university.md', 'cat top_secret.txt', 'cat /etc/passwd', 'cat /etc/hosts', 'cat /var/log/auth.log', 'cat /var/log/syslog', 'uname -a', 'exit', 'neofetch', 'fastfetch', 'gh repo list', 'ls ~/repos', 'curl wttr.in', 'curl wttr.in/Istanbul', 'curl https://api.fufuizm.com/v1/hire-me', 'reboot', 'cat cv.pdf', 'cat cv', 'ping', 'ping fufuizm.com', 'ping 8.8.8.8', 'ping google.com', 'docker ps', 'docker stats', 'docker logs fufuizm-web', 'docker logs ai-pipeline', 'docker logs grafana', 'docker stop fufuizm-web', 'docker start fufuizm-web', 'kubectl get pods', 'nmap', 'nmap fufuizm.com', 'nmap localhost', 'traceroute fufuizm.com', 'traceroute', 'vim', 'vi', 'coffee', 'make coffee', 'brew coffee', 'chmod 777 top_secret.txt', 'htop', 'top', 'cmatrix', 'sudo apt update', 'sudo apt upgrade', 'sudo apt upgrade -y', 'dig fufuizm.com', 'nslookup fufuizm.com', 'history', 'man furkan'];
 
     // ===== Virtual File System =====
     var vfsTree = {
-        '~':            ['about/', 'projects/', 'education/', 'top_secret.txt'],
-        '~/about':      ['profile.md'],
-        '~/projects':   ['ai-container.txt', 'vpn-lab.txt', 'logging.txt'],
-        '~/education':  ['university.md']
+        '/':                       ['home/', 'etc/', 'var/', 'tmp/'],
+        '/home':                   ['furkan/'],
+        '/home/furkan':            ['about/', 'projects/', 'education/', 'top_secret.txt'],
+        '/home/furkan/about':      ['profile.md'],
+        '/home/furkan/projects':   ['ai-container.txt', 'vpn-lab.txt', 'logging.txt'],
+        '/home/furkan/education':  ['university.md'],
+        '/etc':                    ['passwd', 'hosts', 'hostname', 'nginx/', 'ssh/'],
+        '/tmp':                    [],
+        '/var':                    ['log/'],
+        '/var/log':                ['auth.log', 'syslog', 'nginx/']
     };
 
     var catContent = {
@@ -1190,10 +1196,21 @@ runBootSequence();
         'ai-container.txt':  'AI-Powered Container Infrastructure Automation\n---\nModular Docker/docker-compose stack on a low-resource Linux server.\nAI pipeline (OpenClaw + Kimi K2.5 API) analyzes metrics and generates\ncommands with a human-approval step. Version-controlled with Git.',
         'vpn-lab.txt':       'Virtual Network Lab & VPN Infrastructure\n---\nMultiple Linux VMs on VirtualBox simulating router, DNS server, DMZ.\nSSH key auth, ufw firewall rules, WireGuard/OpenVPN for secure access.\nTraffic analysis with tcpdump, nmap, netstat.',
         'logging.txt':       'Centralized Logging & Monitoring Infrastructure\n---\nrsyslog/syslog aggregating service, security and network events\nfrom multiple hosts. Grafana dashboards for CPU/RAM/disk/network.\nBasic observability stack for homelab service health.',
-        'university.md':     'B.Sc. in Management Information Systems\nIstanbul Gelisim University — GPA: 3.03 / 4.00 (2022–2026)\nCourses: OS, Networking, DB, Cloud Computing, Data Mining,\nInformation Security, ERP Systems, Project Management.'
+        'university.md':     'B.Sc. in Management Information Systems\nIstanbul Gelisim University — GPA: 3.03 / 4.00 (2022–2026)\nCourses: OS, Networking, DB, Cloud Computing, Data Mining,\nInformation Security, ERP Systems, Project Management.',
+        'passwd':            'root:x:0:0:root:/root:/bin/bash\ndaemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin\nwww-data:x:33:33:www-data:/var/www:/usr/sbin/nologin\nfurkan:x:1000:1000:Furkan Sarica,,,:/home/furkan:/bin/bash\ndocker:x:999:999:Docker daemon:/var/lib/docker:/usr/sbin/nologin\nnginx:x:101:101:nginx user:/var/cache/nginx:/usr/sbin/nologin\ngrafana:x:472:472::/home/grafana:/sbin/nologin',
+        'hosts':             '127.0.0.1   localhost\n127.0.1.1   devops\n192.168.1.100   fufuizm-web\n192.168.1.101   ai-pipeline\n192.168.1.102   grafana\n::1     localhost ip6-localhost ip6-loopback',
+        'hostname':          'devops',
+        'auth.log':          'Apr  4 08:12:01 devops sshd[1337]: Failed password for invalid user admin from 185.220.101.42 port 52341 ssh2\nApr  4 08:12:03 devops sshd[1338]: Failed password for invalid user root from 185.220.101.42 port 52342 ssh2\nApr  4 08:12:05 devops sshd[1339]: Failed password for invalid user ubuntu from 185.220.101.42 port 52343 ssh2\nApr  4 08:12:31 devops sshd[1340]: Failed password for invalid user admin from 45.33.32.156 port 44512 ssh2\nApr  4 08:12:33 devops sshd[1341]: Failed password for invalid user pi from 45.33.32.156 port 44513 ssh2\nApr  4 08:13:01 devops fail2ban.actions[2048]: WARNING [sshd] Ban 185.220.101.42\nApr  4 08:13:01 devops fail2ban.actions[2048]: WARNING [sshd] Ban 45.33.32.156\nApr  4 08:14:22 devops sshd[1500]: Accepted publickey for furkan from 192.168.1.10 port 55123 ssh2\nApr  4 08:14:22 devops sshd[1500]: pam_unix(sshd:session): session opened for user furkan by (uid=0)',
+        'syslog':            'Apr  4 09:00:01 devops systemd[1]: Starting Docker Application Container Engine...\nApr  4 09:00:02 devops dockerd[2048]: time="2026-04-04T09:00:02Z" level=info msg="Loading containers"\nApr  4 09:00:03 devops dockerd[2048]: time="2026-04-04T09:00:03Z" level=info msg="Docker daemon" graphdriver=overlay2 version=24.0.7\nApr  4 09:00:04 devops systemd[1]: Started Docker Application Container Engine.\nApr  4 09:00:05 devops systemd[1]: Starting fufuizm-web container...\nApr  4 09:00:06 devops systemd[1]: Started fufuizm-web container.\nApr  4 09:00:10 devops nginx[3141]: nginx/1.25.3 started'
     };
 
-    var currentDir = '~';
+    var currentDir = '/home/furkan';
+
+    function dirDisplay(path) {
+        if (path === '/home/furkan') return '~';
+        if (path.startsWith('/home/furkan/')) return '~' + path.slice('/home/furkan'.length);
+        return path;
+    }
 
     // ===== Self-Destruct State =====
     var awaitingSelfDestruct = false;
@@ -1607,7 +1624,7 @@ runBootSequence();
             addLine('Access denied: I can\'t let you delete this server!', 'err');
         } else if (c === 'exit') {
             addLine('logout', 'ok');
-            currentDir = '~';
+            currentDir = '/home/furkan';
             updatePrompt();
             if (document.body.classList.contains('root-mode')) {
                 document.body.classList.remove('root-mode');
@@ -1616,37 +1633,50 @@ runBootSequence();
         } else if (c === 'whoami' || c === 'ip a' || c === 'ifconfig') {
             fetchIpAndPrint();
         } else if (c === 'pwd') {
-            var pwdPath = currentDir === '~' ? '/home/furkan' : '/home/furkan/' + currentDir.slice(2);
-            addLine(pwdPath);
-        } else if (c === 'ls' || c === 'ls -la' || c === 'ls -l') {
+            addLine(currentDir);
+        } else if (c === 'ls' || c === 'ls -la' || c === 'ls -l' || c === 'ls -a') {
             var contents = vfsTree[currentDir];
-            if (contents && contents.length > 0) {
-                addLine(contents.join('  '));
-            } else {
+            if (contents === undefined) {
+                addLine('ls: cannot access \'' + currentDir + '\': No such file or directory', 'err');
+            } else if (contents.length === 0) {
                 addLine('(empty directory)');
+            } else {
+                addLine(contents.join('  '));
             }
         } else if (c === 'cd' || c === 'cd ~') {
-            currentDir = '~';
+            currentDir = '/home/furkan';
             updatePrompt();
         } else if (c.startsWith('cd ')) {
-            var arg = cmd.slice(3).trim();
-            var newDir;
-            if (arg === '..') {
-                newDir = '~';
-            } else if (arg === '~' || arg === '/home/furkan') {
-                newDir = '~';
-            } else if (arg.startsWith('~/') || arg.startsWith('/home/furkan/')) {
-                newDir = arg.startsWith('/home/furkan/') ? '~/' + arg.slice('/home/furkan/'.length) : arg;
+            var cdArg = cmd.slice(3).trim();
+            var cdTarget;
+            if (cdArg === '~' || cdArg === '/home/furkan') {
+                cdTarget = '/home/furkan';
+            } else if (cdArg === '/') {
+                cdTarget = '/';
+            } else if (cdArg === '..') {
+                var cdLast = currentDir.lastIndexOf('/');
+                cdTarget = cdLast > 0 ? currentDir.slice(0, cdLast) : '/';
+            } else if (cdArg.startsWith('/')) {
+                // Absolute path — normalize any ..
+                var cdParts = cdArg.split('/').filter(Boolean);
+                var cdStack = [];
+                cdParts.forEach(function (p) {
+                    if (p === '..') { cdStack.pop(); }
+                    else if (p !== '.') { cdStack.push(p); }
+                });
+                cdTarget = '/' + cdStack.join('/');
+            } else if (cdArg.startsWith('~/')) {
+                cdTarget = '/home/furkan/' + cdArg.slice(2);
             } else {
-                newDir = currentDir === '~' ? '~/' + arg : currentDir + '/' + arg;
+                // Relative path
+                cdTarget = currentDir === '/' ? '/' + cdArg : currentDir + '/' + cdArg;
             }
-            // Strip trailing slash for lookup
-            newDir = newDir.replace(/\/$/, '') || '~';
-            if (vfsTree.hasOwnProperty(newDir)) {
-                currentDir = newDir;
+            cdTarget = cdTarget.replace(/\/$/, '') || '/';
+            if (vfsTree.hasOwnProperty(cdTarget)) {
+                currentDir = cdTarget;
                 updatePrompt();
             } else {
-                addLine('cd: ' + arg + ': No such file or directory', 'err');
+                addLine('cd: ' + cdArg + ': No such file or directory', 'err');
             }
         } else if (c.startsWith('cat ')) {
             var filename = cmd.slice(4).trim();
@@ -1779,13 +1809,61 @@ runBootSequence();
         // ===== Docker Commands =====
         } else if (c === 'docker ps') {
             addBlock('<pre style="color:var(--text-secondary);font-size:0.78rem;overflow-x:auto">' +
-                'CONTAINER ID   IMAGE                    COMMAND         STATUS         PORTS                    NAMES\n' +
-                'a1b2c3d4e5f6   fufuizm/web:v2           "nginx -g..."   Up 4 days      0.0.0.0:443->443/tcp     portfolio-ui\n' +
-                'b9c8d7e6f5a4   fufuizm/api:v1           "node app.js"   Up 4 days      127.0.0.1:3000->3000/tcp portfolio-api\n' +
-                'c0d1e2f3a4b5   fufuizm/monitor:latest   "grafana..."    Up 2 hours     127.0.0.1:3001->3001/tcp portfolio-monitor' +
+                'CONTAINER ID   IMAGE                COMMAND              CREATED        STATUS          PORTS                    NAMES\n' +
+                'a1b2c3d4e5f6   nginx:alpine         "nginx -g \'daem…"   2 weeks ago    Up 2 weeks      0.0.0.0:443->443/tcp     fufuizm-web\n' +
+                'b9c8d7e6f5a4   fufuizm/ai:v2        "python ai_pipe…"   3 days ago     Up 3 days       127.0.0.1:5000->5000/tcp ai-pipeline\n' +
+                'c0d1e2f3a4b5   grafana/grafana:10   "./run.sh"           5 days ago     Up 5 days       127.0.0.1:3001->3001/tcp grafana' +
                 '</pre>');
-        } else if (c === 'docker stop portfolio-ui') {
-            addLine('portfolio-ui', 'ok');
+        } else if (c === 'docker stats' || c === 'docker stats --no-stream') {
+            addBlock('<pre style="color:var(--text-secondary);font-size:0.78rem;overflow-x:auto">' +
+                'CONTAINER ID   NAME           CPU %   MEM USAGE / LIMIT     MEM %   NET I/O          BLOCK I/O\n' +
+                'a1b2c3d4e5f6   fufuizm-web    0.3%    45.2MiB / 2GiB        2.21%   1.2GB / 850MB    120MB / 0B\n' +
+                'b9c8d7e6f5a4   ai-pipeline    12.4%   412.8MiB / 2GiB      20.15%   234MB / 89MB     456MB / 12MB\n' +
+                'c0d1e2f3a4b5   grafana        2.1%    187.3MiB / 2GiB       9.14%   78MB / 34MB      234MB / 5MB' +
+                '</pre>');
+        } else if (c.startsWith('docker logs ')) {
+            var dockerLogsTarget = cmd.slice('docker logs '.length).trim().toLowerCase();
+            var dockerLogsMap = {
+                'fufuizm-web': [
+                    '2026/04/04 08:00:01 [notice] 1#1: using the "epoll" event method',
+                    '2026/04/04 08:00:01 [notice] 1#1: nginx/1.25.3',
+                    '2026/04/04 08:00:01 [notice] 1#1: start worker processes',
+                    '2026/04/04 09:14:22 192.168.1.10 - - "GET / HTTP/2.0" 200 8192',
+                    '2026/04/04 09:15:01 185.220.101.42 - - "GET /wp-admin HTTP/1.1" 404 0',
+                    '2026/04/04 09:15:03 185.220.101.42 - - "GET /.env HTTP/1.1" 403 0',
+                    '2026/04/04 09:15:05 [warn] 8#8: blocked suspicious request from 185.220.101.42',
+                    '2026/04/04 10:23:11 192.168.1.10 - - "GET /projects HTTP/2.0" 200 4096'
+                ],
+                'ai-pipeline': [
+                    '2026-04-04 07:00:00 INFO  AI Pipeline v2.0 starting...',
+                    '2026-04-04 07:00:01 INFO  Loading model: Kimi K2.5 API endpoint',
+                    '2026-04-04 07:00:02 INFO  Connected to metrics API at http://grafana:3001',
+                    '2026-04-04 08:30:00 INFO  Analyzing container metrics...',
+                    '2026-04-04 08:30:01 INFO  CPU anomaly detected on ai-pipeline (12.4%)',
+                    '2026-04-04 08:30:02 INFO  Generating remediation command...',
+                    '2026-04-04 08:30:03 WARN  Awaiting human approval: docker restart ai-pipeline',
+                    '2026-04-04 08:30:45 INFO  Approval granted. Executing.',
+                    '2026-04-04 10:00:00 INFO  Health check OK - all containers nominal'
+                ],
+                'grafana': [
+                    'logger=settings t=2026-04-04T07:00:00Z level=info msg="Starting Grafana" version=10.2.3',
+                    'logger=server t=2026-04-04T07:00:01Z level=info msg="HTTP Server Listen" address=0.0.0.0:3001',
+                    'logger=plugins t=2026-04-04T07:00:02Z level=info msg="Plugin registered" pluginId=grafana-piechart-panel',
+                    'logger=sqlstore t=2026-04-04T07:00:03Z level=info msg="Database ready"',
+                    'logger=http.server t=2026-04-04T09:00:00Z level=info msg="Request Completed" method=GET path=/api/dashboards status=200',
+                    'logger=alerting t=2026-04-04T10:00:00Z level=info msg="Evaluating alert rules"'
+                ]
+            };
+            var dockerLogs = dockerLogsMap[dockerLogsTarget];
+            if (dockerLogs) {
+                dockerLogs.forEach(function (line) { addLine(line); });
+            } else {
+                addLine('Error: No such container: ' + dockerLogsTarget, 'err');
+                addLine('Running containers: fufuizm-web, ai-pipeline, grafana');
+            }
+        } else if (c === 'docker stop fufuizm-web' || c === 'docker stop portfolio-ui') {
+            var dockerStopName = c === 'docker stop fufuizm-web' ? 'fufuizm-web' : 'portfolio-ui';
+            addLine(dockerStopName, 'ok');
             setTimeout(function () {
                 var overlay = document.getElementById('nginx-502-overlay');
                 if (overlay) {
@@ -1793,15 +1871,16 @@ runBootSequence();
                     overlay.setAttribute('aria-hidden', 'false');
                 }
             }, 600);
-        } else if (c === 'docker start portfolio-ui') {
+        } else if (c === 'docker start fufuizm-web' || c === 'docker start portfolio-ui') {
+            var dockerStartName = c === 'docker start fufuizm-web' ? 'fufuizm-web' : 'portfolio-ui';
             var overlay502 = document.getElementById('nginx-502-overlay');
             if (overlay502 && overlay502.classList.contains('active')) {
                 overlay502.classList.remove('active');
                 overlay502.setAttribute('aria-hidden', 'true');
-                addLine('portfolio-ui', 'ok');
+                addLine(dockerStartName, 'ok');
             } else {
-                addLine('portfolio-ui', 'ok');
-                addLine('[ OK ] container portfolio-ui already running', 'ok');
+                addLine(dockerStartName, 'ok');
+                addLine('[ OK ] container ' + dockerStartName + ' already running', 'ok');
             }
 
         // ===== Kubernetes Commands =====
