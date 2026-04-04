@@ -1853,13 +1853,14 @@ runBootSequence();
             }, 1200);
         } else if (c === 'traceroute fufuizm.com' || c === 'traceroute' || c === 'tracert fufuizm.com') {
             addLine('traceroute to fufuizm.com (192.168.20.10), 30 hops max, 60 byte packets', 'ok');
+            function trMs(base) { return (base + Math.random()).toFixed(3) + ' ms'; }
             var hops = [
-                ' 1  router.local (192.168.1.1)         1.' + (Math.floor(Math.random() * 900) + 100) + ' ms',
-                ' 2  isp-gateway (10.0.0.1)            14.' + (Math.floor(Math.random() * 900) + 100) + ' ms',
-                ' 3  cloudflare-edge (1.1.1.1)          22.' + (Math.floor(Math.random() * 900) + 100) + ' ms',
-                ' 4  pfsense-firewall (10.8.0.1)        35.' + (Math.floor(Math.random() * 900) + 100) + ' ms  [VPN Tunnel]',
-                ' 5  dmz-nginx-proxy (192.168.10.5)     36.' + (Math.floor(Math.random() * 900) + 100) + ' ms',
-                ' 6  docker-host.lan (192.168.20.10)    36.' + (Math.floor(Math.random() * 900) + 100) + ' ms'
+                ' 1  router.local (192.168.1.1)         ' + trMs(1),
+                ' 2  isp-gateway (10.0.0.1)            ' + trMs(14),
+                ' 3  cloudflare-edge (1.1.1.1)          ' + trMs(22),
+                ' 4  pfsense-firewall (10.8.0.1)        ' + trMs(35) + '  [VPN Tunnel]',
+                ' 5  dmz-nginx-proxy (192.168.10.5)     ' + trMs(36),
+                ' 6  docker-host.lan (192.168.20.10)    ' + trMs(36)
             ];
             hops.forEach(function (hop, i) {
                 setTimeout(function () { addLine(hop); }, (i + 1) * 350);
@@ -2710,7 +2711,7 @@ function stopMatrixRain() {
                 } else {
                     stopMatrixRain();
                     if (promptEl) promptEl.textContent = 'furkan@devops:~$';
-                    if (window.cliAddLine) window.cliAddLine('[ Hacker mode deactivated ]', 'err');
+                    if (window.cliAddLine) window.cliAddLine('[ Hacker mode deactivated ]', 'ok');
                 }
             }
         } else {
