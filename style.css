@@ -2037,6 +2037,7 @@ body {
     display: none !important;
 }
 
+/* !important overrides any inline drag-position styles set by JS */
 .win-maximized {
     position: fixed !important;
     left: 0 !important;

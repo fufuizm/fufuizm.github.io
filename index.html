@@ -2874,7 +2874,7 @@ function stopMatrixRain() {
 
     if (!taskbarApps) return;
 
-    var highestZ = 5000;
+    var highestZ = 5000; // starting z-index above general content layers
 
     document.querySelectorAll('.terminal-window').forEach(function (win, idx) {
         var header = win.querySelector('.terminal-header');
@@ -2958,7 +2958,7 @@ function stopMatrixRain() {
             savedPos = getInlinePos();
             win.classList.add('win-hidden');
             taskbarBtn.className = 'taskbar-win-btn win-state-minimized';
-            taskbarBtn.textContent = '\u25ac ' + winTitle;
+            taskbarBtn.textContent = '\u25ac ' + winTitle; // ▬ minimize indicator
             taskbarBtn.style.display = 'flex';
         }
 
