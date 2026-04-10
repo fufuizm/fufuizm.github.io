@@ -1257,10 +1257,28 @@ runBootSequence();
             clearInterval(destroyInterval);
             document.body.innerHTML = '';
             document.body.style.cssText = 'margin:0;padding:0;background:#000;';
+            var wrap = document.createElement('div');
+            wrap.style.cssText = 'position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;font-family:"JetBrains Mono",monospace;color:#fff;';
             var msg = document.createElement('div');
-            msg.style.cssText = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;font-family:"JetBrains Mono",monospace;color:#fff;font-size:1.5rem;letter-spacing:3px;';
+            msg.style.cssText = 'font-size:1.5rem;letter-spacing:3px;';
             msg.textContent = 'System Halted.';
-            document.body.appendChild(msg);
+            var rebootMsg = document.createElement('div');
+            rebootMsg.style.cssText = 'font-size:0.9rem;color:#aaa;letter-spacing:1px;';
+            var countdown = 5;
+            rebootMsg.textContent = 'Rebooting in ' + countdown + '...';
+            wrap.appendChild(msg);
+            wrap.appendChild(rebootMsg);
+            document.body.appendChild(wrap);
+            var cdInterval = setInterval(function () {
+                countdown--;
+                if (countdown <= 0) {
+                    clearInterval(cdInterval);
+                    rebootMsg.textContent = 'Rebooting...';
+                    setTimeout(function () { location.reload(); }, 400);
+                } else {
+                    rebootMsg.textContent = 'Rebooting in ' + countdown + '...';
+                }
+            }, 1000);
         }, 4000);
     }
 
@@ -2837,6 +2855,17 @@ function stopMatrixRain() {
         var isDragging = false;
         var startX, startY;
 
+        function resetPosition() {
+            win.style.position = '';
+            win.style.left = '';
+            win.style.top = '';
+            win.style.width = '';
+            win.style.zIndex = '';
+            win.style.margin = '';
+            header.style.cursor = '';
+            isDragging = false;
+        }
+
         function startDrag(clientX, clientY) {
             var rect = win.getBoundingClientRect();
             win.style.position = 'fixed';
@@ -2861,6 +2890,37 @@ function stopMatrixRain() {
             if (!isDragging) return;
             isDragging = false;
             header.style.cursor = 'grab';
+        }
+
+        // ---- Title bar button actions ----
+        var redBtn    = header.querySelector('.t-btn-red');
+        var yellowBtn = header.querySelector('.t-btn-yellow');
+        var greenBtn  = header.querySelector('.t-btn-green');
+
+        // Red: reset to original position + collapse to header bar only
+        if (redBtn) {
+            redBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                resetPosition();
+                win.classList.add('win-minimized');
+            });
+        }
+
+        // Yellow: toggle minimize (collapse / expand content)
+        if (yellowBtn) {
+            yellowBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                win.classList.toggle('win-minimized');
+            });
+        }
+
+        // Green: restore to full view + reset position
+        if (greenBtn) {
+            greenBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                win.classList.remove('win-minimized');
+                resetPosition();
+            });
         }
 
         header.addEventListener('mousedown', function (e) {
