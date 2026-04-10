@@ -831,12 +831,6 @@ resource "docker_container" "grafana" {
 <!-- Interactive Mouse-Tracking Logs -->
 <div id="bg-logs" aria-hidden="true"></div>
 
-<!-- OS Taskbar -->
-<div id="os-taskbar" aria-label="Taskbar">
-  <div id="taskbar-apps" role="toolbar" aria-label="Open windows"></div>
-  <div id="taskbar-clock" aria-live="polite" aria-atomic="true"></div>
-</div>
-
 <!-- Vim Overlay -->
 <div id="vim-overlay" tabindex="-1" aria-hidden="true">
   <div id="vim-main"></div>
@@ -2854,46 +2848,18 @@ function stopMatrixRain() {
     });
 }());
 
-// ===== Web OS Window Manager =====
+// ===== Window Manager =====
 (function () {
-    var taskbarApps = document.getElementById('taskbar-apps');
-    var taskbarClock = document.getElementById('taskbar-clock');
-
-    // Taskbar clock
-    if (taskbarClock) {
-        function updateClock() {
-            var now = new Date();
-            var h = String(now.getHours()).padStart(2, '0');
-            var m = String(now.getMinutes()).padStart(2, '0');
-            var s = String(now.getSeconds()).padStart(2, '0');
-            taskbarClock.textContent = h + ':' + m + ':' + s;
-        }
-        updateClock();
-        setInterval(updateClock, 1000);
-    }
-
-    if (!taskbarApps) return;
-
     var highestZ = 5000; // starting z-index above general content layers
 
-    document.querySelectorAll('.terminal-window').forEach(function (win, idx) {
+    document.querySelectorAll('.terminal-window').forEach(function (win) {
         var header = win.querySelector('.terminal-header');
         if (!header) return;
 
-        var winTitle = win.getAttribute('data-win-title') || ('Window ' + (idx + 1));
         var isDragging = false;
         var startX, startY;
-        var savedPos = null;       // saved before minimize
         var isMaximized = false;
         var savedBeforeMax = null; // saved before maximize
-
-        // Create taskbar button (hidden by default)
-        var taskbarBtn = document.createElement('button');
-        taskbarBtn.className = 'taskbar-win-btn win-state-closed';
-        taskbarBtn.textContent = winTitle;
-        taskbarBtn.style.display = 'none';
-        taskbarBtn.addEventListener('click', function () { restoreWindow(); });
-        taskbarApps.appendChild(taskbarBtn);
 
         function bringToFront() {
             highestZ++;
@@ -2933,33 +2899,34 @@ function stopMatrixRain() {
         // Red: close — hide window, reset to in-flow position
         function closeWindow() {
             win.classList.remove('win-maximized');
+            win.classList.remove('win-minimized');
             isMaximized = false;
             isDragging = false;
-            savedPos = null;
             savedBeforeMax = null;
             clearInlinePos();
             header.style.cursor = '';
             win.classList.add('win-hidden');
-            taskbarBtn.className = 'taskbar-win-btn win-state-closed';
-            taskbarBtn.textContent = winTitle;
-            taskbarBtn.style.display = 'flex';
         }
 
-        // Yellow: minimize — hide window, remember last position
+        // Yellow: minimize — collapse window to header bar only
         function minimizeWindow() {
-            if (isMaximized) {
-                win.classList.remove('win-maximized');
-                isMaximized = false;
-                if (savedBeforeMax) {
-                    applyInlinePos(savedBeforeMax);
-                    savedBeforeMax = null;
+            if (win.classList.contains('win-minimized')) {
+                // Restore from minimized
+                win.classList.remove('win-minimized');
+                header.style.cursor = isMaximized ? 'default' : 'grab';
+            } else {
+                if (isMaximized) {
+                    // Restore from maximized before minimizing
+                    win.classList.remove('win-maximized');
+                    isMaximized = false;
+                    if (savedBeforeMax) {
+                        applyInlinePos(savedBeforeMax);
+                        savedBeforeMax = null;
+                    }
                 }
+                win.classList.add('win-minimized');
+                header.style.cursor = 'grab';
             }
-            savedPos = getInlinePos();
-            win.classList.add('win-hidden');
-            taskbarBtn.className = 'taskbar-win-btn win-state-minimized';
-            taskbarBtn.textContent = '\u25ac ' + winTitle; // ▬ minimize indicator
-            taskbarBtn.style.display = 'flex';
         }
 
         // Green: maximize / restore
@@ -2975,26 +2942,12 @@ function stopMatrixRain() {
             } else {
                 savedBeforeMax = getInlinePos();
                 clearInlinePos();
+                win.classList.remove('win-minimized');
                 win.classList.add('win-maximized');
                 bringToFront();
                 isMaximized = true;
                 header.style.cursor = 'default';
             }
-        }
-
-        // Restore from taskbar
-        function restoreWindow() {
-            win.classList.remove('win-hidden');
-            win.classList.remove('win-maximized');
-            isMaximized = false;
-            if (savedPos && savedPos.position === 'fixed') {
-                applyInlinePos(savedPos);
-                bringToFront();
-            } else {
-                clearInlinePos();
-            }
-            savedPos = null;
-            taskbarBtn.style.display = 'none';
         }
 
         function startDrag(clientX, clientY) {
