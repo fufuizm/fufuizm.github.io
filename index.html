@@ -86,11 +86,12 @@
 <img src="Fufuizm.PNG" alt="Furkan Sarıca - DevOps ve Ağ Mühendisi Portfolyo Fotoğrafı" class="about-avatar">
 </div>
 <div class="about-text">
-<div class="terminal-window">
+<div class="terminal-window" data-win-title="~/profile.md">
 <div class="terminal-header">
 <span class="t-btn t-btn-red"></span>
 <span class="t-btn t-btn-yellow"></span>
 <span class="t-btn t-btn-green"></span>
+<span class="terminal-title">~/profile.md</span>
 </div>
 <pre><code class="comment"># DevOps & Network Engineer in training</code>
 <code class="keyword">class</code> <code class="function">SystemsAdmin</code>:
@@ -765,11 +766,12 @@ resource "docker_container" "grafana" {
     <p class="section-subtitle">furkan@devops:~$ _</p>
   </div>
   <div id="server-metrics"></div>
-  <div class="terminal-window">
+  <div class="terminal-window" data-win-title="furkan@devops:~$">
     <div class="terminal-header">
       <span class="t-btn t-btn-red"></span>
       <span class="t-btn t-btn-yellow"></span>
       <span class="t-btn t-btn-green"></span>
+      <span class="terminal-title">furkan@devops:~$</span>
     </div>
     <div id="cli-box">
       <div id="ping-pong-overlay">
@@ -828,6 +830,12 @@ resource "docker_container" "grafana" {
 
 <!-- Interactive Mouse-Tracking Logs -->
 <div id="bg-logs" aria-hidden="true"></div>
+
+<!-- OS Taskbar -->
+<div id="os-taskbar" aria-label="Taskbar">
+  <div id="taskbar-apps" role="toolbar" aria-label="Open windows"></div>
+  <div id="taskbar-clock" aria-live="polite" aria-atomic="true"></div>
+</div>
 
 <!-- Vim Overlay -->
 <div id="vim-overlay" tabindex="-1" aria-hidden="true">
@@ -2846,34 +2854,158 @@ function stopMatrixRain() {
     });
 }());
 
-// ===== Feature: Draggable Terminal Windows =====
+// ===== Web OS Window Manager =====
 (function () {
-    document.querySelectorAll('.terminal-window').forEach(function (win) {
+    var taskbarApps = document.getElementById('taskbar-apps');
+    var taskbarClock = document.getElementById('taskbar-clock');
+
+    // Taskbar clock
+    if (taskbarClock) {
+        function updateClock() {
+            var now = new Date();
+            var h = String(now.getHours()).padStart(2, '0');
+            var m = String(now.getMinutes()).padStart(2, '0');
+            var s = String(now.getSeconds()).padStart(2, '0');
+            taskbarClock.textContent = h + ':' + m + ':' + s;
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+    }
+
+    if (!taskbarApps) return;
+
+    var highestZ = 5000;
+
+    document.querySelectorAll('.terminal-window').forEach(function (win, idx) {
         var header = win.querySelector('.terminal-header');
         if (!header) return;
 
+        var winTitle = win.getAttribute('data-win-title') || ('Window ' + (idx + 1));
         var isDragging = false;
         var startX, startY;
+        var savedPos = null;       // saved before minimize
+        var isMaximized = false;
+        var savedBeforeMax = null; // saved before maximize
 
-        function resetPosition() {
+        // Create taskbar button (hidden by default)
+        var taskbarBtn = document.createElement('button');
+        taskbarBtn.className = 'taskbar-win-btn win-state-closed';
+        taskbarBtn.textContent = winTitle;
+        taskbarBtn.style.display = 'none';
+        taskbarBtn.addEventListener('click', function () { restoreWindow(); });
+        taskbarApps.appendChild(taskbarBtn);
+
+        function bringToFront() {
+            highestZ++;
+            win.style.zIndex = String(highestZ);
+        }
+
+        function clearInlinePos() {
             win.style.position = '';
             win.style.left = '';
             win.style.top = '';
             win.style.width = '';
-            win.style.zIndex = '';
+            win.style.height = '';
             win.style.margin = '';
-            header.style.cursor = '';
+            win.style.zIndex = '';
+        }
+
+        function getInlinePos() {
+            return {
+                position: win.style.position,
+                left:     win.style.left,
+                top:      win.style.top,
+                width:    win.style.width,
+                zIndex:   win.style.zIndex,
+                margin:   win.style.margin
+            };
+        }
+
+        function applyInlinePos(pos) {
+            win.style.position = pos.position || '';
+            win.style.left     = pos.left     || '';
+            win.style.top      = pos.top      || '';
+            win.style.width    = pos.width    || '';
+            win.style.zIndex   = pos.zIndex   || '';
+            win.style.margin   = pos.margin   || '';
+        }
+
+        // Red: close — hide window, reset to in-flow position
+        function closeWindow() {
+            win.classList.remove('win-maximized');
+            isMaximized = false;
             isDragging = false;
+            savedPos = null;
+            savedBeforeMax = null;
+            clearInlinePos();
+            header.style.cursor = '';
+            win.classList.add('win-hidden');
+            taskbarBtn.className = 'taskbar-win-btn win-state-closed';
+            taskbarBtn.textContent = winTitle;
+            taskbarBtn.style.display = 'flex';
+        }
+
+        // Yellow: minimize — hide window, remember last position
+        function minimizeWindow() {
+            if (isMaximized) {
+                win.classList.remove('win-maximized');
+                isMaximized = false;
+                if (savedBeforeMax) {
+                    applyInlinePos(savedBeforeMax);
+                    savedBeforeMax = null;
+                }
+            }
+            savedPos = getInlinePos();
+            win.classList.add('win-hidden');
+            taskbarBtn.className = 'taskbar-win-btn win-state-minimized';
+            taskbarBtn.textContent = '\u25ac ' + winTitle;
+            taskbarBtn.style.display = 'flex';
+        }
+
+        // Green: maximize / restore
+        function toggleMaximize() {
+            if (isMaximized) {
+                win.classList.remove('win-maximized');
+                isMaximized = false;
+                if (savedBeforeMax) {
+                    applyInlinePos(savedBeforeMax);
+                    savedBeforeMax = null;
+                }
+                header.style.cursor = 'grab';
+            } else {
+                savedBeforeMax = getInlinePos();
+                clearInlinePos();
+                win.classList.add('win-maximized');
+                bringToFront();
+                isMaximized = true;
+                header.style.cursor = 'default';
+            }
+        }
+
+        // Restore from taskbar
+        function restoreWindow() {
+            win.classList.remove('win-hidden');
+            win.classList.remove('win-maximized');
+            isMaximized = false;
+            if (savedPos && savedPos.position === 'fixed') {
+                applyInlinePos(savedPos);
+                bringToFront();
+            } else {
+                clearInlinePos();
+            }
+            savedPos = null;
+            taskbarBtn.style.display = 'none';
         }
 
         function startDrag(clientX, clientY) {
+            if (isMaximized) return;
             var rect = win.getBoundingClientRect();
             win.style.position = 'fixed';
             win.style.left = rect.left + 'px';
-            win.style.top = rect.top + 'px';
+            win.style.top  = rect.top  + 'px';
             win.style.width = rect.width + 'px';
-            win.style.zIndex = '5000';
             win.style.margin = '0';
+            bringToFront();
             startX = clientX - rect.left;
             startY = clientY - rect.top;
             isDragging = true;
@@ -2883,7 +3015,7 @@ function stopMatrixRain() {
         function doDrag(clientX, clientY) {
             if (!isDragging) return;
             win.style.left = (clientX - startX) + 'px';
-            win.style.top = (clientY - startY) + 'px';
+            win.style.top  = (clientY - startY) + 'px';
         }
 
         function endDrag() {
@@ -2892,36 +3024,13 @@ function stopMatrixRain() {
             header.style.cursor = 'grab';
         }
 
-        // ---- Title bar button actions ----
         var redBtn    = header.querySelector('.t-btn-red');
         var yellowBtn = header.querySelector('.t-btn-yellow');
         var greenBtn  = header.querySelector('.t-btn-green');
 
-        // Red: reset to original position + collapse to header bar only
-        if (redBtn) {
-            redBtn.addEventListener('click', function (e) {
-                e.stopPropagation();
-                resetPosition();
-                win.classList.add('win-minimized');
-            });
-        }
-
-        // Yellow: toggle minimize (collapse / expand content)
-        if (yellowBtn) {
-            yellowBtn.addEventListener('click', function (e) {
-                e.stopPropagation();
-                win.classList.toggle('win-minimized');
-            });
-        }
-
-        // Green: restore to full view + reset position
-        if (greenBtn) {
-            greenBtn.addEventListener('click', function (e) {
-                e.stopPropagation();
-                win.classList.remove('win-minimized');
-                resetPosition();
-            });
-        }
+        if (redBtn)    redBtn.addEventListener('click',    function (e) { e.stopPropagation(); closeWindow(); });
+        if (yellowBtn) yellowBtn.addEventListener('click', function (e) { e.stopPropagation(); minimizeWindow(); });
+        if (greenBtn)  greenBtn.addEventListener('click',  function (e) { e.stopPropagation(); toggleMaximize(); });
 
         header.addEventListener('mousedown', function (e) {
             if (e.target.classList.contains('t-btn')) return;
