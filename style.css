@@ -1236,6 +1236,9 @@ body.glitch-mode {
     font-size: 0.78rem;
     color: var(--text-muted);
     min-height: 1.2em;
+    max-height: 10em;
+    overflow-y: auto;
+    line-height: 1.5;
 }
 
 /* ===== 502 Bad Gateway Overlay ===== */
