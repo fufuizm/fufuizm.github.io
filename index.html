@@ -815,7 +815,7 @@ resource "docker_container" "grafana" {
 
 <!-- AFK Screensaver -->
 <div id="screensaver" role="presentation" aria-hidden="true">
-  <div id="screensaver-text">&lt; fufuizm /&gt;</div>
+  <pre id="screensaver-clock"></pre>
 </div>
 
 <!-- 502 Bad Gateway Overlay -->
@@ -2491,29 +2491,106 @@ runBootSequence();
     window.stopPingPong = stopGame;
 }());
 
-// ===== Feature: AFK Screensaver (DVD Logo style) =====
+// ===== Feature: AFK Screensaver (Terminal Analog Clock) =====
 (function () {
     var overlay = document.getElementById('screensaver');
-    var textEl = document.getElementById('screensaver-text');
-    if (!overlay || !textEl) return;
+    var clockEl = document.getElementById('screensaver-clock');
+    if (!overlay || !clockEl) return;
 
     var isActive = false;
     var idleTimer = null;
-    var animId = null;
-    var x = 60, y = 60, vx = 2, vy = 1.5;
-    var colors = ['#00ff88', '#00d4ff', '#bd93f9', '#ffb000', '#ff5f57', '#ff79c6'];
-    var colorIdx = 0;
+    var clockInterval = null;
     var IDLE_MS = 60000;
+
+    // Grid dimensions – horizontal radius is ~2× vertical to look circular in monospace
+    var ROWS = 21, COLS = 43, CY = 10, CX = 21, RY = 9, RX = 19;
+    // Oversampling factor: ensures dense character coverage along each hand line
+    var HAND_STEPS_PER_CELL = 4;
+
+    function setCell(grid, r, c, ch) {
+        if (r >= 0 && r < ROWS && c >= 0 && c < COLS) {
+            grid[r][c] = ch;
+        }
+    }
+
+    // Draw a hand from the centre to its tip using the given character
+    function drawHand(grid, angleRad, lenFrac, ch) {
+        var steps = Math.ceil(Math.max(RY, RX) * lenFrac * HAND_STEPS_PER_CELL);
+        for (var i = 1; i <= steps; i++) {
+            var t = (i / steps) * lenFrac;
+            var r = Math.round(CY + RY * t * Math.sin(angleRad));
+            var c = Math.round(CX + RX * t * Math.cos(angleRad));
+            setCell(grid, r, c, ch);
+        }
+    }
+
+    function drawClock() {
+        var now = new Date();
+        var H = now.getHours() % 12;
+        var M = now.getMinutes();
+        var S = now.getSeconds();
+
+        // Empty grid
+        var grid = [];
+        for (var r = 0; r < ROWS; r++) {
+            grid.push(new Array(COLS).fill(' '));
+        }
+
+        // Clock face circle (dots)
+        for (var deg = 0; deg < 360; deg++) {
+            var a = deg * Math.PI / 180;
+            var cr = Math.round(CY + RY * Math.sin(a));
+            var cc = Math.round(CX + RX * Math.cos(a));
+            if (cr >= 0 && cr < ROWS && cc >= 0 && cc < COLS && grid[cr][cc] === ' ') {
+                grid[cr][cc] = '.';
+            }
+        }
+
+        // Hour numbers on the face (overwrite dots)
+        for (var hr = 1; hr <= 12; hr++) {
+            var ha = (hr / 12) * 2 * Math.PI - Math.PI / 2;
+            var mr = Math.round(CY + RY * Math.sin(ha));
+            var mc = Math.round(CX + RX * Math.cos(ha));
+            var label = String(hr);
+            var sc = mc - Math.floor(label.length / 2);
+            for (var li = 0; li < label.length; li++) {
+                setCell(grid, mr, sc + li, label[li]);
+            }
+        }
+
+        // Hand angles – clockwise from 12 o'clock (= −π/2 from positive x-axis)
+        var sAngle = (S / 60) * 2 * Math.PI - Math.PI / 2;
+        var mAngle = ((M + S / 60) / 60) * 2 * Math.PI - Math.PI / 2;
+        var hAngle = ((H + M / 60) / 12) * 2 * Math.PI - Math.PI / 2;
+
+        // Draw hands – h first so s ends up on top
+        drawHand(grid, hAngle, 0.50, 'h');
+        drawHand(grid, mAngle, 0.75, 'm');
+        drawHand(grid, sAngle, 0.88, 's');
+
+        // Centre pivot
+        setCell(grid, CY, CX, '+');
+
+        // Digital readout at bottom
+        var timeStr = '[ ' +
+            String(now.getHours()).padStart(2, '0') + ':' +
+            String(M).padStart(2, '0') + ':' +
+            String(S).padStart(2, '0') + ' ]';
+        var tstart = Math.floor((COLS - timeStr.length) / 2);
+        for (var ci = 0; ci < timeStr.length; ci++) {
+            setCell(grid, ROWS - 1, tstart + ci, timeStr[ci]);
+        }
+
+        clockEl.textContent = grid.map(function (row) { return row.join(''); }).join('\n');
+    }
 
     function show() {
         if (isActive) return;
         isActive = true;
-        overlay.style.display = 'block';
+        overlay.style.display = 'flex';
         overlay.setAttribute('aria-hidden', 'false');
-        x = Math.random() * Math.max(1, window.innerWidth * 0.4);
-        y = Math.random() * Math.max(1, window.innerHeight * 0.4);
-        textEl.style.color = colors[colorIdx];
-        animate();
+        drawClock();
+        clockInterval = setInterval(drawClock, 1000);
     }
 
     function hide() {
@@ -2521,33 +2598,8 @@ runBootSequence();
         isActive = false;
         overlay.style.display = 'none';
         overlay.setAttribute('aria-hidden', 'true');
-        if (animId) cancelAnimationFrame(animId);
+        clearInterval(clockInterval);
         resetIdle();
-    }
-
-    function animate() {
-        if (!isActive) return;
-        var tw = textEl.offsetWidth;
-        var th = textEl.offsetHeight;
-        var W = window.innerWidth;
-        var H = window.innerHeight;
-        var hit = false;
-
-        x += vx; y += vy;
-
-        if (x + tw >= W) { x = W - tw; vx = -Math.abs(vx); hit = true; }
-        if (x <= 0)      { x = 0;      vx =  Math.abs(vx); hit = true; }
-        if (y + th >= H) { y = H - th; vy = -Math.abs(vy); hit = true; }
-        if (y <= 0)      { y = 0;      vy =  Math.abs(vy); hit = true; }
-
-        if (hit) {
-            colorIdx = (colorIdx + 1) % colors.length;
-            textEl.style.color = colors[colorIdx];
-        }
-
-        textEl.style.left = x + 'px';
-        textEl.style.top = y + 'px';
-        animId = requestAnimationFrame(animate);
     }
 
     function resetIdle() {

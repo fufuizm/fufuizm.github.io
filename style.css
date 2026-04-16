@@ -1026,17 +1026,20 @@ body.hacker-mode .terminal-window {
     z-index: 99999;
     overflow: hidden;
     cursor: none;
+    align-items: center;
+    justify-content: center;
 }
 
-#screensaver-text {
-    position: absolute;
+#screensaver-clock {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 1.8rem;
-    font-weight: 600;
-    white-space: nowrap;
-    text-shadow: 0 0 24px currentColor;
+    font-size: clamp(0.5rem, 1.8vw, 0.85rem);
+    line-height: 1.35;
+    color: #00ff88;
+    text-shadow: 0 0 10px #00ff88, 0 0 3px #00ff88;
     pointer-events: none;
     user-select: none;
+    margin: 0;
+    white-space: pre;
 }
 
 /* ===== Ping Pong Overlay ===== */
