@@ -1031,15 +1031,18 @@ body.hacker-mode .terminal-window {
 }
 
 #screensaver-clock {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: clamp(0.5rem, 1.8vw, 0.85rem);
-    line-height: 1.35;
+    font-family: 'JetBrains Mono', 'Courier New', Courier, monospace;
+    font-size: 16px;
+    line-height: 1.267;
+    letter-spacing: 0;
     color: #00ff88;
     text-shadow: 0 0 10px #00ff88, 0 0 3px #00ff88;
     pointer-events: none;
     user-select: none;
     margin: 0;
     white-space: pre;
+    display: inline-block;
+    transform-origin: center center;
 }
 
 /* ===== Ping Pong Overlay ===== */
