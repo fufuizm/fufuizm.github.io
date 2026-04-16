@@ -2504,6 +2504,8 @@ runBootSequence();
 
     // Grid dimensions – horizontal radius is ~2× vertical to look circular in monospace
     var ROWS = 21, COLS = 43, CY = 10, CX = 21, RY = 9, RX = 19;
+    // Oversampling factor: ensures dense character coverage along each hand line
+    var HAND_STEPS_PER_CELL = 4;
 
     function setCell(grid, r, c, ch) {
         if (r >= 0 && r < ROWS && c >= 0 && c < COLS) {
@@ -2513,7 +2515,7 @@ runBootSequence();
 
     // Draw a hand from the centre to its tip using the given character
     function drawHand(grid, angleRad, lenFrac, ch) {
-        var steps = Math.ceil(Math.max(RY, RX) * lenFrac * 4);
+        var steps = Math.ceil(Math.max(RY, RX) * lenFrac * HAND_STEPS_PER_CELL);
         for (var i = 1; i <= steps; i++) {
             var t = (i / steps) * lenFrac;
             var r = Math.round(CY + RY * t * Math.sin(angleRad));
