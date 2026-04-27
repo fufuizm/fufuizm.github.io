@@ -394,97 +394,90 @@ volumes:
 </div>
 <div class="project-card">
 <div class="project-header">
-<div class="project-title"><span data-lang-tr>Sanal Ağ Laboratuvarı ve VPN Altyapısı</span><span data-lang-en>Virtual Network Lab &amp; VPN Infrastructure</span></div>
-<div class="project-tag"><span data-lang-tr>KİŞİSEL_PROJE | Ağ | VPN | Güvenlik</span><span data-lang-en>PERSONAL_PROJECT | Networking | VPN | Security</span></div>
+<div class="project-title"><span data-lang-tr>Yapay Zeka Destekli Operasyonel CRM ve Karar Destek Platformu</span><span data-lang-en>AI-Powered Operational CRM &amp; Decision Support Platform</span></div>
+<div class="project-tag"><span data-lang-tr>KİŞİSEL_PROJE | CRM | Yapay Zeka | Karar Destek | Veri Analizi</span><span data-lang-en>PERSONAL_PROJECT | CRM | AI | Decision Support | Data Analytics</span></div>
 </div>
 <div class="project-body">
 <ul data-lang-tr-block>
-<li>VirtualBox üzerinde router, DNS sunucu ve istemci rollerinde çoklu Linux VM'ler ile ağ topolojisi</li>
-<li>Internal network ve DMZ benzeri segmentler ile internet erişim senaryoları</li>
-<li>ping, traceroute, netstat/ss, tcpdump, nmap ile TCP/IP, DNS, HTTP/HTTPS trafik analizi</li>
-<li>SSH anahtar tabanlı kimlik doğrulama ve ufw firewall kuralları</li>
-<li>WireGuard/OpenVPN ile iç ağa güvenli uzaktan erişim ve servis yönetimi</li>
+<li>PostgreSQL tabanlı müşteri, iletişim ve satış verisi yönetimi; ilişkisel veri modeli tasarımı</li>
+<li>Python ve LLM API entegrasyonu ile müşteri segmentasyonu, satış tahmini ve öneri motoru</li>
+<li>Grafana dashboard'ları ile müşteri metrikleri, satış hunisi ve karar destek görselleştirmeleri</li>
+<li>REST API aracılığıyla dış sistemlerden veri entegrasyonu ve otomatik raporlama pipeline'ı</li>
+<li>Rol tabanlı erişim kontrolü (RBAC) ve denetim kaydı (audit log) ile güvenli veri erişimi</li>
+<li>Servis sağlığı ve veri pipeline'ı için Grafana alert'leri ile proaktif izleme</li>
 </ul>
 <ul data-lang-en-block>
-<li>Network topology with multiple Linux VMs acting as router, DNS server and clients on VirtualBox</li>
-<li>Internal network and DMZ-like segments with internet access scenarios</li>
-<li>TCP/IP, DNS, HTTP/HTTPS traffic analysis with ping, traceroute, netstat/ss, tcpdump, nmap</li>
-<li>SSH key-based authentication and ufw firewall rules</li>
-<li>Secure remote access to internal network via WireGuard/OpenVPN for service management</li>
+<li>Customer, contact and sales data management with PostgreSQL; relational data model design</li>
+<li>Customer segmentation, sales forecasting and recommendation engine via Python and LLM API integration</li>
+<li>Grafana dashboards for customer metrics, sales funnel and decision-support visualizations</li>
+<li>External data integration via REST API and automated reporting pipeline</li>
+<li>Secure data access with role-based access control (RBAC) and audit logging</li>
+<li>Proactive monitoring with Grafana alerts for service health and data pipeline status</li>
 </ul>
-<pre class="ascii-topology"><code>[Internet]
-    │
-[pfSense/Firewall] ──(VPN: 10.8.0.0/24)── [Remote User]
-    │
-    ├─ [VLAN 10 : DMZ] ── Nginx Reverse Proxy
-    │
-    └─ [VLAN 20 : LAN] ── Docker Host (192.168.20.10)</code></pre>
 </div>
 <div class="project-tech">
-<span>VirtualBox</span><span>Linux</span><span>SSH</span><span>ufw</span><span>WireGuard</span><span>OpenVPN</span><span>tcpdump</span><span>nmap</span>
+<span>PostgreSQL</span><span>Python</span><span>Grafana</span><span>REST API</span><span>LLM API</span><span>Docker</span><span>docker-compose</span><span>Bash</span>
 </div>
 <div class="slo-badges">
-  <span class="slo-badge" title="Service Level Objective — target tunnel uptime">SLO: 99.0%</span>
-  <span class="slo-badge rto" title="Recovery Time Objective — max acceptable downtime">RTO: 30m</span>
-  <span class="slo-badge rpo" title="Recovery Point Objective — max config loss window">RPO: 1h</span>
+  <span class="slo-badge" title="Service Level Objective — platform availability">SLO: 99.5%</span>
+  <span class="slo-badge rto" title="Recovery Time Objective — max acceptable downtime">RTO: 20m</span>
+  <span class="slo-badge rpo" title="Recovery Point Objective — max data loss window">RPO: 1h</span>
 </div>
 <div class="postmortem-block">
   <div class="postmortem-title">⚠ <span data-lang-tr>Olay / Postmortem</span><span data-lang-en>Incident / Postmortem</span></div>
   <ul class="postmortem-list">
-    <li><span class="pm-label"><span data-lang-tr>Sorun</span><span data-lang-en>Problem</span></span> <span data-lang-tr>WireGuard tüneli VM yeniden başlatmasının ardından otomatik olarak kalkmıyor.</span><span data-lang-en>WireGuard tunnel not coming up automatically after VM reboot.</span></li>
-    <li><span class="pm-label"><span data-lang-tr>Kök neden</span><span data-lang-en>Root cause</span></span> <span data-lang-tr>systemd servisi enable edilmemiş, systemctl enable wg-quick@wg0 komutu eksikti.</span><span data-lang-en>systemd service not enabled — missing <code>systemctl enable wg-quick@wg0</code>.</span></li>
-    <li><span class="pm-label">Fix</span> <span data-lang-tr>Tüm VM'lerde <code>systemctl enable</code> çalıştırıldı ve boot testi yapıldı.</span><span data-lang-en>Ran <code>systemctl enable</code> on all VMs and added a post-reboot connectivity test to the runbook.</span></li>
-    <li><span class="pm-label"><span data-lang-tr>Ders</span><span data-lang-en>Lesson</span></span> <span data-lang-tr>Her servis değişikliğinden sonra reboot testi runbook'a eklenmeli.</span><span data-lang-en>Every service change must include a reboot test step in the runbook.</span></li>
+    <li><span class="pm-label"><span data-lang-tr>Sorun</span><span data-lang-en>Problem</span></span> <span data-lang-tr>LLM tabanlı öneri motoru, eksik müşteri verisi içerdiğinde hatalı tahminler üretiyordu.</span><span data-lang-en>LLM-based recommendation engine generating incorrect predictions when customer data contained null fields.</span></li>
+    <li><span class="pm-label"><span data-lang-tr>Kök neden</span><span data-lang-en>Root cause</span></span> <span data-lang-tr>Model giriş verisi doğrulama ve null değer işleme katmanı olmadan doğrudan API'ye gönderiliyordu.</span><span data-lang-en>Input data was forwarded directly to the LLM API without a validation or null-handling layer.</span></li>
+    <li><span class="pm-label">Fix</span> <span data-lang-tr>Giriş doğrulama katmanı eklendi; eksik alanlar için varsayılan değer atama ve uyarı mekanizması kuruldu.</span><span data-lang-en>Added input validation layer; implemented default value substitution and warning flags for missing fields.</span></li>
+    <li><span class="pm-label"><span data-lang-tr>Ders</span><span data-lang-en>Lesson</span></span> <span data-lang-tr>Gerçek dünya verisi AI modellerine gönderilmeden önce her zaman veri kalitesi doğrulaması yapılmalı.</span><span data-lang-en>Always enforce data quality validation before feeding real-world data to AI models.</span></li>
   </ul>
 </div>
 <div class="artifact-links">
   <span class="artifact-label"><span data-lang-tr>İndirilebilir Dosyalar:</span><span data-lang-en>Artifacts:</span></span>
-  <a href="artifacts/vpn-lab-topology.md" download class="artifact-btn">📐 <span data-lang-tr>Topoloji</span><span data-lang-en>Topology</span>.md</a>
-  <a href="artifacts/vpn-lab-runbook.md" download class="artifact-btn">📋 runbook.md</a>
+  <a href="artifacts/crm-schema.md" download class="artifact-btn">📐 <span data-lang-tr>Şema</span><span data-lang-en>Schema</span>.md</a>
+  <a href="artifacts/crm-runbook.md" download class="artifact-btn">📋 runbook.md</a>
 </div>
 <div class="iac-section">
-  <button class="iac-btn" data-target="iac-vpn-lab"><span data-lang-tr>[ Altyapıyı Dağıt (IaC) ]</span><span data-lang-en>[ Deploy this infra (IaC) ]</span></button>
-  <div class="iac-snippet" id="iac-vpn-lab" hidden>
-<div class="iac-copy-wrap"><button class="iac-copy-btn" data-iac="iac-vpn-lab"><span data-lang-tr>Kopyala</span><span data-lang-en>Copy</span></button></div>
-<pre class="iac-code"><span class="iac-comment"># wireguard-setup.yml — Ansible Playbook</span>
----
-- name: Configure WireGuard VPN Server
-  hosts: vpn_host
-  become: yes
-  vars:
-    wg_interface: wg0
-    wg_port: 51820
-    wg_network: "10.8.0.0/24"
-    server_ip: "10.8.0.1"
+  <button class="iac-btn" data-target="iac-crm"><span data-lang-tr>[ Altyapıyı Dağıt (IaC) ]</span><span data-lang-en>[ Deploy this infra (IaC) ]</span></button>
+  <div class="iac-snippet" id="iac-crm" hidden>
+<div class="iac-copy-wrap"><button class="iac-copy-btn" data-iac="iac-crm"><span data-lang-tr>Kopyala</span><span data-lang-en>Copy</span></button></div>
+<pre class="iac-code"><span class="iac-comment"># docker-compose.yml — AI-Powered CRM Platform</span>
+version: "3.9"
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      - POSTGRES_DB=crmdb
+      - POSTGRES_USER=crm
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
 
-  tasks:
-    - name: Install WireGuard
-      apt:
-        name: wireguard
-        state: present
-        update_cache: yes
+  api:
+    build: ./api
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://crm:${DB_PASSWORD}@db:5432/crmdb
+      - LLM_API_KEY=${LLM_API_KEY}
+      - RBAC_ENABLED=true
+    depends_on:
+      - db
 
-    - name: Generate server private key
-      shell: wg genkey
-      register: server_private_key
+  grafana:
+    image: grafana/grafana:latest
+    restart: always
+    ports:
+      - "127.0.0.1:3002:3000"
+    volumes:
+      - grafana-crm:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+      - GF_USERS_ALLOW_SIGN_UP=false
 
-    - name: Deploy wg0 config
-      template:
-        src: wg0.conf.j2
-        dest: /etc/wireguard/wg0.conf
-        mode: '0600'
-
-    - name: Enable and start WireGuard
-      systemd:
-        name: "wg-quick@{{ wg_interface }}"
-        enabled: yes
-        state: started
-
-    - name: Configure ufw rules
-      ufw:
-        rule: allow
-        port: "{{ wg_port }}"
-        proto: udp</pre>
+volumes:
+  pgdata:
+  grafana-crm:</pre>
   </div>
 </div>
 </div>
@@ -577,90 +570,97 @@ resource "docker_container" "grafana" {
 </div>
 <div class="project-card">
 <div class="project-header">
-<div class="project-title"><span data-lang-tr>Yapay Zeka Destekli Operasyonel CRM ve Karar Destek Platformu</span><span data-lang-en>AI-Powered Operational CRM &amp; Decision Support Platform</span></div>
-<div class="project-tag"><span data-lang-tr>KİŞİSEL_PROJE | CRM | Yapay Zeka | Karar Destek | Veri Analizi</span><span data-lang-en>PERSONAL_PROJECT | CRM | AI | Decision Support | Data Analytics</span></div>
+<div class="project-title"><span data-lang-tr>Sanal Ağ Laboratuvarı ve VPN Altyapısı</span><span data-lang-en>Virtual Network Lab &amp; VPN Infrastructure</span></div>
+<div class="project-tag"><span data-lang-tr>KİŞİSEL_PROJE | Ağ | VPN | Güvenlik</span><span data-lang-en>PERSONAL_PROJECT | Networking | VPN | Security</span></div>
 </div>
 <div class="project-body">
 <ul data-lang-tr-block>
-<li>PostgreSQL tabanlı müşteri, iletişim ve satış verisi yönetimi; ilişkisel veri modeli tasarımı</li>
-<li>Python ve LLM API entegrasyonu ile müşteri segmentasyonu, satış tahmini ve öneri motoru</li>
-<li>Grafana dashboard'ları ile müşteri metrikleri, satış hunisi ve karar destek görselleştirmeleri</li>
-<li>REST API aracılığıyla dış sistemlerden veri entegrasyonu ve otomatik raporlama pipeline'ı</li>
-<li>Rol tabanlı erişim kontrolü (RBAC) ve denetim kaydı (audit log) ile güvenli veri erişimi</li>
-<li>Servis sağlığı ve veri pipeline'ı için Grafana alert'leri ile proaktif izleme</li>
+<li>VirtualBox üzerinde router, DNS sunucu ve istemci rollerinde çoklu Linux VM'ler ile ağ topolojisi</li>
+<li>Internal network ve DMZ benzeri segmentler ile internet erişim senaryoları</li>
+<li>ping, traceroute, netstat/ss, tcpdump, nmap ile TCP/IP, DNS, HTTP/HTTPS trafik analizi</li>
+<li>SSH anahtar tabanlı kimlik doğrulama ve ufw firewall kuralları</li>
+<li>WireGuard/OpenVPN ile iç ağa güvenli uzaktan erişim ve servis yönetimi</li>
 </ul>
 <ul data-lang-en-block>
-<li>Customer, contact and sales data management with PostgreSQL; relational data model design</li>
-<li>Customer segmentation, sales forecasting and recommendation engine via Python and LLM API integration</li>
-<li>Grafana dashboards for customer metrics, sales funnel and decision-support visualizations</li>
-<li>External data integration via REST API and automated reporting pipeline</li>
-<li>Secure data access with role-based access control (RBAC) and audit logging</li>
-<li>Proactive monitoring with Grafana alerts for service health and data pipeline status</li>
+<li>Network topology with multiple Linux VMs acting as router, DNS server and clients on VirtualBox</li>
+<li>Internal network and DMZ-like segments with internet access scenarios</li>
+<li>TCP/IP, DNS, HTTP/HTTPS traffic analysis with ping, traceroute, netstat/ss, tcpdump, nmap</li>
+<li>SSH key-based authentication and ufw firewall rules</li>
+<li>Secure remote access to internal network via WireGuard/OpenVPN for service management</li>
 </ul>
+<pre class="ascii-topology"><code>[Internet]
+    │
+[pfSense/Firewall] ──(VPN: 10.8.0.0/24)── [Remote User]
+    │
+    ├─ [VLAN 10 : DMZ] ── Nginx Reverse Proxy
+    │
+    └─ [VLAN 20 : LAN] ── Docker Host (192.168.20.10)</code></pre>
 </div>
 <div class="project-tech">
-<span>PostgreSQL</span><span>Python</span><span>Grafana</span><span>REST API</span><span>LLM API</span><span>Docker</span><span>docker-compose</span><span>Bash</span>
+<span>VirtualBox</span><span>Linux</span><span>SSH</span><span>ufw</span><span>WireGuard</span><span>OpenVPN</span><span>tcpdump</span><span>nmap</span>
 </div>
 <div class="slo-badges">
-  <span class="slo-badge" title="Service Level Objective — platform availability">SLO: 99.5%</span>
-  <span class="slo-badge rto" title="Recovery Time Objective — max acceptable downtime">RTO: 20m</span>
-  <span class="slo-badge rpo" title="Recovery Point Objective — max data loss window">RPO: 1h</span>
+  <span class="slo-badge" title="Service Level Objective — target tunnel uptime">SLO: 99.0%</span>
+  <span class="slo-badge rto" title="Recovery Time Objective — max acceptable downtime">RTO: 30m</span>
+  <span class="slo-badge rpo" title="Recovery Point Objective — max config loss window">RPO: 1h</span>
 </div>
 <div class="postmortem-block">
   <div class="postmortem-title">⚠ <span data-lang-tr>Olay / Postmortem</span><span data-lang-en>Incident / Postmortem</span></div>
   <ul class="postmortem-list">
-    <li><span class="pm-label"><span data-lang-tr>Sorun</span><span data-lang-en>Problem</span></span> <span data-lang-tr>LLM tabanlı öneri motoru, eksik müşteri verisi içerdiğinde hatalı tahminler üretiyordu.</span><span data-lang-en>LLM-based recommendation engine generating incorrect predictions when customer data contained null fields.</span></li>
-    <li><span class="pm-label"><span data-lang-tr>Kök neden</span><span data-lang-en>Root cause</span></span> <span data-lang-tr>Model giriş verisi doğrulama ve null değer işleme katmanı olmadan doğrudan API'ye gönderiliyordu.</span><span data-lang-en>Input data was forwarded directly to the LLM API without a validation or null-handling layer.</span></li>
-    <li><span class="pm-label">Fix</span> <span data-lang-tr>Giriş doğrulama katmanı eklendi; eksik alanlar için varsayılan değer atama ve uyarı mekanizması kuruldu.</span><span data-lang-en>Added input validation layer; implemented default value substitution and warning flags for missing fields.</span></li>
-    <li><span class="pm-label"><span data-lang-tr>Ders</span><span data-lang-en>Lesson</span></span> <span data-lang-tr>Gerçek dünya verisi AI modellerine gönderilmeden önce her zaman veri kalitesi doğrulaması yapılmalı.</span><span data-lang-en>Always enforce data quality validation before feeding real-world data to AI models.</span></li>
+    <li><span class="pm-label"><span data-lang-tr>Sorun</span><span data-lang-en>Problem</span></span> <span data-lang-tr>WireGuard tüneli VM yeniden başlatmasının ardından otomatik olarak kalkmıyor.</span><span data-lang-en>WireGuard tunnel not coming up automatically after VM reboot.</span></li>
+    <li><span class="pm-label"><span data-lang-tr>Kök neden</span><span data-lang-en>Root cause</span></span> <span data-lang-tr>systemd servisi enable edilmemiş, systemctl enable wg-quick@wg0 komutu eksikti.</span><span data-lang-en>systemd service not enabled — missing <code>systemctl enable wg-quick@wg0</code>.</span></li>
+    <li><span class="pm-label">Fix</span> <span data-lang-tr>Tüm VM'lerde <code>systemctl enable</code> çalıştırıldı ve boot testi yapıldı.</span><span data-lang-en>Ran <code>systemctl enable</code> on all VMs and added a post-reboot connectivity test to the runbook.</span></li>
+    <li><span class="pm-label"><span data-lang-tr>Ders</span><span data-lang-en>Lesson</span></span> <span data-lang-tr>Her servis değişikliğinden sonra reboot testi runbook'a eklenmeli.</span><span data-lang-en>Every service change must include a reboot test step in the runbook.</span></li>
   </ul>
 </div>
 <div class="artifact-links">
   <span class="artifact-label"><span data-lang-tr>İndirilebilir Dosyalar:</span><span data-lang-en>Artifacts:</span></span>
-  <a href="artifacts/crm-schema.md" download class="artifact-btn">📐 <span data-lang-tr>Şema</span><span data-lang-en>Schema</span>.md</a>
-  <a href="artifacts/crm-runbook.md" download class="artifact-btn">📋 runbook.md</a>
+  <a href="artifacts/vpn-lab-topology.md" download class="artifact-btn">📐 <span data-lang-tr>Topoloji</span><span data-lang-en>Topology</span>.md</a>
+  <a href="artifacts/vpn-lab-runbook.md" download class="artifact-btn">📋 runbook.md</a>
 </div>
 <div class="iac-section">
-  <button class="iac-btn" data-target="iac-crm"><span data-lang-tr>[ Altyapıyı Dağıt (IaC) ]</span><span data-lang-en>[ Deploy this infra (IaC) ]</span></button>
-  <div class="iac-snippet" id="iac-crm" hidden>
-<div class="iac-copy-wrap"><button class="iac-copy-btn" data-iac="iac-crm"><span data-lang-tr>Kopyala</span><span data-lang-en>Copy</span></button></div>
-<pre class="iac-code"><span class="iac-comment"># docker-compose.yml — AI-Powered CRM Platform</span>
-version: "3.9"
-services:
-  db:
-    image: postgres:15-alpine
-    restart: always
-    environment:
-      - POSTGRES_DB=crmdb
-      - POSTGRES_USER=crm
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+  <button class="iac-btn" data-target="iac-vpn-lab"><span data-lang-tr>[ Altyapıyı Dağıt (IaC) ]</span><span data-lang-en>[ Deploy this infra (IaC) ]</span></button>
+  <div class="iac-snippet" id="iac-vpn-lab" hidden>
+<div class="iac-copy-wrap"><button class="iac-copy-btn" data-iac="iac-vpn-lab"><span data-lang-tr>Kopyala</span><span data-lang-en>Copy</span></button></div>
+<pre class="iac-code"><span class="iac-comment"># wireguard-setup.yml — Ansible Playbook</span>
+---
+- name: Configure WireGuard VPN Server
+  hosts: vpn_host
+  become: yes
+  vars:
+    wg_interface: wg0
+    wg_port: 51820
+    wg_network: "10.8.0.0/24"
+    server_ip: "10.8.0.1"
 
-  api:
-    build: ./api
-    restart: always
-    environment:
-      - DATABASE_URL=postgresql://crm:${DB_PASSWORD}@db:5432/crmdb
-      - LLM_API_KEY=${LLM_API_KEY}
-      - RBAC_ENABLED=true
-    depends_on:
-      - db
+  tasks:
+    - name: Install WireGuard
+      apt:
+        name: wireguard
+        state: present
+        update_cache: yes
 
-  grafana:
-    image: grafana/grafana:latest
-    restart: always
-    ports:
-      - "127.0.0.1:3002:3000"
-    volumes:
-      - grafana-crm:/var/lib/grafana
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
-      - GF_USERS_ALLOW_SIGN_UP=false
+    - name: Generate server private key
+      shell: wg genkey
+      register: server_private_key
 
-volumes:
-  pgdata:
-  grafana-crm:</pre>
+    - name: Deploy wg0 config
+      template:
+        src: wg0.conf.j2
+        dest: /etc/wireguard/wg0.conf
+        mode: '0600'
+
+    - name: Enable and start WireGuard
+      systemd:
+        name: "wg-quick@{{ wg_interface }}"
+        enabled: yes
+        state: started
+
+    - name: Configure ufw rules
+      ufw:
+        rule: allow
+        port: "{{ wg_port }}"
+        proto: udp</pre>
   </div>
 </div>
 </div>
