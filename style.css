@@ -448,6 +448,88 @@ white-space: nowrap;
 .cert-provider { color: var(--accent-cyan); font-size: 0.85rem; margin-bottom: 0.8rem; }
 .cert-desc { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; }
 
+/* Experience Section */
+.exp-card {
+background: var(--bg-card);
+border: 1px solid var(--border-color);
+padding: 1.5rem;
+margin-bottom: 1.5rem;
+transition: all 0.3s;
+}
+
+.exp-card:hover {
+border-color: var(--terminal-green);
+box-shadow: var(--glow);
+}
+
+.exp-header {
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+margin-bottom: 0.5rem;
+}
+
+.exp-title { font-size: 1rem; color: var(--text-primary); font-weight: 500; }
+
+.exp-status {
+font-size: 0.75rem;
+padding: 0.2rem 0.6rem;
+background: rgba(0, 255, 136, 0.1);
+color: var(--terminal-green);
+border: 1px solid var(--terminal-green-dim);
+white-space: nowrap;
+}
+
+.exp-company { color: var(--accent-cyan); font-size: 0.85rem; margin-bottom: 0.3rem; }
+
+.exp-meta {
+font-size: 0.8rem;
+color: var(--text-muted);
+margin-bottom: 0.8rem;
+}
+
+.exp-desc {
+color: var(--text-secondary);
+font-size: 0.85rem;
+line-height: 1.6;
+margin-bottom: 1rem;
+}
+
+.exp-resp ul { list-style: none; padding: 0; }
+
+.exp-resp li {
+color: var(--text-secondary);
+font-size: 0.85rem;
+line-height: 1.6;
+margin-bottom: 0.5rem;
+padding-left: 1.2rem;
+position: relative;
+}
+
+.exp-resp li::before {
+content: '>';
+position: absolute;
+left: 0;
+color: var(--terminal-green);
+}
+
+.exp-skills {
+display: flex;
+flex-wrap: wrap;
+gap: 0.5rem;
+margin-top: 1rem;
+padding-top: 1rem;
+border-top: 1px solid var(--border-color);
+}
+
+.exp-tag {
+font-size: 0.75rem;
+padding: 0.2rem 0.6rem;
+background: rgba(189, 147, 249, 0.1);
+color: var(--accent-purple);
+border: 1px solid rgba(189, 147, 249, 0.3);
+}
+
 /* Projects Section */
 .project-card {
 background: var(--bg-card);
