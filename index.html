@@ -303,47 +303,6 @@
 </div>
 </section>
 
-<!-- Verification Section -->
-<section id="verification">
-<div class="section-header">
-<h2 class="section-title"><span data-lang-tr>doğrulama</span><span data-lang-en>verification</span></h2>
-<p class="section-subtitle">cat ~/validation-checklist.md</p>
-</div>
-
-<div class="verification-card">
-  <div class="verification-title">
-    <span data-lang-tr>Doğrulama / Çalışmalarımı Nasıl Kanıtlıyorum</span>
-    <span data-lang-en>Verification / How I Validate My Work</span>
-  </div>
-  <ul class="verification-list">
-    <li class="v-item"><span class="v-check">✓</span>
-      <span data-lang-tr><strong>Restore testi:</strong> Backup'ları düzenli olarak geri yükleyerek bütünlüğünü doğrulama</span>
-      <span data-lang-en><strong>Restore test:</strong> Periodically restore backups to verify integrity before relying on them</span>
-    </li>
-    <li class="v-item"><span class="v-check">✓</span>
-      <span data-lang-tr><strong>Paket yakalama:</strong> Her ağ yapılandırma değişikliğinin ardından tcpdump ile trafik analizi</span>
-      <span data-lang-en><strong>Packet capture:</strong> tcpdump/Wireshark traffic analysis after every network config change</span>
-    </li>
-    <li class="v-item"><span class="v-check">✓</span>
-      <span data-lang-tr><strong>Log korelasyonu:</strong> Servis olaylarını syslog, auth.log ve uygulama loglarıyla çapraz doğrulama</span>
-      <span data-lang-en><strong>Log correlation:</strong> Cross-validating service events against syslog, auth.log, and app logs</span>
-    </li>
-    <li class="v-item"><span class="v-check">✓</span>
-      <span data-lang-tr><strong>Sertleştirme kontrol listesi:</strong> SSH anahtar kimlik doğrulaması, devre dışı parola girişi, ufw varsayılan reddet, root oturumu kapalı</span>
-      <span data-lang-en><strong>Hardening checklist:</strong> SSH key auth, disabled password login, ufw default-deny, root login off</span>
-    </li>
-    <li class="v-item"><span class="v-check">✓</span>
-      <span data-lang-tr><strong>Port tarama doğrulaması:</strong> Firewall kural değişikliklerinin ardından nmap ile saldırı yüzeyi kontrolü</span>
-      <span data-lang-en><strong>Port-scan validation:</strong> nmap scan against all VMs after firewall rule changes to confirm attack surface</span>
-    </li>
-    <li class="v-item"><span class="v-check">✓</span>
-      <span data-lang-tr><strong>Kaos testi:</strong> Servis kesintisi simülasyonu ve alert / otomatik kurtarma süresini ölçme</span>
-      <span data-lang-en><strong>Chaos test:</strong> Simulate service outage and measure alert-to-recovery time against RTO targets</span>
-    </li>
-  </ul>
-</div>
-</section>
-
 <!-- Projects Section -->
 <section id="projects">
 <div class="section-header">
@@ -1041,7 +1000,7 @@ entry.target.style.transform = 'translateY(0)';
 });
 }, observerOptions);
 
-document.querySelectorAll('.terminal-card, .cert-card, .project-card, .tool-box, .edu-item, .homelab-card, .verification-card').forEach(el => {
+document.querySelectorAll('.terminal-card, .cert-card, .project-card, .tool-box, .edu-item, .homelab-card, .exp-card').forEach(el => {
 el.style.opacity = '0';
 el.style.transform = 'translateY(20px)';
 el.style.transition = 'opacity 0.5s, transform 0.5s';
@@ -3362,7 +3321,7 @@ function stopMatrixRain() {
 
 // ===== Feature 10: Keyboard-first Navigation =====
 (function () {
-    var sections = ['#about', '#education', '#certificates', '#verification', '#projects', '#tools', '#contact', '#cli-terminal'];
+    var sections = ['#about', '#education', '#experience', '#certificates', '#projects', '#tools', '#contact', '#cli-terminal'];
     var ggTimer = null;
     var gpTimer = null;
     var gtTimer = null;
