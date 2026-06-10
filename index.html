@@ -310,365 +310,122 @@
 <p class="section-subtitle">tree ~/projects/</p>
 </div>
 
-<!-- Project 1 -->
+<!-- Project 1: AI Container Infrastructure -->
 <div class="project-card">
 <div class="project-header">
-<div class="project-title"><span data-lang-tr>Yapay Zeka Destekli Konteyner Altyapı Otomasyonu</span><span data-lang-en>AI-Powered Container Infrastructure Automation</span></div>
-<div class="project-tag"><span data-lang-tr>KİŞİSEL_PROJE | Homelab | Docker | Yapay Zeka</span><span data-lang-en>PERSONAL_PROJECT | Homelab | Docker | AI</span></div>
+<div class="project-title"><span data-lang-tr>Yapay Zeka Destekli Konteyner Tabanlı Sunucu ve Altyapı Otomasyonu</span><span data-lang-en>AI-Powered Container-Based Server &amp; Infrastructure Automation</span></div>
+<div class="project-tag"><span data-lang-tr>TEZ_PROJESI | Homelab | Docker | AI | DevOps</span><span data-lang-en>THESIS_PROJECT | Homelab | Docker | AI | DevOps</span></div>
 </div>
 <div class="project-body">
 <ul data-lang-tr-block>
-<li>Düşük kaynak tüketimli Linux sunucu üzerinde Docker ve docker-compose ile modüler konteyner altyapısı</li>
-<li>Web UI, DNS filtreleme, monitoring bileşenleri ters vekil (reverse proxy) arkasında izole servisler olarak çalıştırma</li>
+<li>Düşük kaynaklı Linux sunucuda Docker ve docker-compose ile modüler, tekrarlanabilir ve versiyon kontrollü konteyner altyapısı</li>
+<li>Web UI, DNS filtreleme ve monitoring bileşenlerini ters vekil (reverse proxy) arkasında izole servis olarak çalıştırma</li>
 <li>OpenClaw ve Kimi K2.5 API ile sunucu metriklerini (CPU, RAM, disk, servis durumu) analiz eden AI otomasyon pipeline'ı</li>
-<li>Model çıktılarını komut ve script'lere dönüştüren kontrollü yürütme mekanizması</li>
-<li>Kritik operasyonlar için onay adımı — güvenli yarı otonom sunucu yönetimi</li>
-<li>Git ile versiyon kontrollü konfigürasyon dosyaları, rollback ve yedekleme prosedürleri</li>
+<li>Model çıktılarını komut ve script'lere dönüştüren kontrollü yürütme mekanizması; kritik operasyonlar için onay adımı</li>
+<li>Git tabanlı konfigürasyon versiyonlaması, standart dağıtım, rollback ve yedekleme prosedürleri</li>
 </ul>
 <ul data-lang-en-block>
-<li>Modular container infrastructure on low-resource Linux server with Docker and docker-compose</li>
-<li>Web UI, DNS filtering, monitoring components running as isolated services behind reverse proxy</li>
+<li>Modular, repeatable, and version-controlled container infrastructure on a low-resource Linux server using Docker and docker-compose</li>
+<li>Web UI, DNS filtering, and monitoring components running as isolated services behind a reverse proxy</li>
 <li>AI automation pipeline analyzing server metrics (CPU, RAM, disk, service health) via OpenClaw and Kimi K2.5 API</li>
-<li>Controlled execution mechanism converting model outputs to commands and scripts</li>
-<li>Approval step for critical operations — secure semi-autonomous server management</li>
-<li>Version-controlled configuration files with Git, rollback and backup procedures</li>
+<li>Controlled execution converting model outputs to commands and scripts; approval gate for critical operations</li>
+<li>Git-based configuration versioning for standardized deployments, rollbacks, and backup workflows</li>
 </ul>
 </div>
 <div class="project-tech">
-<span>Linux</span><span>Docker</span><span>docker-compose</span><span>Git</span><span>OpenClaw</span><span>Kimi K2.5 API</span><span>Reverse Proxy</span><span>Bash</span>
-</div>
-<div class="slo-badges">
-  <span class="slo-badge" title="Service Level Objective — target uptime">SLO: 99.5%</span>
-  <span class="slo-badge rto" title="Recovery Time Objective — max acceptable downtime">RTO: 15m</span>
-  <span class="slo-badge rpo" title="Recovery Point Objective — max data loss window">RPO: 30m</span>
-</div>
-<div class="postmortem-block">
-  <div class="postmortem-title">⚠ <span data-lang-tr>Olay / Postmortem</span><span data-lang-en>Incident / Postmortem</span></div>
-  <ul class="postmortem-list">
-    <li><span class="pm-label"><span data-lang-tr>Sorun</span><span data-lang-en>Problem</span></span> <span data-lang-tr>AI pipeline yanlış servis adını hedef alarak hatalı konteyner restart komutu üretiyor.</span><span data-lang-en>AI pipeline targeting wrong service name, generating incorrect container restart command.</span></li>
-    <li><span class="pm-label"><span data-lang-tr>Kök neden</span><span data-lang-en>Root cause</span></span> <span data-lang-tr>Model çıktısı parse edilmeden doğrudan komut olarak çalıştırılıyordu.</span><span data-lang-en>Model output was executed directly without schema validation of the service name field.</span></li>
-    <li><span class="pm-label">Fix</span> <span data-lang-tr>Komut çalıştırmadan önce servis adını allowlist ile doğrulayan parser eklendi.</span><span data-lang-en>Added parser that validates service name against an allowlist before any command execution.</span></li>
-    <li><span class="pm-label"><span data-lang-tr>Ders</span><span data-lang-en>Lesson</span></span> <span data-lang-tr>LLM çıktısına hiçbir zaman doğrudan güvenme; her zaman şema doğrulaması ve insan onay adımı kullan.</span><span data-lang-en>Never trust LLM output directly; always schema-validate and keep the human approval gate.</span></li>
-  </ul>
+<span>Linux</span><span>Docker</span><span>docker-compose</span><span>Git</span><span>OpenClaw</span><span>Kimi K2.5 API</span><span>Reverse Proxy</span><span>Bash</span><span>Infrastructure Automation</span>
 </div>
 <div class="artifact-links">
-  <span class="artifact-label"><span data-lang-tr>İndirilebilir Dosyalar:</span><span data-lang-en>Artifacts:</span></span>
-  <a href="artifacts/ai-container-topology.md" download class="artifact-btn">📐 <span data-lang-tr>Topoloji</span><span data-lang-en>Topology</span>.md</a>
-  <a href="artifacts/compose-snippet.yml" download class="artifact-btn">🐳 compose-snippet.yml</a>
-</div>
-<div class="iac-section">
-  <button class="iac-btn" data-target="iac-ai-container"><span data-lang-tr>[ Altyapıyı Dağıt (IaC) ]</span><span data-lang-en>[ Deploy this infra (IaC) ]</span></button>
-  <div class="iac-snippet" id="iac-ai-container" hidden>
-<div class="iac-copy-wrap"><button class="iac-copy-btn" data-iac="iac-ai-container"><span data-lang-tr>Kopyala</span><span data-lang-en>Copy</span></button></div>
-<pre class="iac-code"><span class="iac-comment"># docker-compose.yml — AI Container Infrastructure</span>
-version: "3.9"
-services:
-  web:
-    image: nginx:alpine
-    restart: always
-    ports:
-      - "443:443"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./certs:/etc/ssl/certs:ro
-
-  ai-pipeline:
-    build: ./ai-pipeline
-    restart: always
-    environment:
-      - OPENCLAW_API_KEY=${OPENCLAW_API_KEY}
-      - KIMI_API_KEY=${KIMI_API_KEY}
-      - APPROVAL_REQUIRED=true
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-
-  grafana:
-    image: grafana/grafana:latest
-    restart: always
-    ports:
-      - "127.0.0.1:3001:3000"
-    volumes:
-      - grafana-data:/var/lib/grafana
-
-volumes:
-  grafana-data:</pre>
-  </div>
+  <a href="https://github.com/fufuizm/fufuizm.github.io/tree/main/artifacts" class="artifact-btn" target="_blank" rel="noopener"><span data-lang-tr>📐 Topoloji ve IaC Dosyaları</span><span data-lang-en>📐 Topology &amp; IaC Files</span></a>
 </div>
 </div>
+
+<!-- Project 2: Roadmind -->
+<div class="project-card">
+<div class="project-header">
+<div class="project-title">Roadmind — AI Project Prompt Studio for Coding Agents</div>
+<div class="project-tag"><span data-lang-tr>KİŞİSEL_PROJE | Full-Stack | AI | Prompt Engineering | Üretken Araçlar</span><span data-lang-en>PERSONAL_PROJECT | Full-Stack | AI | Prompt Engineering | Developer Tools</span></div>
+</div>
+<div class="project-body">
+<ul data-lang-tr-block>
+<li>React + TypeScript + Vite önyüz; Türkçe yerelleştirilmiş UI ile AI sağlayıcı seçimi, model seçimi, çıktı modu, plan modu ve kodlama ajanı ön ayarları</li>
+<li>Express.js + Prisma + SQLite backend; versiyonlu şema, yapılandırılmış proje kayıtları, prompt taslağı düzenleme ve sonlandırma/yeniden oluşturma akışları</li>
+<li>NVIDIA NIM ve Ollama entegrasyonu — birleşik sağlayıcı servisi, model kataloğu çözümleme, bağlantı testi ve graceful fallback</li>
+<li>JSON schema ile yapılandırılmış çıktılar; otomatik doğrulama, onarım ve normalizasyon katmanları</li>
+<li>Çok biçimli dışa aktarım: JSON · Markdown · TXT · AGENTS.md · CLAUDE.md · ajan başına prompt dosyaları</li>
+<li>Sunucu tarafı API anahtarı yönetimi; .env yapısı ile istemci paketlerine veya dışa aktarılan dosyalara sızdırma önlemi</li>
+</ul>
+<ul data-lang-en-block>
+<li>React + TypeScript + Vite frontend with Turkish-localized UI for AI provider selection, model picker, output mode, plan mode, and coding-agent presets</li>
+<li>Express.js + Prisma + SQLite backend with versioned schema, structured project records, prompt draft editing, and finalize/regenerate flows</li>
+<li>NVIDIA NIM and Ollama integration behind a unified provider service with model catalog resolution, connectivity testing, and graceful fallback</li>
+<li>JSON-schema-driven structured outputs with automated validation, repair, and normalization layers</li>
+<li>Multi-format export pipeline: JSON · Markdown · TXT · AGENTS.md · CLAUDE.md · per-agent prompt files</li>
+<li>Server-side API key management with Git-friendly .env structure to prevent leakage into client bundles or export artifacts</li>
+</ul>
+</div>
+<div class="project-tech">
+<span>React</span><span>TypeScript</span><span>Vite</span><span>Node.js</span><span>Express.js</span><span>Prisma</span><span>SQLite</span><span>NVIDIA NIM</span><span>Ollama</span><span>JSON Schema</span><span>REST APIs</span>
+</div>
+<div class="artifact-links">
+  <a href="https://github.com/fufuizm/roadmind-ai-prompt-studio" class="artifact-btn" target="_blank" rel="noopener">🔗 GitHub: roadmind-ai-prompt-studio</a>
+</div>
+</div>
+
+<!-- Project 3: AI CRM -->
 <div class="project-card">
 <div class="project-header">
 <div class="project-title"><span data-lang-tr>Yapay Zeka Destekli Operasyonel CRM ve Karar Destek Platformu</span><span data-lang-en>AI-Powered Operational CRM &amp; Decision Support Platform</span></div>
-<div class="project-tag"><span data-lang-tr>KİŞİSEL_PROJE | CRM | Yapay Zeka | Karar Destek | Veri Analizi</span><span data-lang-en>PERSONAL_PROJECT | CRM | AI | Decision Support | Data Analytics</span></div>
+<div class="project-tag"><span data-lang-tr>KİŞİSEL_PROJE | CRM | OCR | AI | Full-Stack</span><span data-lang-en>PERSONAL_PROJECT | CRM | OCR | AI | Full-Stack</span></div>
 </div>
 <div class="project-body">
 <ul data-lang-tr-block>
-<li>PostgreSQL tabanlı müşteri, iletişim ve satış verisi yönetimi; ilişkisel veri modeli tasarımı</li>
-<li>Python ve LLM API entegrasyonu ile müşteri segmentasyonu, satış tahmini ve öneri motoru</li>
-<li>Grafana dashboard'ları ile müşteri metrikleri, satış hunisi ve karar destek görselleştirmeleri</li>
-<li>REST API aracılığıyla dış sistemlerden veri entegrasyonu ve otomatik raporlama pipeline'ı</li>
-<li>Rol tabanlı erişim kontrolü (RBAC) ve denetim kaydı (audit log) ile güvenli veri erişimi</li>
-<li>Servis sağlığı ve veri pipeline'ı için Grafana alert'leri ile proaktif izleme</li>
+<li>React + TypeScript + Vite önyüz; Express.js ve SQLite backend ile müşteri ve operasyonel kayıt yönetimi</li>
+<li>OCR destekli ürün alım akışı — fiziksel ürün verisi girişini hızlandırma ve müşteri-kayıt eşleştirmesini otomatikleştirme</li>
+<li>Operasyonel veriyi yorumlayan ve özet, öncelik ve eylem odaklı öneriler üreten AI destekli içgörü paneli</li>
+<li>Rol tabanlı erişim kontrolü (RBAC), oturum yönetimi, RESTful API dokümantasyonu ve veritabanı migrasyon yapısı</li>
 </ul>
 <ul data-lang-en-block>
-<li>Customer, contact and sales data management with PostgreSQL; relational data model design</li>
-<li>Customer segmentation, sales forecasting and recommendation engine via Python and LLM API integration</li>
-<li>Grafana dashboards for customer metrics, sales funnel and decision-support visualizations</li>
-<li>External data integration via REST API and automated reporting pipeline</li>
-<li>Secure data access with role-based access control (RBAC) and audit logging</li>
-<li>Proactive monitoring with Grafana alerts for service health and data pipeline status</li>
+<li>React + TypeScript + Vite frontend with Express.js and SQLite backend for unified customer and operational record management</li>
+<li>OCR-assisted product intake flow to accelerate physical product data entry and automate customer-to-record matching</li>
+<li>AI-powered insight panel interpreting operational data and generating summaries, priorities, and action-oriented recommendations</li>
+<li>Role-based access control (RBAC), session handling, RESTful API documentation, and database migration structures</li>
 </ul>
 </div>
 <div class="project-tech">
-<span>PostgreSQL</span><span>Python</span><span>Grafana</span><span>REST API</span><span>LLM API</span><span>Docker</span><span>docker-compose</span><span>Bash</span>
-</div>
-<div class="slo-badges">
-  <span class="slo-badge" title="Service Level Objective — platform availability">SLO: 99.5%</span>
-  <span class="slo-badge rto" title="Recovery Time Objective — max acceptable downtime">RTO: 20m</span>
-  <span class="slo-badge rpo" title="Recovery Point Objective — max data loss window">RPO: 1h</span>
-</div>
-<div class="postmortem-block">
-  <div class="postmortem-title">⚠ <span data-lang-tr>Olay / Postmortem</span><span data-lang-en>Incident / Postmortem</span></div>
-  <ul class="postmortem-list">
-    <li><span class="pm-label"><span data-lang-tr>Sorun</span><span data-lang-en>Problem</span></span> <span data-lang-tr>LLM tabanlı öneri motoru, eksik müşteri verisi içerdiğinde hatalı tahminler üretiyordu.</span><span data-lang-en>LLM-based recommendation engine generating incorrect predictions when customer data contained null fields.</span></li>
-    <li><span class="pm-label"><span data-lang-tr>Kök neden</span><span data-lang-en>Root cause</span></span> <span data-lang-tr>Model giriş verisi doğrulama ve null değer işleme katmanı olmadan doğrudan API'ye gönderiliyordu.</span><span data-lang-en>Input data was forwarded directly to the LLM API without a validation or null-handling layer.</span></li>
-    <li><span class="pm-label">Fix</span> <span data-lang-tr>Giriş doğrulama katmanı eklendi; eksik alanlar için varsayılan değer atama ve uyarı mekanizması kuruldu.</span><span data-lang-en>Added input validation layer; implemented default value substitution and warning flags for missing fields.</span></li>
-    <li><span class="pm-label"><span data-lang-tr>Ders</span><span data-lang-en>Lesson</span></span> <span data-lang-tr>Gerçek dünya verisi AI modellerine gönderilmeden önce her zaman veri kalitesi doğrulaması yapılmalı.</span><span data-lang-en>Always enforce data quality validation before feeding real-world data to AI models.</span></li>
-  </ul>
+<span>React</span><span>TypeScript</span><span>Vite</span><span>Express.js</span><span>SQLite</span><span>OCR</span><span>REST APIs</span><span>RBAC</span>
 </div>
 <div class="artifact-links">
-  <span class="artifact-label"><span data-lang-tr>İndirilebilir Dosyalar:</span><span data-lang-en>Artifacts:</span></span>
-  <a href="artifacts/crm-schema.md" download class="artifact-btn">📐 <span data-lang-tr>Şema</span><span data-lang-en>Schema</span>.md</a>
-  <a href="artifacts/crm-runbook.md" download class="artifact-btn">📋 runbook.md</a>
+  <a href="https://github.com/fufuizm/ai-operational-crm-decision-support" class="artifact-btn" target="_blank" rel="noopener">🔗 GitHub: ai-operational-crm-decision-support</a>
 </div>
-<div class="iac-section">
-  <button class="iac-btn" data-target="iac-crm"><span data-lang-tr>[ Altyapıyı Dağıt (IaC) ]</span><span data-lang-en>[ Deploy this infra (IaC) ]</span></button>
-  <div class="iac-snippet" id="iac-crm" hidden>
-<div class="iac-copy-wrap"><button class="iac-copy-btn" data-iac="iac-crm"><span data-lang-tr>Kopyala</span><span data-lang-en>Copy</span></button></div>
-<pre class="iac-code"><span class="iac-comment"># docker-compose.yml — AI-Powered CRM Platform</span>
-version: "3.9"
-services:
-  db:
-    image: postgres:15-alpine
-    restart: always
-    environment:
-      - POSTGRES_DB=crmdb
-      - POSTGRES_USER=crm
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+</div>
 
-  api:
-    build: ./api
-    restart: always
-    environment:
-      - DATABASE_URL=postgresql://crm:${DB_PASSWORD}@db:5432/crmdb
-      - LLM_API_KEY=${LLM_API_KEY}
-      - RBAC_ENABLED=true
-    depends_on:
-      - db
-
-  grafana:
-    image: grafana/grafana:latest
-    restart: always
-    ports:
-      - "127.0.0.1:3002:3000"
-    volumes:
-      - grafana-crm:/var/lib/grafana
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
-      - GF_USERS_ALLOW_SIGN_UP=false
-
-volumes:
-  pgdata:
-  grafana-crm:</pre>
-  </div>
+<!-- Terminal-style additional projects -->
+<div class="terminal-window" style="margin-top: 3rem;">
+<div class="terminal-header">
+<span class="t-btn t-btn-red"></span>
+<span class="t-btn t-btn-yellow"></span>
+<span class="t-btn t-btn-green"></span>
+<span class="terminal-title">~/projects/more/</span>
 </div>
-</div>
-<div class="project-card">
-<div class="project-header">
-<div class="project-title"><span data-lang-tr>Merkezi Loglama ve İzleme Altyapısı</span><span data-lang-en>Centralized Logging &amp; Monitoring Infrastructure</span></div>
-<div class="project-tag"><span data-lang-tr>KİŞİSEL_PROJE | Gözlemlenebilirlik | Syslog | Grafana</span><span data-lang-en>PERSONAL_PROJECT | Observability | Syslog | Grafana</span></div>
-</div>
-<div class="project-body">
-<ul data-lang-tr-block>
-<li>Birden fazla Linux sunucudan merkezi log sunucuya sistem loglarının toplanması</li>
-<li>rsyslog/syslog ile servis, güvenlik ve ağ olaylarının tek noktada birleştirilmesi ve filtrelenmesi</li>
-<li>CPU, bellek, disk ve ağ kullanımı için hafif monitoring araçları ve dashboard'lar</li>
-<li>Temel gözlemlenebilirlik (observability) altyapısı ile servis sağlığı izleme</li>
-</ul>
-<ul data-lang-en-block>
-<li>Collecting system logs from multiple Linux servers to a central log server</li>
-<li>Aggregating and filtering service, security and network events via rsyslog/syslog</li>
-<li>Lightweight monitoring tools and dashboards for CPU, memory, disk and network usage</li>
-<li>Basic observability infrastructure for service health monitoring</li>
-</ul>
-</div>
-<div class="project-tech">
-<span>Linux</span><span>rsyslog</span><span>Grafana</span><span>Monitoring</span><span>Log Aggregation</span>
-</div>
-<div class="slo-badges">
-  <span class="slo-badge" title="Service Level Objective — log delivery success rate">SLO: 99.9%</span>
-  <span class="slo-badge rto" title="Recovery Time Objective — max log collection gap">RTO: 10m</span>
-  <span class="slo-badge rpo" title="Recovery Point Objective — max log data loss">RPO: 5m</span>
-</div>
-<div class="postmortem-block">
-  <div class="postmortem-title">⚠ <span data-lang-tr>Olay / Postmortem</span><span data-lang-en>Incident / Postmortem</span></div>
-  <ul class="postmortem-list">
-    <li><span class="pm-label"><span data-lang-tr>Sorun</span><span data-lang-en>Problem</span></span> <span data-lang-tr>Merkezi log sunucusunda disk dolunca rsyslog sessizce log kaybetmeye başladı.</span><span data-lang-en>Central log server silently dropping logs when disk reached full capacity.</span></li>
-    <li><span class="pm-label"><span data-lang-tr>Kök neden</span><span data-lang-en>Root cause</span></span> <span data-lang-tr>Disk kullanımı için alert kurulmamıştı; logrotate çalışmıyordu.</span><span data-lang-en>No disk usage alert configured; logrotate was not running due to a misconfigured cron entry.</span></li>
-    <li><span class="pm-label">Fix</span> <span data-lang-tr>Logrotate düzeltildi, disk kullanımı için %80 eşiğinde Grafana alert eklendi.</span><span data-lang-en>Fixed logrotate config; added Grafana alert at 80% disk threshold.</span></li>
-    <li><span class="pm-label"><span data-lang-tr>Ders</span><span data-lang-en>Lesson</span></span> <span data-lang-tr>Gözlemlenebilirlik stack'inin kendisi de izlenmeli; infra'yı kim izlediğini izle.</span><span data-lang-en>The observability stack itself must be monitored — "who watches the watchmen" applies to infra too.</span></li>
-  </ul>
-</div>
-<div class="artifact-links">
-  <span class="artifact-label"><span data-lang-tr>İndirilebilir Dosyalar:</span><span data-lang-en>Artifacts:</span></span>
-  <a href="artifacts/logging-setup.md" download class="artifact-btn">📋 runbook.md</a>
-  <a href="artifacts/monitoring-config.yml" download class="artifact-btn">⚙ monitoring-config.yml</a>
-</div>
-<div class="iac-section">
-  <button class="iac-btn" data-target="iac-logging"><span data-lang-tr>[ Altyapıyı Dağıt (IaC) ]</span><span data-lang-en>[ Deploy this infra (IaC) ]</span></button>
-  <div class="iac-snippet" id="iac-logging" hidden>
-<div class="iac-copy-wrap"><button class="iac-copy-btn" data-iac="iac-logging"><span data-lang-tr>Kopyala</span><span data-lang-en>Copy</span></button></div>
-<pre class="iac-code"><span class="iac-comment"># terraform — Centralized Logging Host</span>
-terraform {
-  required_providers {
-    docker = {
-      source  = "kreuzwerker/docker"
-      version = "~> 3.0"
-    }
-  }
-}
-
-resource "docker_container" "rsyslog" {
-  image   = "rsyslog/syslog_appliance_alpine:latest"
-  name    = "rsyslog-central"
-  restart = "always"
-  ports {
-    internal = 514
-    external = 514
-    protocol = "udp"
-  }
-  volumes {
-    host_path      = "/var/log/central"
-    container_path = "/var/log"
-  }
-}
-
-resource "docker_container" "grafana" {
-  image   = "grafana/grafana:latest"
-  name    = "grafana"
-  restart = "always"
-  ports {
-    internal = 3000
-    external = 3001
-    ip       = "127.0.0.1"
-  }
-  env = [
-    "GF_SECURITY_ADMIN_PASSWORD=${var.grafana_password}",
-    "GF_USERS_ALLOW_SIGN_UP=false"
-  ]
-}</pre>
-  </div>
-</div>
-</div>
-<div class="project-card">
-<div class="project-header">
-<div class="project-title"><span data-lang-tr>Sanal Ağ Laboratuvarı ve VPN Altyapısı</span><span data-lang-en>Virtual Network Lab &amp; VPN Infrastructure</span></div>
-<div class="project-tag"><span data-lang-tr>KİŞİSEL_PROJE | Ağ | VPN | Güvenlik</span><span data-lang-en>PERSONAL_PROJECT | Networking | VPN | Security</span></div>
-</div>
-<div class="project-body">
-<ul data-lang-tr-block>
-<li>VirtualBox üzerinde router, DNS sunucu ve istemci rollerinde çoklu Linux VM'ler ile ağ topolojisi</li>
-<li>Internal network ve DMZ benzeri segmentler ile internet erişim senaryoları</li>
-<li>ping, traceroute, netstat/ss, tcpdump, nmap ile TCP/IP, DNS, HTTP/HTTPS trafik analizi</li>
-<li>SSH anahtar tabanlı kimlik doğrulama ve ufw firewall kuralları</li>
-<li>WireGuard/OpenVPN ile iç ağa güvenli uzaktan erişim ve servis yönetimi</li>
-</ul>
-<ul data-lang-en-block>
-<li>Network topology with multiple Linux VMs acting as router, DNS server and clients on VirtualBox</li>
-<li>Internal network and DMZ-like segments with internet access scenarios</li>
-<li>TCP/IP, DNS, HTTP/HTTPS traffic analysis with ping, traceroute, netstat/ss, tcpdump, nmap</li>
-<li>SSH key-based authentication and ufw firewall rules</li>
-<li>Secure remote access to internal network via WireGuard/OpenVPN for service management</li>
-</ul>
-<pre class="ascii-topology"><code>[Internet]
-    │
-[pfSense/Firewall] ──(VPN: 10.8.0.0/24)── [Remote User]
-    │
-    ├─ [VLAN 10 : DMZ] ── Nginx Reverse Proxy
-    │
-    └─ [VLAN 20 : LAN] ── Docker Host (192.168.20.10)</code></pre>
-</div>
-<div class="project-tech">
-<span>VirtualBox</span><span>Linux</span><span>SSH</span><span>ufw</span><span>WireGuard</span><span>OpenVPN</span><span>tcpdump</span><span>nmap</span>
-</div>
-<div class="slo-badges">
-  <span class="slo-badge" title="Service Level Objective — target tunnel uptime">SLO: 99.0%</span>
-  <span class="slo-badge rto" title="Recovery Time Objective — max acceptable downtime">RTO: 30m</span>
-  <span class="slo-badge rpo" title="Recovery Point Objective — max config loss window">RPO: 1h</span>
-</div>
-<div class="postmortem-block">
-  <div class="postmortem-title">⚠ <span data-lang-tr>Olay / Postmortem</span><span data-lang-en>Incident / Postmortem</span></div>
-  <ul class="postmortem-list">
-    <li><span class="pm-label"><span data-lang-tr>Sorun</span><span data-lang-en>Problem</span></span> <span data-lang-tr>WireGuard tüneli VM yeniden başlatmasının ardından otomatik olarak kalkmıyor.</span><span data-lang-en>WireGuard tunnel not coming up automatically after VM reboot.</span></li>
-    <li><span class="pm-label"><span data-lang-tr>Kök neden</span><span data-lang-en>Root cause</span></span> <span data-lang-tr>systemd servisi enable edilmemiş, systemctl enable wg-quick@wg0 komutu eksikti.</span><span data-lang-en>systemd service not enabled — missing <code>systemctl enable wg-quick@wg0</code>.</span></li>
-    <li><span class="pm-label">Fix</span> <span data-lang-tr>Tüm VM'lerde <code>systemctl enable</code> çalıştırıldı ve boot testi yapıldı.</span><span data-lang-en>Ran <code>systemctl enable</code> on all VMs and added a post-reboot connectivity test to the runbook.</span></li>
-    <li><span class="pm-label"><span data-lang-tr>Ders</span><span data-lang-en>Lesson</span></span> <span data-lang-tr>Her servis değişikliğinden sonra reboot testi runbook'a eklenmeli.</span><span data-lang-en>Every service change must include a reboot test step in the runbook.</span></li>
-  </ul>
-</div>
-<div class="artifact-links">
-  <span class="artifact-label"><span data-lang-tr>İndirilebilir Dosyalar:</span><span data-lang-en>Artifacts:</span></span>
-  <a href="artifacts/vpn-lab-topology.md" download class="artifact-btn">📐 <span data-lang-tr>Topoloji</span><span data-lang-en>Topology</span>.md</a>
-  <a href="artifacts/vpn-lab-runbook.md" download class="artifact-btn">📋 runbook.md</a>
-</div>
-<div class="iac-section">
-  <button class="iac-btn" data-target="iac-vpn-lab"><span data-lang-tr>[ Altyapıyı Dağıt (IaC) ]</span><span data-lang-en>[ Deploy this infra (IaC) ]</span></button>
-  <div class="iac-snippet" id="iac-vpn-lab" hidden>
-<div class="iac-copy-wrap"><button class="iac-copy-btn" data-iac="iac-vpn-lab"><span data-lang-tr>Kopyala</span><span data-lang-en>Copy</span></button></div>
-<pre class="iac-code"><span class="iac-comment"># wireguard-setup.yml — Ansible Playbook</span>
----
-- name: Configure WireGuard VPN Server
-  hosts: vpn_host
-  become: yes
-  vars:
-    wg_interface: wg0
-    wg_port: 51820
-    wg_network: "10.8.0.0/24"
-    server_ip: "10.8.0.1"
-
-  tasks:
-    - name: Install WireGuard
-      apt:
-        name: wireguard
-        state: present
-        update_cache: yes
-
-    - name: Generate server private key
-      shell: wg genkey
-      register: server_private_key
-
-    - name: Deploy wg0 config
-      template:
-        src: wg0.conf.j2
-        dest: /etc/wireguard/wg0.conf
-        mode: '0600'
-
-    - name: Enable and start WireGuard
-      systemd:
-        name: "wg-quick@{{ wg_interface }}"
-        enabled: yes
-        state: started
-
-    - name: Configure ufw rules
-      ufw:
-        rule: allow
-        port: "{{ wg_port }}"
-        proto: udp</pre>
-  </div>
+<pre class="term-output"><code class="comment"># More projects on GitHub — browse with `ls` or open directly</code>
+<span class="prompt">furkan@devops:~/projects/more$</span> <span class="cmd">ls -la</span>
+<span class="output">drwxr-xr-x  5 furkan devops  4096 Jun  9 18:45 .
+<span class="output">drwxr-xr-x  12 furkan devops  4096 Jun  9 18:45 ..
+<span class="hl-dir">-rw-r--r--</span>  1 furkan devops  <span class="hl-size">2.1K</span>  Jun  1  <span class="hl-name"><a href="https://github.com/fufuizm/centralized-logging-monitoring" target="_blank" rel="noopener">centralized-logging-monitoring/</a></span>  <span class="hl-desc"># Merkezi loglama ve izleme (rsyslog, Grafana)</span>
+<span class="hl-dir">-rw-r--r--</span>  1 furkan devops  <span class="hl-size">3.4K</span>  May 28  <span class="hl-name"><a href="https://github.com/fufuizm/erpnext-selfhosted-ops" target="_blank" rel="noopener">erpnext-selfhosted-ops/</a></span>      <span class="hl-desc"># Self-hosted ERPNext (Docker, K3s, Nginx)</span>
+<span class="hl-dir">-rw-r--r--</span>  1 furkan devops  <span class="hl-size">1.8K</span>  May 15  <span class="hl-name"><a href="https://github.com/fufuizm/virtual-network-lab" target="_blank" rel="noopener">virtual-network-lab/</a></span>         <span class="hl-desc"># Sanal ağ ortamı (VirtualBox, VPN, SSH)</span>
+<span class="hl-dir">-rw-r--r--</span>  1 furkan devops  <span class="hl-size">2.6K</span>  Apr 22  <span class="hl-name"><a href="https://github.com/fufuizm/vcalendar-ai-assistant" target="_blank" rel="noopener">vcalendar-ai-assistant/</a></span>      <span class="hl-desc"># AI destekli takvim asistanı (React, Prisma)</span>
+<span class="hl-dir">-rw-r--r--</span>  1 furkan devops  <span class="hl-size">2.3K</span>  Apr 10  <span class="hl-name"><a href="https://github.com/fufuizm/vhealth-ai-assistant" target="_blank" rel="noopener">vhealth-ai-assistant/</a></span>        <span class="hl-desc"># AI destekli sağlık asistanı (React, Node.js)</span>
+</span></pre>
+<div class="term-footer">
+  <span class="prompt">furkan@devops:~/projects/more$</span> <span class="cmd">gh repo view fufuizm --web</span>
+  <span class="output"><br>→ <a href="https://github.com/fufuizm?tab=repositories" target="_blank" rel="noopener">github.com/fufuizm?tab=repositories</a></span>
 </div>
 </div>
 </section>
 
+<!-- GitHub Contribution Graph -->
 <!-- GitHub Contribution Graph -->
 <div style="text-align:center; margin: 0 auto 4rem; max-width: 1000px; padding: 0 2rem;">
   <img src="https://ghchart.rshah.org/00ff88/fufuizm" alt="GitHub Contributions Graph" style="width: 100%; max-width: 800px; border-radius: 4px; padding: 1rem; background: var(--bg-card); margin-top: 2rem;">

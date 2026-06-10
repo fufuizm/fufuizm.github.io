@@ -2073,4 +2073,40 @@ body.light-theme ::-webkit-scrollbar-thumb { background: #b0b8c1; }
     white-space: nowrap;
 }
 
+/* ===== More Projects Terminal Listing ===== */
+.term-output {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    line-height: 1.65;
+    color: var(--text-secondary);
+    margin: 0;
+    padding: 0.8rem 1rem;
+    background: var(--bg-secondary);
+    overflow-x: auto;
+}
+
+.term-output .comment { color: var(--text-muted); font-style: italic; }
+.term-output .prompt { color: var(--terminal-green); }
+.term-output .cmd { color: var(--text-primary); }
+.term-output .output { color: var(--text-secondary); display: block; }
+.term-output .hl-dir { color: var(--accent-cyan); }
+.term-output .hl-size { color: var(--accent-amber); }
+.term-output .hl-name a { color: var(--accent-cyan); text-decoration: none; transition: color 0.2s; }
+.term-output .hl-name a:hover { color: var(--terminal-green); text-decoration: underline; }
+.term-output .hl-desc { color: var(--text-muted); font-style: italic; }
+
+.term-footer {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    padding: 0.6rem 1rem;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
+
+.term-footer .prompt { color: var(--terminal-green); }
+.term-footer .cmd { color: var(--text-primary); }
+.term-footer a { color: var(--accent-cyan); text-decoration: none; }
+.term-footer a:hover { color: var(--terminal-green); text-decoration: underline; }
+
 
