@@ -23,6 +23,9 @@
 </head>
 <body class="lang-tr">
 
+<!-- Scroll Progress Bar -->
+<div id="scroll-progress"></div>
+
 <!-- Boot Screen -->
 <div id="boot-screen">
   <div id="boot-log"></div>
@@ -77,7 +80,7 @@
 <main>
 <!-- About Section -->
 <section id="about">
-<div class="section-header">
+<div class="section-header reveal">
 <h2 class="section-title"><span data-lang-tr>hakkımda</span><span data-lang-en>about</span></h2>
 <p class="section-subtitle">cat ~/profile.md</p>
 </div>
@@ -140,14 +143,14 @@
 
 <!-- Education Section -->
 <section id="education">
-<div class="section-header">
+<div class="section-header reveal">
 <h2 class="section-title"><span data-lang-tr>eğitim</span><span data-lang-en>education</span></h2>
 <p class="section-subtitle">ls -la ~/academic/</p>
 </div>
 
 <div class="terminal-card">
 <div class="terminal-content">
-<div class="edu-item">
+<div class="edu-item reveal">
 <div class="edu-header">
 <span class="edu-title">
 <span data-lang-tr>Yönetim Bilişim Sistemleri — Lisans</span>
@@ -188,7 +191,7 @@
 </div>
 </div>
 
-<div class="edu-item">
+<div class="edu-item reveal">
 <div class="edu-header">
 <span class="edu-title">
 <span data-lang-tr>Lise Diploması — Eşit Ağırlık</span>
@@ -203,12 +206,12 @@
 
 <!-- Experience Section -->
 <section id="experience">
-<div class="section-header">
+<div class="section-header reveal">
 <h2 class="section-title"><span data-lang-tr>deneyim</span><span data-lang-en>experience</span></h2>
 <p class="section-subtitle">cat ~/work.log</p>
 </div>
 
-<div class="exp-card">
+<div class="exp-card reveal">
   <div class="exp-header">
     <span class="exp-title">Software &amp; Business Solutions Intern</span>
     <span class="exp-status"><span data-lang-tr>DEVAM EDİYOR</span><span data-lang-en>IN_PROGRESS</span></span>
@@ -247,12 +250,12 @@
 
 <!-- Certificates Section -->
 <section id="certificates">
-<div class="section-header">
+<div class="section-header reveal">
 <h2 class="section-title"><span data-lang-tr>sertifikalar</span><span data-lang-en>certificates</span></h2>
 <p class="section-subtitle">cat ~/certs/*.json</p>
 </div>
 
-<div class="cert-card">
+<div class="cert-card reveal">
 <div class="cert-header">
 <span class="cert-title"><span data-lang-tr>IBM DevOps ve Yazılım Mühendisliği Profesyonel Sertifikası</span><span data-lang-en>IBM DevOps and Software Engineering Professional Certificate</span></span>
 <span class="cert-status"><span data-lang-tr>DEVAM EDİYOR</span><span data-lang-en>IN_PROGRESS</span></span>
@@ -264,7 +267,7 @@
 </div>
 </div>
 
-<div class="cert-card">
+<div class="cert-card reveal">
 <div class="cert-header">
 <span class="cert-title"><span data-lang-tr>Akamai Ağ Mühendisliği Profesyonel Sertifikası</span><span data-lang-en>Akamai Network Engineering Professional Certificate</span></span>
 <span class="cert-status"><span data-lang-tr>DEVAM EDİYOR</span><span data-lang-en>IN_PROGRESS</span></span>
@@ -276,7 +279,7 @@
 </div>
 </div>
 
-<div class="cert-card">
+<div class="cert-card reveal">
 <div class="cert-header">
 <span class="cert-title"><span data-lang-tr>NVIDIA Developer Program Member</span><span data-lang-en>NVIDIA Developer Program Member</span></span>
 <span class="cert-status"><span data-lang-tr>TAMAMLANDI</span><span data-lang-en>COMPLETED</span></span>
@@ -292,13 +295,13 @@
 
 <!-- Projects Section -->
 <section id="projects">
-<div class="section-header">
+<div class="section-header reveal">
 <h2 class="section-title"><span data-lang-tr>projeler</span><span data-lang-en>projects</span></h2>
 <p class="section-subtitle">tree ~/projects/</p>
 </div>
 
 <!-- Project 1: AI Container Infrastructure -->
-<div class="project-card">
+<div class="project-card reveal reveal-delay-1">
 <div class="project-header">
 <div class="project-title"><span data-lang-tr>Yapay Zeka Destekli Konteyner Tabanlı Sunucu ve Altyapı Otomasyonu</span><span data-lang-en>AI-Powered Container-Based Server &amp; Infrastructure Automation</span></div>
 <div class="project-tag"><span data-lang-tr>TEZ_PROJESI | Homelab | Docker | AI | DevOps</span><span data-lang-en>THESIS_PROJECT | Homelab | Docker | AI | DevOps</span></div>
@@ -328,7 +331,7 @@
 </div>
 
 <!-- Project 2: ERPNext -->
-<div class="project-card">
+<div class="project-card reveal reveal-delay-2">
 <div class="project-header">
 <div class="project-title"><span data-lang-tr>ERPNext Self-Hosted Dağıtım ve Operasyon Altyapısı</span><span data-lang-en>ERPNext Self-Hosted Deployment &amp; Operations Architecture</span></div>
 <div class="project-tag"><span data-lang-tr>ÜNİVERSİTE_PROJESI | ERP | Docker | K3s | DevOps</span><span data-lang-en>UNIVERSITY_PROJECT | ERP | Docker | K3s | DevOps</span></div>
@@ -358,7 +361,7 @@
 </div>
 
 <!-- Project 3: AI CRM -->
-<div class="project-card">
+<div class="project-card reveal reveal-delay-3">
 <div class="project-header">
 <div class="project-title"><span data-lang-tr>Yapay Zeka Destekli Operasyonel CRM ve Karar Destek Platformu</span><span data-lang-en>AI-Powered Operational CRM &amp; Decision Support Platform</span></div>
 <div class="project-tag"><span data-lang-tr>KİŞİSEL_PROJE | CRM | OCR | AI | Full-Stack</span><span data-lang-en>PERSONAL_PROJECT | CRM | OCR | AI | Full-Stack</span></div>
@@ -415,12 +418,12 @@ traceroute to github.com/fufuizm (140.82.121.4), 30 hops max
 
 <!-- Tools Section -->
 <section id="tools">
-<div class="section-header">
+<div class="section-header reveal">
 <h2 class="section-title"><span data-lang-tr>araçlar</span><span data-lang-en>tools</span></h2>
 <p class="section-subtitle">dpkg -l | grep -E "(docker|git|python)"</p>
 </div>
 
-<div class="tools-grid">
+<div class="tools-grid stagger-children">
 
 <div class="tool-box">
   <div class="tool-header">
@@ -513,13 +516,13 @@ traceroute to github.com/fufuizm (140.82.121.4), 30 hops max
 
 <!-- Contact Section -->
 <section id="contact">
-<div class="section-header">
+<div class="section-header reveal">
 <h2 class="section-title"><span data-lang-tr>iletişim</span><span data-lang-en>contact</span></h2>
 <p class="section-subtitle">ssh user@host | sendmail</p>
 </div>
 
 <!-- Availability Banner -->
-<div class="availability-banner">
+<div class="availability-banner reveal">
   <div class="avail-row">
     <span class="avail-key">availability</span><span class="avail-sep">:</span>
     <span class="avail-val open"><span data-lang-tr>müsait</span><span data-lang-en>open</span></span>
@@ -538,7 +541,7 @@ traceroute to github.com/fufuizm (140.82.121.4), 30 hops max
   </div>
 </div>
 
-<div class="contact-grid">
+<div class="contact-grid stagger-children">
 <a href="mailto:sarica.furkan@icloud.com?subject=Portfolio%20%C4%B0leti%C5%9Fim" class="contact-item" data-copy="sarica.furkan@icloud.com">
 <div class="contact-label"><span data-lang-tr>E-POSTA</span><span data-lang-en>EMAIL</span></div>
 <div class="contact-value">sarica.furkan@icloud.com<span class="contact-copy-badge"><span data-lang-tr>[ Kopyala ]</span><span data-lang-en>[ Copy ]</span></span></div>
@@ -3196,6 +3199,66 @@ function stopMatrixRain() {
             });
         });
     });
+}());
+
+// ===== 10/10 Upgrade: Scroll Animations =====
+(function () {
+    // Scroll Progress Bar
+    var scrollProgress = document.getElementById('scroll-progress');
+    function updateScrollProgress() {
+        if (!scrollProgress) return;
+        var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        var scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        var progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+        scrollProgress.style.width = progress + '%';
+    }
+    
+    window.addEventListener('scroll', updateScrollProgress, { passive: true });
+    
+    // Intersection Observer for reveal animations
+    var revealObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                // Handle stagger children
+                if (entry.target.classList.contains('stagger-children')) {
+                    entry.target.classList.add('visible');
+                }
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { 
+        threshold: 0.1, 
+        rootMargin: '0px 0px -50px 0px' 
+    });
+    
+    document.querySelectorAll('.reveal, .stagger-children').forEach(function(el) {
+        revealObserver.observe(el);
+    });
+    
+    // Hero decode effect after boot
+    function activateHeroDecode() {
+        var typing = document.querySelector('.hero h1 .typing');
+        if (typing) {
+            typing.classList.add('decode-active');
+        }
+    }
+    
+    // Trigger hero decode after boot screen fades
+    var bootScreen = document.getElementById('boot-screen');
+    if (bootScreen) {
+        var bootObserver = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (bootScreen.classList.contains('fade-out')) {
+                    setTimeout(activateHeroDecode, 300);
+                    bootObserver.disconnect();
+                }
+            });
+        });
+        bootObserver.observe(bootScreen, { attributes: true, attributeFilter: ['class'] });
+    } else {
+        setTimeout(activateHeroDecode, 1500);
+    }
 }());
 
 </script>
