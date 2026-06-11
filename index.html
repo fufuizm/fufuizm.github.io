@@ -605,7 +605,8 @@ traceroute to github.com/fufuizm (140.82.121.4), 30 hops max
 </p>
 <p id="system-status" style="color: var(--terminal-green); font-size: 0.8rem; margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace;"></p>
 <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 1rem;">
-© 2025 | Built with HTML + CSS | No frameworks
+<span data-lang-tr>© 2025 | vitaR&D tarafından geliştirilmiş ve tasarlanmıştır</span>
+<span data-lang-en>© 2025 | Designed and developed by vitaR&D</span>
 </p>
 </footer>
 
@@ -3334,6 +3335,191 @@ function stopMatrixRain() {
     }
 }());
 
+
+
+// ===== 10/10 FINAL: Custom Terminal Cursor =====
+(function() {
+    var cursor = document.createElement('div');
+    cursor.id = 'terminal-cursor';
+    document.body.appendChild(cursor);
+    document.body.classList.add('custom-cursor');
+    
+    var mouseX = 0, mouseY = 0;
+    var cursorX = 0, cursorY = 0;
+    
+    document.addEventListener('mousemove', function(e) {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    }, { passive: true });
+    
+    // Smooth follow
+    function updateCursor() {
+        cursorX += (mouseX - cursorX) * 0.25;
+        cursorY += (mouseY - cursorY) * 0.25;
+        cursor.style.left = cursorX + 'px';
+        cursor.style.top = cursorY + 'px';
+        requestAnimationFrame(updateCursor);
+    }
+    requestAnimationFrame(updateCursor);
+    
+    // Hover detection
+    document.addEventListener('mouseover', function(e) {
+        var target = e.target;
+        if (target.tagName === 'A' || target.tagName === 'BUTTON' || target.closest('a') || target.closest('button') || target.classList.contains('skill-tag') || target.classList.contains('project-card') || target.classList.contains('contact-item')) {
+            cursor.classList.add('hover');
+        }
+    }, { passive: true });
+    
+    document.addEventListener('mouseout', function(e) {
+        cursor.classList.remove('hover');
+    }, { passive: true });
+    
+    // Click effect
+    document.addEventListener('mousedown', function() { cursor.classList.add('click'); });
+    document.addEventListener('mouseup', function() { cursor.classList.remove('click'); });
+}());
+
+// ===== 10/10 FINAL: CRT Grain Overlay =====
+(function() {
+    var grain = document.createElement('div');
+    grain.id = 'crt-grain';
+    document.body.appendChild(grain);
+    
+    // Auto-enable after boot
+    setTimeout(function() {
+        grain.classList.add('active');
+        document.body.classList.add('crt-active');
+    }, 3500);
+}());
+
+// ===== 10/10 FINAL: Hero Text Scramble Decode =====
+(function() {
+    var GLITCH_CHARS = '!<>-_\/[]{}—=+*^?#________';
+    var MATRIX_CHARS = '日ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ012345789:・.=*+-<>¦｜ç';
+    
+    function scrambleText(element, finalText, duration) {
+        duration = duration || 1500;
+        var chars = finalText.split('');
+        var totalFrames = Math.floor(duration / 30); // ~33fps
+        var frame = 0;
+        
+        element.innerHTML = '';
+        var spanArray = [];
+        
+        chars.forEach(function(char, i) {
+            var span = document.createElement('span');
+            span.className = 'scramble-char';
+            span.style.setProperty('--char-index', i);
+            if (char === ' ') {
+                span.innerHTML = '&nbsp;';
+                span.classList.add('final');
+            }
+            element.appendChild(span);
+            spanArray.push({ span: span, char: char, final: char === ' ', revealed: char === ' ' });
+        });
+        
+        var interval = setInterval(function() {
+            frame++;
+            var progress = frame / totalFrames;
+            var revealIndex = Math.floor(progress * chars.length);
+            
+            spanArray.forEach(function(item, i) {
+                if (item.final) return;
+                
+                if (i <= revealIndex && !item.revealed) {
+                    item.span.textContent = item.char;
+                    item.span.classList.remove('glitching');
+                    item.span.classList.add('final');
+                    item.revealed = true;
+                    // Play tiny click sound if available
+                    if (window.playClick && Math.random() > 0.7) window.playClick();
+                } else if (!item.revealed) {
+                    var pool = progress < 0.3 ? MATRIX_CHARS : GLITCH_CHARS;
+                    item.span.textContent = pool[Math.floor(Math.random() * pool.length)];
+                    item.span.classList.add('glitching');
+                }
+            });
+            
+            if (frame >= totalFrames) {
+                clearInterval(interval);
+                // Ensure all chars are final
+                spanArray.forEach(function(item) {
+                    if (!item.final) {
+                        item.span.textContent = item.char;
+                        item.span.classList.remove('glitching');
+                        item.span.classList.add('final');
+                    }
+                });
+            }
+        }, 30);
+    }
+    
+    // Trigger scramble after boot
+    function startScramble() {
+        var typing = document.querySelector('.hero h1 .typing');
+        if (typing && !typing.dataset.scrambled) {
+            typing.dataset.scrambled = 'true';
+            var finalText = typing.textContent;
+            scrambleText(typing, finalText, 2000);
+        }
+    }
+    
+    // Wait for boot screen to fade
+    var bootScreen = document.getElementById('boot-screen');
+    if (bootScreen) {
+        var obs = new MutationObserver(function(mutations) {
+            if (bootScreen.classList.contains('fade-out')) {
+                setTimeout(startScramble, 600);
+                obs.disconnect();
+            }
+        });
+        obs.observe(bootScreen, { attributes: true, attributeFilter: ['class'] });
+    } else {
+        setTimeout(startScramble, 2000);
+    }
+}());
+
+// ===== 10/10 FINAL: Konami Code Easter Egg =====
+(function() {
+    var KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    var input = [];
+    
+    document.addEventListener('keydown', function(e) {
+        input.push(e.key);
+        if (input.length > KONAMI.length) input.shift();
+        
+        if (input.length === KONAMI.length && input.every(function(k, i) { return k === KONAMI[i]; })) {
+            // Konami triggered!
+            input = [];
+            
+            // Toggle hacker mode
+            document.body.classList.toggle('hacker-mode');
+            
+            var isHacker = document.body.classList.contains('hacker-mode');
+            
+            // Show notification
+            var notif = document.createElement('div');
+            notif.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#000;border:2px solid ' + (isHacker ? '#39ff14' : '#00ff88') + ';padding:2rem 3rem;z-index:100001;font-family:"JetBrains Mono",monospace;font-size:1.2rem;color:' + (isHacker ? '#39ff14' : '#00ff88') + ';text-align:center;box-shadow:0 0 60px ' + (isHacker ? 'rgba(57,255,20,0.5)' : 'rgba(0,255,136,0.5)') + ';';
+            notif.innerHTML = isHacker 
+                ? '<div style="font-size:2rem;margin-bottom:0.5rem;">👾</div>HACKER MODE ACTIVATED<br><span style="font-size:0.8rem;color:#666;">Matrix rain intensified. Cursor synced. Grain amplified.</span>'
+                : '<div style="font-size:2rem;margin-bottom:0.5rem;">✅</div>NORMAL MODE RESTORED<br><span style="font-size:0.8rem;color:#666;">Systems nominal. Welcome back, operator.</span>';
+            document.body.appendChild(notif);
+            
+            setTimeout(function() {
+                notif.style.transition = 'opacity 0.5s';
+                notif.style.opacity = '0';
+                setTimeout(function() { notif.remove(); }, 500);
+            }, 2500);
+            
+            // Intensify matrix rain if active
+            var canvas = document.getElementById('matrix-rain');
+            if (canvas && window.matrixConfig) {
+                window.matrixConfig.speed = isHacker ? 2.5 : 1;
+                window.matrixConfig.density = isHacker ? 0.8 : 0.5;
+            }
+        }
+    });
+}());
 </script>
 
 </body>

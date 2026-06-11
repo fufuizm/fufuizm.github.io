@@ -2372,3 +2372,107 @@ section > * {
     opacity: 1;
     transform: translateX(0);
 }
+
+
+/* ===== 10/10 FINAL UPGRADES ===== */
+
+/* Custom Terminal Cursor */
+body.custom-cursor, body.custom-cursor * {
+    cursor: none !important;
+}
+
+#terminal-cursor {
+    position: fixed;
+    width: 10px;
+    height: 18px;
+    background: var(--terminal-green);
+    pointer-events: none;
+    z-index: 100000;
+    mix-blend-mode: difference;
+    transition: transform 0.08s ease-out, opacity 0.15s;
+    opacity: 0.85;
+    box-shadow: 0 0 8px var(--terminal-green), 0 0 16px var(--terminal-green-dim);
+    will-change: transform;
+}
+
+#terminal-cursor.hover {
+    transform: scale(1.6);
+    opacity: 1;
+    box-shadow: 0 0 15px var(--terminal-green), 0 0 30px var(--terminal-green), 0 0 60px var(--terminal-green-dim);
+}
+
+#terminal-cursor.click {
+    transform: scale(0.8);
+    opacity: 0.6;
+}
+
+/* CRT Grain Overlay */
+#crt-grain {
+    position: fixed;
+    inset: -50%;
+    width: 200%;
+    height: 200%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0;
+    pointer-events: none;
+    z-index: 9998;
+    mix-blend-mode: overlay;
+    animation: grain-shift 0.4s steps(4) infinite;
+    transition: opacity 0.5s ease;
+}
+
+#crt-grain.active {
+    opacity: 0.035;
+}
+
+@keyframes grain-shift {
+    0%   { transform: translate(0, 0); }
+    25%  { transform: translate(-2%, 2%); }
+    50%  { transform: translate(2%, -1%); }
+    75%  { transform: translate(-1%, -2%); }
+    100% { transform: translate(1%, 1%); }
+}
+
+/* CRT Scanline Flicker Enhancement */
+@keyframes scanline-breathe {
+    0%, 100% { opacity: 0.45; }
+    50% { opacity: 0.55; }
+}
+
+body.crt-active::before {
+    animation: scanline-breathe 2s ease-in-out infinite, scanline-flicker 4s ease-in-out infinite;
+}
+
+/* Konami Code Hacker Mode Enhancements */
+body.hacker-mode #terminal-cursor {
+    background: #39ff14;
+    box-shadow: 0 0 8px #39ff14, 0 0 16px rgba(57, 255, 20, 0.5);
+}
+
+/* Hero Scramble Effect Base */
+.hero h1 .typing {
+    display: inline-block;
+    min-width: 1ch;
+}
+
+.scramble-char {
+    display: inline-block;
+    transition: color 0.05s;
+}
+
+.scramble-char.glitching {
+    color: var(--accent-cyan);
+    text-shadow: 0 0 8px var(--accent-cyan);
+}
+
+/* Matrix decode character set */
+@keyframes char-flicker {
+    0%, 90%, 100% { opacity: 1; }
+    95% { opacity: 0.3; }
+}
+
+.scramble-char.final {
+    animation: char-flicker 3s ease-in-out infinite;
+    animation-delay: calc(var(--char-index) * 0.1s);
+}
+
