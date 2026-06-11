@@ -1459,7 +1459,17 @@ runBootSequence();
                 document.body.classList.remove('root-mode');
                 stopMatrixRain();
             }
-        } else if (c === 'whoami' || c === 'ip a' || c === 'ifconfig') {
+        } else if (c === 'whoami') {
+            addLine('furkan', 'ok');
+            addLine('  Role: DevOps & Network Engineer');
+            addLine('  Company: Logosoft Bilişim Teknolojileri A.Ş. (Stajyer)');
+            addLine('  Location: Ümraniye, İstanbul, Türkiye');
+            addLine('  Uptime: 22 years, 365 days, 14 hours');
+            addLine('  Shell: /bin/zsh (oh-my-zsh + powerlevel10k)');
+            addLine('');
+            addLine('  Skills: Docker, Kubernetes, Linux, Networking, CI/CD, Python, Bash, Nginx,');
+            addLine('           Grafana, Prometheus, SAP Business One, ERP, CRM, AI/ML');
+        } else if (c === 'ip a' || c === 'ifconfig') {
             fetchIpAndPrint();
         } else if (c === 'pwd') {
             addLine(currentDir);
@@ -1472,6 +1482,63 @@ runBootSequence();
             } else {
                 addLine(contents.join('  '));
             }
+        } else if (c === 'ls skills/' || c === 'ls skills') {
+            addLine('[Network & Security]');
+            addLine('  TCP/IP  VLAN  VPN  WireGuard  pfSense  Nmap  Firewall  IDS/IPS');
+            addLine('');
+            addLine('[DevOps & Containers]');
+            addLine('  Docker  Kubernetes  Helm  CI/CD  GitHub Actions  GitLab  Jenkins');
+            addLine('');
+            addLine('[Cloud & Infrastructure]');
+            addLine('  AWS  Azure  GCP  Terraform  Ansible  Nginx  HAProxy  Load Balancing');
+            addLine('');
+            addLine('[Monitoring & Observability]');
+            addLine('  Grafana  Prometheus  ELK  Zabbix  PRTG  Log Management');
+            addLine('');
+            addLine('[Development]');
+            addLine('  Python  Bash  JavaScript  TypeScript  React  Node.js  SQL  NoSQL');
+            addLine('');
+            addLine('[Business Systems]');
+            addLine('  SAP Business One  ERP  CRM  Digital Transformation  Business Analysis');
+        } else if (c === 'cat experience.txt' || c === 'cat experience') {
+            addLine('=== EXPERIENCE.LOG ===');
+            addLine('');
+            addLine('[2026-05 -- Present] Logosoft Bilişim Teknolojileri A.Ş.');
+            addLine('Position: Software & Business Solutions Intern');
+            addLine('Location: Ümraniye, İstanbul, Türkiye (Ofiste)');
+            addLine('Status: DEVAM EDİYOR');
+            addLine('');
+            addLine('Responsibilities:');
+            addLine('  • Kurumsal yazılım dağıtımı ve entegrasyon');
+            addLine('  • SAP Business One modül yapılandırma');
+            addLine('  • İş analizi ve dijital dönüşüm süreçleri');
+            addLine('  • CRM/ERP sistem yönetimi');
+            addLine('');
+            addLine('Skills Gained: CRM, ERP, SAP B1, Business Analysis,');
+            addLine('                Digital Transformation, Enterprise Software');
+            addLine('');
+            addLine('--- EOF ---');
+        } else if (c === 'ping logosoft.com.tr' || c === 'ping logosoft') {
+            (function() {
+                var lines = [
+                    'PING logosoft.com.tr (185.122.201.35) 56(84) bytes of data.',
+                    '64 bytes from 185.122.201.35: icmp_seq=1 ttl=57 time=12.4 ms',
+                    '64 bytes from 185.122.201.35: icmp_seq=2 ttl=57 time=11.8 ms',
+                    '64 bytes from 185.122.201.35: icmp_seq=3 ttl=57 time=12.1 ms',
+                    '64 bytes from 185.122.201.35: icmp_seq=4 ttl=57 time=11.9 ms',
+                    '',
+                    '--- logosoft.com.tr ping statistics ---',
+                    '4 packets transmitted, 4 received, 0% packet loss, time 3004ms',
+                    'rtt min/avg/max/mdev = 11.800/12.050/12.400/0.240 ms',
+                    '',
+                    '[INFO] Target is ONLINE and responsive. Enterprise infrastructure healthy.'
+                ];
+                var i = 0;
+                var iv = setInterval(function() {
+                    if (i < lines.length) { addLine(lines[i++], lines[i-1].indexOf('ONLINE') !== -1 ? 'ok' : ''); }
+                    else { clearInterval(iv); }
+                }, 200);
+            }());
         } else if (c === 'cd' || c === 'cd ~') {
             currentDir = '/home/furkan';
             updatePrompt();
@@ -3215,7 +3282,8 @@ function stopMatrixRain() {
     
     window.addEventListener('scroll', updateScrollProgress, { passive: true });
     
-    // Intersection Observer for reveal animations
+    // Intersection Observer for reveal animations + per-section typing sounds
+    var revealedSections = new Set();
     var revealObserver = new IntersectionObserver(function (entries) {
         entries.forEach(function(entry) {
             if (entry.isIntersecting) {
@@ -3223,6 +3291,11 @@ function stopMatrixRain() {
                 // Handle stagger children
                 if (entry.target.classList.contains('stagger-children')) {
                     entry.target.classList.add('visible');
+                }
+                // Play typing sound for section headers (once per section)
+                if (entry.target.classList.contains('section-header') && window.playClick && !revealedSections.has(entry.target.id)) {
+                    window.playClick();
+                    revealedSections.add(entry.target.id);
                 }
                 revealObserver.unobserve(entry.target);
             }
