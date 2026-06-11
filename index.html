@@ -393,12 +393,16 @@
 <span class="t-btn t-btn-green"></span>
 <span class="terminal-title">~/projects</span>
 </div>
-<pre class="term-output" style="text-align: center; padding: 2rem;"><code class="comment"># More repositories on GitHub...</code>
-<span class="prompt">furkan@devops:~$</span> <span class="cmd">gh repo view fufuizm --web</span>
+<pre class="term-output" style="text-align: center; padding: 2rem;"><code class="comment"># Tracing route to additional repositories...</code>
+<span class="prompt">furkan@devops:~$</span> <span class="cmd">traceroute github.com/fufuizm</span>
 <span class="output" style="display: block; margin-top: 1rem;">
-  <a href="https://github.com/fufuizm?tab=repositories" target="_blank" rel="noopener" style="color: var(--accent-cyan); text-decoration: none;">
-    → github.com/fufuizm
-  </a>
+traceroute to github.com/fufuizm (140.82.121.4), 30 hops max
+ 1  gw.localnet (192.168.1.1)           0.8 ms
+ 2  isp-backbone.turkiye.net.tr         5.2 ms
+ 3  de-cix.frankfurt.core                18.4 ms
+ 4  github-edge.as32934                  22.1 ms
+ 5  github.com/fufuizm                   23.7 ms  <span style="color: var(--terminal-green);">REACHED</span>
+<span style="color: var(--terminal-green);">→</span> <a href="https://github.com/fufuizm?tab=repositories" target="_blank" rel="noopener" style="color: var(--accent-cyan); text-decoration: none;">github.com/fufuizm</a>
 </span></pre>
 </div>
 </section>
