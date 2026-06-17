@@ -70,6 +70,24 @@ opacity: 0.5;
 }
 
 /* Language Toggle */
+.skip-link {
+    position: fixed;
+    top: -100px;
+    left: 1rem;
+    z-index: 10001;
+    background: var(--bg-card);
+    border: 1px solid var(--terminal-green);
+    padding: 0.5rem 1rem;
+    color: var(--terminal-green);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: top 0.3s ease;
+}
+.skip-link:focus {
+    top: 1rem;
+}
+
 .lang-toggle {
 position: fixed;
 top: 1.2rem;
@@ -698,7 +716,20 @@ border-top: 1px solid var(--border-color);
 [data-lang-tr] { display: none; }
 [data-lang-en] { display: none; }
 body.lang-tr [data-lang-tr] { display: inline; }
-body.lang-en [data-lang-en] { display: inline; }
+body.lang-tr [data-lang-en] { display: none; }
+/* Screen reader fix: hide inactive language from AT */
+body.lang-tr [data-lang-en],
+body.lang-tr [data-lang-en-block],
+body.lang-tr [data-lang-en-grid],
+body.lang-tr [data-lang-en-li] {
+    display: none;
+}
+body.lang-en [data-lang-tr],
+body.lang-en [data-lang-tr-block],
+body.lang-en [data-lang-tr-grid],
+body.lang-en [data-lang-tr-li] {
+    display: none;
+}
 /* For block-level bilingual elements */
 [data-lang-tr-block] { display: none; }
 [data-lang-en-block] { display: none; }
@@ -1343,7 +1374,8 @@ body.glitch-mode {
     max-width: 500px;
 }
 
-#nginx-502-content h1 {
+#nginx-502-content h1,
+.nginx-502-title {
     font-size: 2rem;
     font-weight: normal;
     margin-bottom: 0.3rem;
